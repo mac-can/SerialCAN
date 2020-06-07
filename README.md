@@ -151,8 +151,8 @@ POSIX&reg; compatible operating systems:
 #### macOS Catalina
 
 - macOS Catalina (10.15) on a MacBook Pro (2019)
-- Apple clang version 11.0.3 (clang-1103.0.32.59)
-- Xcode Version 11.4.1 (11E503a)
+- Apple clang version 11.0.3 (clang-1103.0.32.62)
+- Xcode Version 11.5 (11E608c)
 
 #### macOS High Sierra
 
@@ -234,10 +234,10 @@ along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
 ### Trademarks
 
 Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other countries. \
-Windows is a registered trademark of Microsoft Corporation in the United States and/or other countries. \
 POSIX is a registered trademark of the Institute of Electrical and Electronic Engineers, Inc. \
+Windows is a registered trademark of Microsoft Corporation in the United States and/or other countries. \
 GNU C/C++ is a registered trademark of Free Software Foundation, Inc.
-Linux is a registered trademark of Linus Torvalds.
+Linux is a registered trademark of Linus Torvalds. \
 Cygwin is a registered trademark of Red Hat, Inc.
 
 ### Hazard Note

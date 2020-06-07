@@ -133,7 +133,7 @@
 		0F82062C2460255D00CD103A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1140;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = "UV Software, Berlin";
 				TargetAttributes = {
 					0F8206332460255D00CD103A = {
