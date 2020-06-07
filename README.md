@@ -236,7 +236,7 @@ along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
 Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other countries. \
 POSIX is a registered trademark of the Institute of Electrical and Electronic Engineers, Inc. \
 Windows is a registered trademark of Microsoft Corporation in the United States and/or other countries. \
-GNU C/C++ is a registered trademark of Free Software Foundation, Inc.
+GNU C/C++ is a registered trademark of Free Software Foundation, Inc. \
 Linux is a registered trademark of Linus Torvalds. \
 Cygwin is a registered trademark of Red Hat, Inc.
 
