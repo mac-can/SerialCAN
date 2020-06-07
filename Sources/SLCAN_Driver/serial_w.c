@@ -1,0 +1,394 @@
+/*
+ *  Software for Industrial Communication, Motion Control, and Automation
+ *
+ *  Copyright (C) 2002-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *
+ *  This module is part of the SourceMedley repository.
+ *
+ *  This module is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This module is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this module.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/** @file        serial.c
+ *
+ *  @brief       Serial data transmission.
+ *
+ *  @remarks     Windows compatible variant (_WIN32 and _WIN64)
+ *
+ *  @author      $Author: haumea $
+ *
+ *  @version     $Rev: 691 $
+ *
+ *  @addtogroup  serial
+ *  @{
+ */
+#include "serial.h"
+#include "logger.h"
+
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include <Windows.h>
+
+
+/*  -----------  options  ------------------------------------------------
+ */
+
+#if (OPTION_SERIAL_DEBUG_LEVEL > 0)
+#define SERIAL_DEBUG_ERROR(...)  log_printf(__VA_ARGS__)
+#else
+#define SERIAL_DEBUG_ERROR(...)  while (0)
+#endif
+
+#if (OPTION_SERIAL_DEBUG_LEVEL > 1)
+#define SERIAL_DEBUG_INFO(...)  log_printf(__VA_ARGS__)
+#else
+#define SERIAL_DEBUG_INFO(...)  while (0)
+#endif
+
+#if (OPTION_SERIAL_DEBUG_LEVEL > 2)
+#define SERIAL_DEBUG_ASYNC(...)  log_async(__VA_ARGS__)
+#define SERIAL_DEBUG_SYNC(...)  log_sync(__VA_ARGS__)
+#undef SERIAL_DEBUG_INFO
+#define SERIAL_DEBUG_INFO(...)  while (0)
+#else
+#define SERIAL_DEBUG_ASYNC(...)  while (0)
+#define SERIAL_DEBUG_SYNC(...)  while (0)
+#endif
+
+/*  -----------  defines  ------------------------------------------------
+ */
+
+#define BAUDRATE        115200U
+#define BYTESIZE        8
+#define STOPBITS        TWOSTOPBITS
+#define IN_QUEUE        4096U
+#define OUT_QUEUE       4096U
+
+
+/*  -----------  types  --------------------------------------------------
+ */
+
+typedef struct serial_t_ {
+    HANDLE hPort;
+    HANDLE hThread;
+    sio_recv_t callback;
+    void *receiver;
+} serial_t;
+
+
+/*  -----------  prototypes  ---------------------------------------------
+ */
+
+static DWORD WINAPI reception_loop(LPVOID lpParam);
+
+
+/*  -----------  variables  ----------------------------------------------
+ */
+
+
+ /*  -----------  functions  ----------------------------------------------
+  */
+
+sio_port_t sio_create(sio_recv_t callback, void *receiver) {
+    serial_t *serial = (serial_t*)NULL;
+
+    /* reset errno variable */
+    errno = 0;
+    /* C language constructor */
+    if ((serial = (serial_t*)malloc(sizeof(serial_t))) != NULL) {
+        serial->hPort = INVALID_HANDLE_VALUE;
+        serial->hThread = NULL;
+        serial->callback = callback;
+        serial->receiver = receiver;
+    }
+    /* return a pointer to the instance */
+    return (sio_port_t)serial;
+}
+
+int sio_destroy(sio_port_t port) {
+    serial_t *serial = (serial_t*)port;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        return -1;
+    }
+    /* close opened file (if any) */
+    (void)sio_disconnect(port);
+    /* C language destructor */
+    free(serial);
+    return 0;
+}
+
+int sio_signal(sio_port_t port) {
+    serial_t *serial = (serial_t*)port;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        return -1;
+    }
+    // TODO: purge?
+    return 0;
+}
+
+int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
+    serial_t *serial = (serial_t*)port;
+    int comm, n;
+    DWORD speed;
+    char path[42];
+    DCB dcb;
+    DWORD errors;
+    COMMTIMEOUTS timeouts;
+    // TODO: set transmission attributes
+    (void)param;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        return -1;
+    }
+    if (!device) {
+        errno = EINVAL;
+        return -1;
+    }
+    if (serial->hPort != INVALID_HANDLE_VALUE) {
+        errno = EALREADY;
+        return -1;
+    }
+    // FIXME: rework this
+    if (((n = sscanf_s(device, "COM%i@%lu", &comm, &speed)) < 1) &&
+        ((n = sscanf_s(device, "com%i@%lu", &comm, &speed)) < 1) &&
+        ((n = sscanf_s(device, "\\\\.\\com%i@%lu", &comm, &speed)) < 1) &&
+        ((n = sscanf_s(device, "\\\\.\\COM%i@%lu", &comm, &speed)) < 1)) {
+        errno = ENOENT;
+        return -1;
+    }
+    if (n < 2)
+        speed = BAUDRATE;
+    /* create a file for the comm port */
+    sprintf_s(path, 42, "\\\\.\\COM%i", comm); /* See Q115831 */
+    if ((serial->hPort = CreateFile(path, (GENERIC_READ | GENERIC_WRITE),
+        0,                              // exclusive access
+        NULL,                           // no security attrs
+        OPEN_EXISTING,                  // default for devices other than files 
+        0,                              // flags: no overlapped I/O
+        NULL)) == INVALID_HANDLE_VALUE) {
+        errno = ENODEV;
+        return -1;
+    }
+    /* setup device buffers */
+    if (!SetupComm(serial->hPort, IN_QUEUE, OUT_QUEUE)) {
+        (void)ClearCommError(serial->hPort, &errors, NULL);
+        (void)CloseHandle(serial->hPort);
+        errno = ENODEV;
+        return -1;
+    }
+    /* purge any information in the buffer */
+    if (!PurgeComm(serial->hPort, 
+        (PURGE_TXABORT | PURGE_RXABORT | PURGE_TXCLEAR | PURGE_RXCLEAR))) {
+        CloseHandle(serial->hPort);
+        errno = ENODEV;
+        return -1;
+    }
+    /* set up time-outs for overlapped I/O */
+    timeouts.ReadIntervalTimeout = MAXDWORD;
+    timeouts.ReadTotalTimeoutMultiplier = 0U;
+    timeouts.ReadTotalTimeoutConstant = 0U;
+    timeouts.WriteTotalTimeoutMultiplier = 0U;
+    timeouts.WriteTotalTimeoutConstant = 0U;
+    if (!SetCommTimeouts(serial->hPort, &timeouts)) {
+        (void)CloseHandle(serial->hPort);
+        errno = ENODEV;
+        return -1;
+    }
+    /* set up the device control block */
+    dcb.DCBlength = (DWORD)sizeof(DCB);
+    if (!GetCommState(serial->hPort, &dcb)) {
+        (void)CloseHandle(serial->hPort);
+        errno = ENODEV;
+        return -1;
+    }
+    dcb.BaudRate = speed;                   // current baud rate
+    dcb.fBinary = TRUE;                     // binary mode, no EOF check
+    dcb.fParity = FALSE;                    // enable parity checking
+    dcb.fOutxCtsFlow = FALSE;               // CTS output flow control
+    dcb.fOutxDsrFlow = FALSE;               // DSR output flow control
+    dcb.fDtrControl = DTR_CONTROL_ENABLE;   // DTR flow control type
+    dcb.fDsrSensitivity = FALSE;            // DSR sensitivity
+    dcb.fTXContinueOnXoff = FALSE;          // XOFF continues Tx
+    dcb.fOutX = FALSE;                      // XON/XOFF out flow control
+    dcb.fInX = FALSE;                       // XON/XOFF in flow control
+    dcb.fErrorChar = FALSE;                 // enable error replacement
+    dcb.fNull = FALSE;                      // enable null stripping
+    dcb.fRtsControl = RTS_CONTROL_ENABLE;   // RTS flow control
+    dcb.fAbortOnError = FALSE;              // abort reads/writes on error
+    //dcb.XonLim = 0;                       // transmit XON threshold
+    //dcb.XoffLim = 30108;                  // transmit XOFF threshold
+    dcb.ByteSize = BYTESIZE;                // number of bits/byte, 4-8
+    dcb.Parity = NOPARITY;                  // 0-4=no,odd,even,mark,space
+    dcb.StopBits = STOPBITS;                // 0,1,2 = 1, 1.5, 2
+    dcb.XonChar = 0x11;                     // Tx and Rx XON character
+    dcb.XoffChar = 0x13;                    // Tx and Rx XOFF character
+    dcb.ErrorChar = 0x00;                   // error replacement character
+    dcb.EofChar = 0x1A;                     // end of input character
+    //dcb.EvtChar = -3;                     // received event character
+    if (!SetCommState(serial->hPort, &dcb)) {
+        (void)CloseHandle(serial->hPort);
+        errno = ENODEV;
+        return -1;
+    }
+    /* create the reception thread */
+    if ((serial->hThread = CreateThread(
+        NULL,                           // default security attributes
+        0,                              // use default stack size  
+        reception_loop,                 // thread function name
+        port,                           // argument to thread function 
+        0,                              // use default creation flags 
+        NULL)) == NULL) {
+        (void)CloseHandle(serial->hPort);
+        errno = ENODEV;
+        return -1;
+    }
+    /* return COM port number */
+    (void)ClearCommError(serial->hPort, &errors, NULL);
+    return comm;
+}
+
+int sio_disconnect(sio_port_t port) {
+    serial_t *serial = (serial_t*)port;
+    DWORD errors;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        return -1;
+    }
+    if (serial->hPort == INVALID_HANDLE_VALUE) {
+        errno = EBADF;
+        return -1;
+    }
+    /* kill the reception thread */
+    (void)TerminateThread(serial->hThread, 0);
+    (void)WaitForSingleObject(serial->hThread, 0);
+    (void)CloseHandle(serial->hThread);
+    serial->hThread = NULL;
+    /* purge all pending transfers */
+    (void)PurgeComm(serial->hPort,
+        (PURGE_TXABORT | PURGE_RXABORT | PURGE_TXCLEAR | PURGE_RXCLEAR));
+    (void)ClearCommError(serial->hPort, &errors, NULL);
+    /* disconnect from serial port */
+    if (!CloseHandle(serial->hPort)) {
+        errno = ENODEV;
+        return -1;
+    }
+    serial->hPort = INVALID_HANDLE_VALUE;
+    return 0;
+}
+
+int sio_transmit(sio_port_t port, const uint8_t *buffer, size_t nbytes) {
+    serial_t *serial = (serial_t*)port;
+    DWORD res = 0, errors;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        return -1;
+    }
+    if (!buffer) {
+        errno = EINVAL;
+        return -1;
+    }
+    if (serial->hPort == INVALID_HANDLE_VALUE) {
+        errno = EBADF;
+        return -1;
+    }
+    /* send n bytes (set errno on error) */
+	DWORD sent = 0U;
+    if (!WriteFile(serial->hPort, buffer, (DWORD)nbytes, &sent, NULL)) {
+        (void)ClearCommError(serial->hPort, &errors, NULL);
+        errno = EBUSY;
+        return -1;
+    }
+    SERIAL_DEBUG_SYNC(buffer, (size_t)sent);
+    // TODO: 'blocking write' required?
+    return (int)sent;
+}
+
+#if (0)
+int sio_receive(sio_port_t port, uint8_t *buffer, size_t nbytes, uint16_t timeout) {
+    serial_t *serial = (serial_t*)port;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        return -1;
+    }
+    if (!buffer) {
+        errno = EINVAL;
+        return -1;
+    }
+    if (serial->hPort == INVALID_HANDLE_VALUE) {
+        errno = EBADF;
+        return -1;
+    }
+    // TODO: insert coin here
+    return -1;
+}
+#endif
+
+static DWORD WINAPI reception_loop(LPVOID lpParam) {
+    serial_t *serial = (serial_t*)lpParam;
+    DWORD errors;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        perror("+++ serial");
+        abort();
+    }
+    if (serial->hPort == INVALID_HANDLE_VALUE) {
+        errno = EBADF;
+        perror("+++ serial");
+        abort();
+    }
+    /* the torture never stops */
+    for (;;) {
+        DWORD nbytes = 0U;
+        uint8_t buffer[1];
+
+        if (ReadFile(serial->hPort, buffer, 1, &nbytes, NULL)) {
+            SERIAL_DEBUG_ASYNC(buffer, nbytes);
+            if ((nbytes > 0) && serial->callback)
+                serial->callback(serial->receiver, &buffer[0], (size_t)nbytes);
+        }
+        else {
+            (void)ClearCommError(serial->hPort, &errors, NULL);
+        }
+    }
+    return 0;
+}
+
+/*  ----------------------------------------------------------------------
+ *  Uwe Vogt,  UV Software,  Chausseestrasse 33 A,  10115 Berlin,  Germany
+ *  Tel.: +49-30-46799872,  Fax: +49-30-46799873,  Mobile: +49-170-3801903
+ *  E-Mail: uwe.vogt@uv-software.de,  Homepage: http://www.uv-software.de/
+ */
