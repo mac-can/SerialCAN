@@ -1,0 +1,350 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0F23108B24648EC500A96990 /* buffer_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F23108A24648EC500A96990 /* buffer_p.c */; };
+		0F23108E2465FB5200A96990 /* queue_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F23108C2465FB5200A96990 /* queue_p.c */; };
+		0F6C789F246C311A007EBB88 /* can_btr.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F6C789C246C311A007EBB88 /* can_btr.c */; };
+		0F6C78A2246C9000007EBB88 /* logger_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F6C78A1246C9000007EBB88 /* logger_p.c */; };
+		0F8206382460255D00CD103A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F8206372460255D00CD103A /* main.cpp */; };
+		0F8206502463172200CD103A /* serial_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F82064E2463172200CD103A /* serial_p.c */; };
+		0F8206532463386B00CD103A /* slcan.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F8206522463386B00CD103A /* slcan.c */; };
+		0F92B4832468505C00B06780 /* SerialCAN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F92B4822468505C00B06780 /* SerialCAN.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0F8206322460255D00CD103A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0F23108924648EC500A96990 /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = buffer.h; path = ../../Sources/SLCAN_Driver/buffer.h; sourceTree = "<group>"; };
+		0F23108A24648EC500A96990 /* buffer_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffer_p.c; path = ../../Sources/SLCAN_Driver/buffer_p.c; sourceTree = "<group>"; };
+		0F23108C2465FB5200A96990 /* queue_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = queue_p.c; path = ../../Sources/SLCAN_Driver/queue_p.c; sourceTree = "<group>"; };
+		0F23108D2465FB5200A96990 /* queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = queue.h; path = ../../Sources/SLCAN_Driver/queue.h; sourceTree = "<group>"; };
+		0F680C052469A6830049148F /* CANAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANAPI.h; path = ../../Sources/CANAPI/CANAPI.h; sourceTree = "<group>"; };
+		0F6C789C246C311A007EBB88 /* can_btr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = can_btr.c; path = ../../Sources/CANAPI/can_btr.c; sourceTree = "<group>"; };
+		0F6C789E246C311A007EBB88 /* can_btr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = can_btr.h; path = ../../Sources/CANAPI/can_btr.h; sourceTree = "<group>"; };
+		0F6C78A1246C9000007EBB88 /* logger_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = logger_p.c; path = ../../Sources/SLCAN_Driver/logger_p.c; sourceTree = "<group>"; };
+		0F8206342460255D00CD103A /* SerialCAN */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SerialCAN; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F8206372460255D00CD103A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		0F82063E2460266C00CD103A /* build_no.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = build_no.h; path = ../../Sources/build_no.h; sourceTree = "<group>"; };
+		0F820648246026E600CD103A /* CANAPI_Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANAPI_Types.h; path = ../../Sources/CANAPI/CANAPI_Types.h; sourceTree = "<group>"; };
+		0F82064B2462D1A800CD103A /* logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = logger.h; path = ../../Sources/SLCAN_Driver/logger.h; sourceTree = "<group>"; };
+		0F82064E2463172200CD103A /* serial_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = serial_p.c; path = ../../Sources/SLCAN_Driver/serial_p.c; sourceTree = "<group>"; };
+		0F82064F2463172200CD103A /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serial.h; path = ../../Sources/SLCAN_Driver/serial.h; sourceTree = "<group>"; };
+		0F8206512463386B00CD103A /* slcan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = slcan.h; path = ../../Sources/SLCAN_Driver/slcan.h; sourceTree = "<group>"; };
+		0F8206522463386B00CD103A /* slcan.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = slcan.c; path = ../../Sources/SLCAN_Driver/slcan.c; sourceTree = "<group>"; };
+		0F8598192482615600315C05 /* CANAPI_SerialCAN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANAPI_SerialCAN.h; path = ../../Sources/CANAPI/CANAPI_SerialCAN.h; sourceTree = "<group>"; };
+		0F92B4812468505C00B06780 /* SerialCAN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SerialCAN.h; path = ../../Sources/SerialCAN.h; sourceTree = "<group>"; };
+		0F92B4822468505C00B06780 /* SerialCAN.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SerialCAN.cpp; path = ../../Sources/SerialCAN.cpp; sourceTree = "<group>"; };
+		0FFE72FE24719EA900A64333 /* CANAPI_Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANAPI_Defines.h; path = ../../Sources/CANAPI/CANAPI_Defines.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0F8206312460255D00CD103A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0F82062B2460255D00CD103A = {
+			isa = PBXGroup;
+			children = (
+				0F8206362460255D00CD103A /* Sources */,
+				0F8206352460255D00CD103A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		0F8206352460255D00CD103A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0F8206342460255D00CD103A /* SerialCAN */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0F8206362460255D00CD103A /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				0F6C789C246C311A007EBB88 /* can_btr.c */,
+				0F6C789E246C311A007EBB88 /* can_btr.h */,
+				0F680C052469A6830049148F /* CANAPI.h */,
+				0F820648246026E600CD103A /* CANAPI_Types.h */,
+				0FFE72FE24719EA900A64333 /* CANAPI_Defines.h */,
+				0F8598192482615600315C05 /* CANAPI_SerialCAN.h */,
+				0F23108C2465FB5200A96990 /* queue_p.c */,
+				0F23108D2465FB5200A96990 /* queue.h */,
+				0F23108A24648EC500A96990 /* buffer_p.c */,
+				0F23108924648EC500A96990 /* buffer.h */,
+				0F82064E2463172200CD103A /* serial_p.c */,
+				0F82064F2463172200CD103A /* serial.h */,
+				0F6C78A1246C9000007EBB88 /* logger_p.c */,
+				0F82064B2462D1A800CD103A /* logger.h */,
+				0F8206522463386B00CD103A /* slcan.c */,
+				0F8206512463386B00CD103A /* slcan.h */,
+				0F92B4822468505C00B06780 /* SerialCAN.cpp */,
+				0F92B4812468505C00B06780 /* SerialCAN.h */,
+				0F82063E2460266C00CD103A /* build_no.h */,
+				0F8206372460255D00CD103A /* main.cpp */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0F8206332460255D00CD103A /* SerialCAN */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0F82063B2460255D00CD103A /* Build configuration list for PBXNativeTarget "SerialCAN" */;
+			buildPhases = (
+				0F8206302460255D00CD103A /* Sources */,
+				0F8206312460255D00CD103A /* Frameworks */,
+				0F8206322460255D00CD103A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SerialCAN;
+			productName = SerialCAN;
+			productReference = 0F8206342460255D00CD103A /* SerialCAN */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0F82062C2460255D00CD103A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1140;
+				ORGANIZATIONNAME = "UV Software, Berlin";
+				TargetAttributes = {
+					0F8206332460255D00CD103A = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
+				};
+			};
+			buildConfigurationList = 0F82062F2460255D00CD103A /* Build configuration list for PBXProject "SerialCAN" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0F82062B2460255D00CD103A;
+			productRefGroup = 0F8206352460255D00CD103A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0F8206332460255D00CD103A /* SerialCAN */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0F8206302460255D00CD103A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0F23108B24648EC500A96990 /* buffer_p.c in Sources */,
+				0F8206382460255D00CD103A /* main.cpp in Sources */,
+				0F23108E2465FB5200A96990 /* queue_p.c in Sources */,
+				0F6C789F246C311A007EBB88 /* can_btr.c in Sources */,
+				0F8206502463172200CD103A /* serial_p.c in Sources */,
+				0F8206532463386B00CD103A /* slcan.c in Sources */,
+				0F92B4832468505C00B06780 /* SerialCAN.cpp in Sources */,
+				0F6C78A2246C9000007EBB88 /* logger_p.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0F8206392460255D00CD103A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"OPTION_CAN_2_0_ONLY=1",
+					"OPTION_CANAPI_COMPANIONS=1",
+					"OPTION_SERIAL_DEBUG_LEVEL=1",
+					"OPTION_SLCAN_DEBUG_LEVEL=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = (
+					../Sources,
+					../Sources/CANAPI,
+					../Sources/SLCAN_Driver,
+				);
+			};
+			name = Debug;
+		};
+		0F82063A2460255D00CD103A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OPTION_CAN_2_0_ONLY=1",
+					"OPTION_CANAPI_COMPANIONS=1",
+					"OPTION_SERIAL_DEBUG_LEVEL=0",
+					"OPTION_SLCAN_DEBUG_LEVEL=0",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = (
+					../Sources,
+					../Sources/CANAPI,
+					../Sources/SLCAN_Driver,
+				);
+			};
+			name = Release;
+		};
+		0F82063C2460255D00CD103A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0F82063D2460255D00CD103A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0F82062F2460255D00CD103A /* Build configuration list for PBXProject "SerialCAN" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0F8206392460255D00CD103A /* Debug */,
+				0F82063A2460255D00CD103A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0F82063B2460255D00CD103A /* Build configuration list for PBXNativeTarget "SerialCAN" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0F82063C2460255D00CD103A /* Debug */,
+				0F82063D2460255D00CD103A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0F82062C2460255D00CD103A /* Project object */;
+}

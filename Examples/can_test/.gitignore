@@ -1,0 +1,4 @@
+.objects
+can_test
+*.exe
+*.log
