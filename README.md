@@ -146,6 +146,10 @@ POSIX&reg; compatible operating systems:
 2. Linux&reg;
 3. Cygwin&reg;
 
+Windows&reg; (x64 operating systems):
+
+1. Windows 10 Pro
+
 ### Development Environments
 
 #### macOS Catalina
@@ -169,6 +173,10 @@ POSIX&reg; compatible operating systems:
 
 - Cygwin 3.1.5(0.340/5/3) under Windows 10 Pro (Version 1909)
 - GNU C/C++ Compiler (GCC) 9.3.0
+
+#### Windows 10 Pro
+
+- Microsoft Visual Studio Community 2017 (Version 15.9.19)
 
 ### CAN Hardware
 

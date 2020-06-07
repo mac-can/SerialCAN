@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{38f3608a-61ce-4613-8d18-554045d68d50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\CANAPI">
+      <UniqueIdentifier>{1743d300-2c4c-4c82-a51f-4eac54cf266b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\SLCAN_Driver">
+      <UniqueIdentifier>{1aedc2be-67a7-4c98-881e-cd8a7b35ddb0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Sources\CANAPI\can_btr.c">
+      <Filter>Sources\CANAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\SLCAN_Driver\slcan.c">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\SerialCAN.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\main.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\SLCAN_Driver\buffer_w.c">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\SLCAN_Driver\logger_w.c">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\SLCAN_Driver\queue_w.c">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\SLCAN_Driver\serial_w.c">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Sources\CANAPI\can_btr.h">
+      <Filter>Sources\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\CANAPI\CANAPI.h">
+      <Filter>Sources\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Defines.h">
+      <Filter>Sources\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Types.h">
+      <Filter>Sources\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\SLCAN_Driver\buffer.h">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\SLCAN_Driver\logger.h">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\SLCAN_Driver\queue.h">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\SLCAN_Driver\serial.h">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\SLCAN_Driver\slcan.h">
+      <Filter>Sources\SLCAN_Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\SerialCAN.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\build_no.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
