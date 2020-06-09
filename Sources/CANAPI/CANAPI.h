@@ -26,17 +26,17 @@
 ///              Interface API for various CAN interfaces from different
 ///              vendors running under multiple operating systems.
 //
-/// \note        This header file provides an abstract class with pure virtual
+/// \remarks     This header file provides an abstract class with pure virtual
 ///              methods and all data types and defines for the implementation
-///              of CAN API V3 wrapper library for a CAN adapter from an
+///              of a CAN API V3 wrapper library for a CAN adapter from an
 ///              arbitrary vendor.
 //
-/// \note        Additionally the class CCANAPI provides static methods for
+/// \remarks     Additionally the class CCANAPI provides static methods for
 ///              bit-rate conversion using CiA bit-timing indexes as a base.
 //
-/// \author      $Author: eris $
+/// \author      $Author: haumea $
 //
-/// \version     $Rev: 910 $
+/// \version     $Rev: 912 $
 //
 /// \defgroup    can_api CAN Interface API, Version 3
 /// \{
@@ -311,4 +311,4 @@ public:
 /// \}
 #endif // CANAPI_H_INCLUDED
 /// \}
-// $Id: CANAPI.h 910 2020-06-06 08:12:08Z eris $  Copyright (C) UV Software //
+// $Id: CANAPI.h 912 2020-06-09 16:36:41Z haumea $  Copyright (C) UV Software //

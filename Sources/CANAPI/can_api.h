@@ -22,9 +22,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces
  *
- *  @author      $Author: uranus $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 911 $
+ *  @version     $Rev: 912 $
  *
  *  @defgroup    can_api CAN Interface API, Version 3
  *  @{
@@ -55,8 +55,13 @@ extern "C" {
 #if (OPTION_CANAPI_LIBRARY == 0) && (OPTION_CANAPI_DRIVER == 0)
     #error Option for function signatures not set
 #endif
-#define CANAPI  extern
-
+#if (OPTION_CANAPI_DLLEXPORT != 0)
+    #define CANAPI  __declspec(dllexport)
+#elif if (OPTION_CANAPI_DLLIMPORT != 0)
+    #define CANAPI  __declspec(dllimport)
+#else
+    #define CANAPI  extern
+#endif
 
 /*  -----------  defines  ------------------------------------------------
  */

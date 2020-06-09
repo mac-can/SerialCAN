@@ -22,9 +22,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces - Definitions and Options
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 907 $
+ *  @version     $Rev: 913 $
  *
  *  @addtogroup  can_api
  *  @{
@@ -61,8 +61,53 @@ extern "C" {
 #define CANLIB_RUSOKU_LT        500     /**< Rusuko TouCAN interfaces */
 #define CANLIB_KVASER_32        600     /**< Kvaser CANLIB (canlib32) */
 #define CANLIB_ROCKETCAN        700     /**< CAN-over-IP (RocketCAN) */
-#define CANLIB_SERIALCAN        900     /**< CAN-over-Serial-Line (SerialCAN) */
+#define CANLIB_SERIALCAN        900     /**< Serial-Line (SerialCAN) */
 #define CANLIB_SOCKETCAN        1000    /**< Linux CAN (SocketCAN) */
+/** @} */
+
+/** @name  Library Names
+ *  @brief Filenames of the CAN API libraries (depending on platform)
+ *  @{ */
+#if defined(__linux__)
+ #define CANAPI_PLATFORM       "Linux"
+ #define CANDLL_CANAPILIB      "libuvcan300.so.2"
+ #define CANDLL_SERIALCAN      "libuvcanslc.so.1"
+ #define CANDLL_SOCKETCAN      "libuvcansoc.so.1"
+
+ #define CAN200_SOCKETCAN      "libu2cansoc.so.1"
+#elif defined(__APPLE__)
+ #define CANAPI_PLATFORM       "macOS"
+ #define CANDLL_CANAPILIB      "libUVCAN300.dylib"
+ #define CANDLL_PCANBasic      "libUVCANPCB.dylib"
+ #define CANDLL_RUSOKU_LT      "libUVCANTOU.dylib"
+ #define CANDLL_SERIALCAN      "libUVCANSLC.dylib"
+#else
+ #ifdef _WIN64
+ #define CANAPI_PLATFORM       "x64"
+ #else
+ #define CANAPI_PLATFORM       "x86"
+ #endif
+ #define CANDLL_CANAPILIB      "uvcan300.dll"
+ #define CANDLL_PCANBasic      "u3canpcb.dll"
+ #define CANDLL_KVASER_32      "u3cankvl.dll"
+ #define CANDLL_RUSOKU_LT      "u3cantou.dll"
+ #define CANDLL_SERIALCAN      "u3canslc.dll"
+
+ #define CAN200_CANAPILIB      "uvcan200.dll"
+ #define CAN200_IXXAT_VCI      "uvcanvci.dll"
+ #define CAN200_IXXAT_CAC      "uvcancac.dll"
+ #define CAN200_PEAK_PCAN      "uvcanpcl.dll"
+ #define CAN200_VECTOR_XL      "uvcanvxl.dll"
+ #define CAN200_PCANBasic      "uvcanpcb.dll"
+ #define CAN200_UVS_TCPIP      "uvcantcp.dll"
+ #define CAN200_UCAN_VCP       "uvcanvcp.dll"
+
+ #define CAN100_CANAPILIB      "uvcan100.dll"
+ #define CAN100_VECTOR_XL      "u1canvxl.dll"
+ #define CAN100_PCANBasic      "u1canpcb.dll"
+ #define CAN100_ROCKETCAN      "u1canroc.dll"
+ #define CAN100_SERIALCAN      "u1canslc.dll"
+#endif
 /** @} */
 
 #define CANDEV_NETWORK        (-1)      /**< channel ID for network device */
@@ -70,14 +115,6 @@ extern "C" {
 
 #define SYSERR_OFFSET         (-10000)  /**< offset for system errors */
 
-#define CAN_API_VENDOR          "UV Software, Berlin"
-#define CAN_API_AUTHOR          "Uwe Vogt, UV Software"
-#define CAN_API_WEBSITE         "www.uv-software.com"
-#define CAN_API_CONTACT         "info@uv-software.com"
-#define CAN_API_LICENSE         "GNU Lesser General Public License, Version 3"
-#define CAN_API_COPYRIGHT       "Copyright (C) 2004-20%02u, UV Software, Berlin"
-#define CAN_API_HAZARD_NOTE     "If you connect your CAN device to a real CAN network when using this library,\n" \
-                                "you might damage your application."
 
 /*  -----------  types  --------------------------------------------------
  */

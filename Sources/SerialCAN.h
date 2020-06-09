@@ -28,7 +28,7 @@
 /// \brief  SerialCAN dynamic library
 /// \{
 #define SERIALCAN_LIBRARY_ID  CANLIB_SERIALCAN
-#define SERIALCAN_LIBRARY_NAME  "libUVCANSLC.dylib"
+#define SERIALCAN_LIBRARY_NAME  CANDLL_SERIALCAN
 #define SERIALCAN_LIBRARY_VENDOR  "UV Software, Berlin"
 #define SERIALCAN_LIBRARY_LICENSE  "GNU General Public License, Version 3"
 #define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (C) 2016,2020  Uwe Vogt, UV Software, Berlin"
