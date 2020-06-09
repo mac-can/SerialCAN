@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Projekte\git\SerialCAN\Sources;C:\Projekte\git\SerialCAN\Sources\CANAPI;C:\Projekte\git\SerialCAN\Sources\SLCAN_Driver;C:\Projekte\git\SerialCAN\Trial\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN_Driver;.\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=1;OPTION_SERIAL_DEBUG_LEVEL=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Projekte\git\SerialCAN\Sources;C:\Projekte\git\SerialCAN\Sources\CANAPI;C:\Projekte\git\SerialCAN\Sources\SLCAN_Driver;C:\Projekte\git\SerialCAN\Trial\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN_Driver;.\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -106,7 +106,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Projekte\git\SerialCAN\Sources;C:\Projekte\git\SerialCAN\Sources\CANAPI;C:\Projekte\git\SerialCAN\Sources\SLCAN_Driver;C:\Projekte\git\SerialCAN\Trial\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN_Driver;.\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -124,7 +124,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Projekte\git\SerialCAN\Sources;C:\Projekte\git\SerialCAN\Sources\CANAPI;C:\Projekte\git\SerialCAN\Sources\SLCAN_Driver;C:\Projekte\git\SerialCAN\Trial\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN_Driver;.\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -148,6 +148,7 @@
     <ClInclude Include="..\..\Sources\build_no.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Defines.h" />
+    <ClInclude Include="..\..\Sources\CANAPI\CANAPI_SerialCAN.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Types.h" />
     <ClInclude Include="..\..\Sources\CANAPI\can_btr.h" />
     <ClInclude Include="..\..\Sources\SerialCAN.h" />

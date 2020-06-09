@@ -71,5 +71,8 @@
     <ClInclude Include="..\..\Sources\build_no.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Sources\CANAPI\CANAPI_SerialCAN.h">
+      <Filter>Sources\CANAPI</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
