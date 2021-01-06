@@ -1,6 +1,6 @@
 ### Driver for CAN-over-Serial-Line Interfaces (SLCAN Protocol)
 
-_Copyright &copy; 2016-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
+_Copyright &copy; 2016,2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
 
 # CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 
@@ -171,12 +171,12 @@ Windows&reg; (x64 operating systems):
 
 #### Cygwin (64-bit)
 
-- Cygwin 3.1.5(0.340/5/3) under Windows 10 Pro (Version 1909)
-- GNU C/C++ Compiler (GCC) 9.3.0
+- Cygwin 3.1.7(0.340/5/3) under Windows 10 Pro (Version 1909)
+- GNU C/C++ Compiler (GCC) 10.2.0
 
 #### Windows 10 Pro
 
-- Microsoft Visual Studio Community 2017 (Version 15.9.19)
+- Microsoft Visual Studio Community 2017 (Version 15.9.30)
 
 ### CAN Hardware
 
