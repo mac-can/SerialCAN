@@ -56,7 +56,7 @@ static const char APPLICATION[] = "CAN Monitor for CAN-over-Serial-Line Interfac
 #else
 static const char APPLICATION[] = "CAN Monitor for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 #endif
-static const char COPYRIGHT[]   = "Copyright (C) 2007,2016-2020 by Uwe Vogt, UV Software, Berlin";
+static const char COPYRIGHT[]   = "Copyright (C) 2007,2016-2021 by Uwe Vogt, UV Software, Berlin";
 static const char WARRANTY[]    = "This program comes with ABSOLUTELY NO WARRANTY!\n\n" \
                                   "This is free software, and you are welcome to redistribute it\n" \
                                   "under certain conditions; type `--version' for details.";
@@ -410,7 +410,8 @@ int main(int argc, const char * argv[]) {
                 wraparound = CCanMessage::OptionWraparoundNo;
             else if (!strcasecmp(optarg, "8"))
                 wraparound = CCanMessage::OptionWraparound8;
-            else if (!strcasecmp(optarg, "8"))
+#if (OPTION_CAN_2_0_ONLY == 0)
+            else if (!strcasecmp(optarg, "10"))
                 wraparound = CCanMessage::OptionWraparound10;
             else if (!strcasecmp(optarg, "16"))
                 wraparound = CCanMessage::OptionWraparound16;
@@ -418,6 +419,7 @@ int main(int argc, const char * argv[]) {
                 wraparound = CCanMessage::OptionWraparound32;
             else if (!strcasecmp(optarg, "64"))
                 wraparound = CCanMessage::OptionWraparound64;
+#endif
             else {
                 fprintf(stderr, "%s: illegal argument for option `--wrap' (%c)\n", basename(argv[0]), opt);
                 return 1;
@@ -603,7 +605,7 @@ int CCanDriver::ListCanDevices(const char *vendor) {
             for (int32_t j = 0; CCanDriver::m_CanVendors[j].id != EOF; j++) {
                 if (CCanDriver::m_CanDevices[i].library == CCanDriver::m_CanVendors[j].id) {
                     fprintf(stdout, "(VendorName=\"%s\", LibraryId=%" PRIi32 ", AdapterId=%" PRIi32 ")",
-                        CCanDriver::m_CanVendors[j].name, CCanDriver::m_CanDevices[i].library, CCanDriver::m_CanDevices[i].adapter);
+                            CCanDriver::m_CanVendors[j].name, CCanDriver::m_CanDevices[i].library, CCanDriver::m_CanDevices[i].adapter);
                     break;
                 }
             }
@@ -766,7 +768,9 @@ static void usage(FILE *stream, const char *program)
     fprintf(stream, " -i  --id=(HEX|DEC|OCT)        display mode of CAN-IDs (default=HEX)\n");
     fprintf(stream, " -d, --data=(HEX|DEC|OCT)      display mode of data bytes (default=HEX)\n");
     fprintf(stream, " -a, --ascii=(ON|OFF)          display data bytes in ASCII (default=ON)\n");
+#if (OPTION_CAN_2_0_ONLY == 0)
     fprintf(stream, " -w, --wrap=(NO|8|10|16|32|64) wraparound after n data bytes (default=NO)\n");
+#endif
     fprintf(stream, " -x, --exclude=[~]<id-list>    exclude CAN-IDs: <id>[-<id>]{,<id>[-<id>]}\n");
 //    fprintf(stream, " -s, --script=<filename>       execute a script file\n"); // TODO: script engine
 #if (OPTION_CAN_2_0_ONLY == 0)
@@ -778,7 +782,9 @@ static void usage(FILE *stream, const char *program)
     fprintf(stream, "     --no-remote-frames        suppress remote frames (RTR frames)\n");
     fprintf(stream, "     --no-extended-frames      suppress extended frames (29-bit identifier)\n");
     fprintf(stream, " -b, --baudrate=<baudrate>     CAN 2.0 bit timing in kbps (default=250)\n");
+#if (OPTION_CAN_2_0_ONLY == 0)
     fprintf(stream, "     --bitrate=<bit-rate>      CAN FD bit rate (as a string)\n");
+#endif
     fprintf(stream, " -v, --verbose                 show detailed bit rate settings\n");
     fprintf(stream, " -h, --help                    display this help screen and exit\n");
     fprintf(stream, "     --version                 show version information and exit\n");
