@@ -1,8 +1,8 @@
 ### CAN Interface API, Version 3
 
-_Copyright &copy; 2004-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
+_Copyright &copy; 2004-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
 
-Version $Rev: 902 $
+Version $Rev: 918 $
 
 # A CAN Interface Wrapper Specification
 
@@ -37,10 +37,8 @@ extern int can_init(int32_t library, int32_t board, uint8_t mode, const void *pa
 extern int can_test(int32_t board, uint8_t mode, const void *param, int *result);
 extern int can_init(int32_t board, uint8_t mode, const void *param);
 #endif
-#if defined(_WIN32) || defined(_WIN64)
-extern int can_kill(int handle);
-#endif
 extern int can_exit(int handle);
+extern int can_kill(int handle);
 
 extern int can_start(int handle, const can_bitrate_t *bitrate);
 extern int can_reset(int handle);

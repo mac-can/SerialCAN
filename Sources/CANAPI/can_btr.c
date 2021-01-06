@@ -24,13 +24,13 @@
  *
  *  @note        SJA1000 Bit-timing register BTR0 an BTR1:
  *
- *               +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+<br>
+ *               +-f-+-e-+-d-+---+---+---+---+-8-+-7-+-6-+---+-4-+-3-+---+---+-0-+<br>
  *               |  SJW  |          BRP          |SAM|   TSEG2   |     TSEG1     |<br>
- *               +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+<br>
+ *               +-7-+-6-+-5-+---+---+---+---+-0-+-7-+-6-+---+-4-+-3-+---+---+-0-+<br>
  *
  *  @author      $Author: eris $
  *
- *  @version     $Rev: 902 $
+ *  @version     $Rev: 915 $
  *
  *  @addtogroup  can_btr
  *  @{
@@ -482,7 +482,7 @@ static int scan_bitrate(const btr_string_t string, btr_bitrate_t *bitrate, bool 
 #endif
         // f_clock: (80000000, 60000000, 40000000, 30000000, 24000000, 20000000)
         if(!strcasecmp(key, "f_clock")) {
-#ifndef CANBTR_PEAK_FREQUENCIES
+#ifndef OPTION_CANBTR_PEAK_FREQUENCIES
             if((BTR_FREQUENCY_MIN <= tmp) && (tmp <= BTR_FREQUENCY_MAX))
                 temporary.btr.frequency = (int32_t)tmp;
             else
@@ -501,7 +501,7 @@ static int scan_bitrate(const btr_string_t string, btr_bitrate_t *bitrate, bool 
         }
         // f_clock_mhz: (80, 60, 40, 30, 24, 20)
         else if(!strcasecmp(key, "f_clock_mhz")) {
-#ifndef CANBTR_PEAK_FREQUENCIES
+#ifndef OPTION_CANBTR_PEAK_FREQUENCIES
             if((BTR_FREQUENCY_MHZ_MIN <= tmp) && (tmp <= BTR_FREQUENCY_MHZ_MAX))
                 temporary.btr.frequency = (int32_t)tmp * (int32_t)1000000;
             else

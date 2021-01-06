@@ -1,7 +1,7 @@
 //
 //  CAN Interface API, Version 3 (Interface Definition)
 //
-//  Copyright (C) 2004-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (C) 2004-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This file is part of CAN API V3.
 //
@@ -34,9 +34,9 @@
 /// \remarks     Additionally the class CCANAPI provides static methods for
 ///              bit-rate conversion using CiA bit-timing indexes as a base.
 //
-/// \author      $Author: haumea $
+/// \author      $Author: eris $
 //
-/// \version     $Rev: 912 $
+/// \version     $Rev: 918 $
 //
 /// \defgroup    can_api CAN Interface API, Version 3
 /// \{
@@ -311,4 +311,4 @@ public:
 /// \}
 #endif // CANAPI_H_INCLUDED
 /// \}
-// $Id: CANAPI.h 912 2020-06-09 16:36:41Z haumea $  Copyright (C) UV Software //
+// $Id: CANAPI.h 918 2021-01-04 20:34:30Z eris $  Copyright (C) UV Software //

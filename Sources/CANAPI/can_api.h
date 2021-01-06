@@ -1,7 +1,7 @@
 /*
  *  CAN Interface API, Version 3 (generic)
  *
- *  Copyright (C) 2004-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (C) 2004-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *
  *  This file is part of CAN API V3.
  *
@@ -22,9 +22,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces
  *
- *  @author      $Author: haumea $
+ *  @author      $Author: eris $
  *
- *  @version     $Rev: 912 $
+ *  @version     $Rev: 918 $
  *
  *  @defgroup    can_api CAN Interface API, Version 3
  *  @{
@@ -57,7 +57,7 @@ extern "C" {
 #endif
 #if (OPTION_CANAPI_DLLEXPORT != 0)
     #define CANAPI  __declspec(dllexport)
-#elif if (OPTION_CANAPI_DLLIMPORT != 0)
+#elif (OPTION_CANAPI_DLLIMPORT != 0)
     #define CANAPI  __declspec(dllimport)
 #else
     #define CANAPI  extern
@@ -207,6 +207,30 @@ CANAPI int can_init(int32_t board, uint8_t mode, const void *param);
 CANAPI int can_exit(int handle);
 
 
+/** @brief       signals a waiting event object of the CAN interface. This can
+ *               be used to terminate a blocking read operation in progress
+ *               (e.g. by means of a Ctrl-C handler or similar).
+ *
+ *  @remarks     Some drivers are using waitable objects to realize blocking
+ *               operations by a call to WaitForSingleObject (Windows) or
+ *               pthread_cond_wait (POSIX), but these waitable objects are
+ *               no cancellation points. This means that they cannot be
+ *               terminated by Ctrl-C (SIGINT).
+ *
+ *  @note        SIGINT is not supported for any Win32 application. [MSVC Docs]
+ *
+ *  @param[in]   handle  - handle of the CAN interface, or (-1) to signal all
+ *
+ *  @returns     0 if successful, or a negative value on error.
+ *
+ *  @retval      CANERR_NOTINIT   - library not initialized
+ *  @retval      CANERR_HANDLE    - invalid interface handle
+ *  @retval      CANERR_NOTSUPP   - function not supported
+ *  @retval      others           - vendor-specific
+ */
+CANAPI int can_kill(int handle);
+
+
 /** @brief       initializes the operation mode and the bit-rate settings of the
  *               CAN interface and sets the operation state of the CAN controller
  *               to 'running'.
@@ -289,30 +313,6 @@ CANAPI int can_write(int handle, const can_message_t *message, uint16_t timeout)
  *  @retval      others           - vendor-specific
  */
 CANAPI int can_read(int handle, can_message_t *message, uint16_t timeout);
-
-
-/** @brief       signals a waiting event object of the CAN interface. This can
- *               be used to terminate a blocking read operation in progress
- *               (e.g. by means of a Ctrl-C handler or similar).
- *
- *  @remarks     Some drivers are using waitable objects to realize blocking
- *               operations by a call to WaitForSingleObject (Windows) or
- *               pthread_cond_wait (POSIX), but these waitable objects are
- *               no cancellation points. This means that they cannot be
- *               terminated by Ctrl-C (SIGINT).
- *
- *  @note        SIGINT is not supported for any Win32 application. [MSVC Docs]
- *
- *  @param[in]   handle  - handle of the CAN interface, or (-1) to signal all
- *
- *  @returns     0 if successful, or a negative value on error.
- *
- *  @retval      CANERR_NOTINIT   - library not initialized
- *  @retval      CANERR_HANDLE    - invalid interface handle
- *  @retval      CANERR_NOTSUPP   - function not supported
- *  @retval      others           - vendor-specific
- */
-CANAPI int can_kill(int handle);
 
 
 /** @brief       retrieves the status register of the CAN interface.

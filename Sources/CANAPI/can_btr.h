@@ -24,7 +24,7 @@
  *
  *  @author      $Author: eris $
  *
- *  @version     $Rev: 902 $
+ *  @version     $Rev: 915 $
  *
  *  @defgroup    can_btr CAN Bit-rate Conversion
  *  @{
@@ -50,6 +50,14 @@ extern "C" {
 /*  -----------  options  ------------------------------------------------
  */
 
+/** @note  Set define OPTION_CANAPI_COMPANIONS to a non-zero value to compile
+ *         this module in conjunction with the CAN API V3 sources (e.g. in
+ *         the build environment).
+ */
+/** @note  Set define OPTION_CANBTR_PEAK_FREQUENCIES to a non-zero value to
+ *         compile with supported PCANBasic frequencies only (e.g. in the
+ *         build environment).
+ */
 /*#define CANBTR_PEAK_FREQUENCIES       // use only supported PCANBasic frequencies */
 
 

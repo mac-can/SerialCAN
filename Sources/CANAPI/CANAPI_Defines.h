@@ -22,9 +22,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces - Definitions and Options
  *
- *  @author      $Author: haumea $
+ *  @author      $Author: eris $
  *
- *  @version     $Rev: 913 $
+ *  @version     $Rev: 915 $
  *
  *  @addtogroup  can_api
  *  @{
@@ -55,7 +55,7 @@ extern "C" {
  *  @{ */
 #define CANLIB_IXXAT_VCI        100     /**< IXXAT Virtual CAN interfaces */
 #define CANLIB_IXXAT_CAC        800     /**< IXXAT canAnalyzer/32 Client */
-#define CANLIB_PEAK_PCAN        200     /**< PEAK PCAN-Light interfaces */
+#define CANLIB_PEAK_PCAN        200     /**< PEAK PCAN interfaces */
 #define CANLIB_VECTOR_XL        300     /**< Vector XL-Driver library */
 #define CANLIB_PCANBASIC        400     /**< PEAK PCAN-Basic interfaces */
 #define CANLIB_RUSOKU_LT        500     /**< Rusuko TouCAN interfaces */
@@ -63,10 +63,11 @@ extern "C" {
 #define CANLIB_ROCKETCAN        700     /**< CAN-over-IP (RocketCAN) */
 #define CANLIB_SERIALCAN        900     /**< Serial-Line (SerialCAN) */
 #define CANLIB_SOCKETCAN        1000    /**< Linux CAN (SocketCAN) */
-/** @} */
+/** @note  Peak's PCAN-Light DLL is outdated, so the library ID can be reused.
+ *  @} */
 
 /** @name  Library Names
- *  @brief Filenames of the CAN API libraries (depending on platform)
+ *  @brief Filenames of the CAN API libraries (depending on the platform)
  *  @{ */
 #if defined(__linux__)
  #define CANAPI_PLATFORM       "Linux"
@@ -81,6 +82,8 @@ extern "C" {
  #define CANDLL_PCANBasic      "libUVCANPCB.dylib"
  #define CANDLL_RUSOKU_LT      "libUVCANTOU.dylib"
  #define CANDLL_SERIALCAN      "libUVCANSLC.dylib"
+ #define CANDLL_KVASERCAN      "libUVCANKVD.dylib"
+ #define CANDLL_PEAK_PCAN      "libUVCANPCD.dylib"
 #else
  #ifdef _WIN64
  #define CANAPI_PLATFORM       "x64"
