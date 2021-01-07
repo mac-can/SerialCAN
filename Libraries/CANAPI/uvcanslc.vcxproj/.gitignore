@@ -1,0 +1,6 @@
+.vs/
+x64
+Debug
+Release
+uvcanslc.vcxproj.user
+*.log

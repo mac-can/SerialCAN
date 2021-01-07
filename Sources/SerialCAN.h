@@ -1,7 +1,7 @@
 //
 //  SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 //
-//  Copyright (C) 2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (C) 2016,2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This file is part of SerialCAN.
 //
@@ -28,10 +28,10 @@
 /// \brief  SerialCAN dynamic library
 /// \{
 #define SERIALCAN_LIBRARY_ID  CANLIB_SERIALCAN
-#define SERIALCAN_LIBRARY_NAME  "libUVCANSLC.dylib"
+#define SERIALCAN_LIBRARY_NAME  CANDLL_SERIALCAN
 #define SERIALCAN_LIBRARY_VENDOR  "UV Software, Berlin"
 #define SERIALCAN_LIBRARY_LICENSE  "GNU General Public License, Version 3"
-#define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (C) 2016,2020  Uwe Vogt, UV Software, Berlin"
+#define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (C) 2016,2020-2021  Uwe Vogt, UV Software, Berlin"
 #define SERIALCAN_LIBRARY_HAZARD_NOTE  "If you connect your CAN device to a real CAN network when using this library,\n" \
                                        "you might damage your application."
 /// \}

@@ -1,7 +1,7 @@
 //
 //  CAN Tester for CAN-over-Serial-Line Interfaces
 //
-//  Copyright (C) 2007,2016-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (C) 2007,2016-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ static const char APPLICATION[] = "CAN Tester for CAN-over-Serial-Line Interface
 #else
 static const char APPLICATION[] = "CAN Tester for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 #endif
-static const char COPYRIGHT[]   = "Copyright (C) 2007,2016-2020 by Uwe Vogt, UV Software, Berlin";
+static const char COPYRIGHT[]   = "Copyright (C) 2007,2016-2021 by Uwe Vogt, UV Software, Berlin";
 static const char WARRANTY[]    = "This program comes with ABSOLUTELY NO WARRANTY!\n\n" \
                                   "This is free software, and you are welcome to redistribute it\n" \
                                   "under certain conditions; type `--version' for details.";
@@ -944,7 +944,9 @@ static void usage(FILE *stream, const char *program)
     fprintf(stream, "     --no-remote-frames        suppress remote frames (RTR frames)\n");
     fprintf(stream, "     --no-extended-frames      suppress extended frames (29-bit identifier)\n");
     fprintf(stream, " -b, --baudrate=<baudrate>     CAN 2.0 bit timing in kbps (default=250)\n");
+#if (OPTION_CAN_2_0_ONLY == 0)
     fprintf(stream, "     --bitrate=<bit-rate>      CAN FD bit rate (as a string)\n");
+#endif
     fprintf(stream, " -v, --verbose                 show detailed bit rate settings\n");
     fprintf(stream, "Options for transmitter test:\n");
     fprintf(stream, " -t, --transmit=<time>         send messages for the given time in seconds, or\n");
@@ -960,7 +962,9 @@ static void usage(FILE *stream, const char *program)
 #endif
     fprintf(stream, "     --shared                  shared CAN controller access (when supported)\n");
     fprintf(stream, " -b, --baudrate=<baudrate>     CAN 2.0 bit timing in kbps (default=250)\n");
+#if (OPTION_CAN_2_0_ONLY == 0)
     fprintf(stream, "     --bitrate=<bit-rate>      CAN FD bit rate (as a string)\n");
+#endif
     fprintf(stream, " -v, --verbose                 show detailed bit rate settings\n");
     fprintf(stream, "Options:\n");
     fprintf(stream, " -h, --help                    display this help screen and exit\n");
