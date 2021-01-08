@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from CANAPI import *
+from CANAPI_SerialCAN import *
+import platform
 import argparse
 import signal
 import sys
@@ -9,6 +10,10 @@ import sys
 #
 def sigterm(signo, frame):
     print()
+    print('>>> can.kill()')
+    result = can.kill()
+    if result < 0:
+        print('+++ error: can.kill returned {}'.format(result))
     print('>>> can.exit()')
     result = can.exit()
     if result < 0:
@@ -18,18 +23,25 @@ def sigterm(signo, frame):
 
 
 # CAN API V3 driver library
-lib = 'libUVCANPCD.dylib'
-chn = 81
+if platform.system() == 'Darwin':
+    lib = 'libUVCANSLC.dylib'
+    com = '/dev/tty.usbserial-LW4KOZQW'
+elif platform.system() != 'Windows':
+    lib = 'libuvcanslc.so'
+    com = '/dev/ttyUSB0'
+else:
+    lib = 'u3canslc.dll'
+    com = '\\\\.\\COM4'
 
 # parse the command line
 parser = argparse.ArgumentParser()
 parser.add_argument('input', type=str, nargs='?', default=lib,
                     help='CAN API V3 driver library, default=\'' + lib + '\'')
-parser.add_argument('--channel', type=int, nargs=1, default=[chn],
-                    help='CAN interface (channel), default=' + str(chn))
+parser.add_argument('--port', type=str, nargs=1, default=[com],
+                    help='Serial port, default=' + str(com))
 args = parser.parse_args()
 lib = args.input
-chn = args.channel[0]
+com = args.port[0]
 opMode = OpMode()
 opMode.byte = CANMODE_DEFAULT
 bitRate = Bitrate()
@@ -44,9 +56,14 @@ print(CANAPI.version())
 print('>>> can = CANAPI(' + lib + ')')
 can = CANAPI(lib)
 
+# serial port settings
+port = SerialPort()
+port.name = c_char_p(com.encode('utf-8'))
+port.attr.options = CANSIO_SLCAN
+
 # initialize the CAN interface
-print('>>> can.init({}, 0x{:02X})'.format(chn, opMode.byte))
-res = can.init(channel=chn, mode=opMode)
+print('>>> can.init({}, 0x{:02X})'.format(port.name, opMode.byte))
+res = can.init(channel=CANDEV_SERIAL, mode=opMode, param=port)
 if res < CANERR_NOERROR:
     sys.exit('+++ error: can.init returned {}'.format(res))
 res, status = can.status()

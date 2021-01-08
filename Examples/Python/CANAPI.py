@@ -28,7 +28,7 @@
 
     $Author: eris $
 
-    $Rev: 922 $
+    $Rev: 923 $
 """
 from ctypes import *
 import platform
@@ -456,7 +456,12 @@ class CANAPI:
 
     def kill(self):
         """
-          Tbd.
+          signals a waiting event object of the CAN interface. This can be used to terminate a blocking operation
+          in progress (e.g. by means of a Ctrl-C handler or similar).
+
+          Some drivers are using waitable objects to realize blocking operations by a call to WaitForSingleObject
+          (Windows) or pthread_cond_wait (POSIX), but these waitable objects are no cancellation points.
+          This means that they cannot be terminated by Ctrl-C (SIGINT).
 
           :return: 0 if successful, or a negative value on error
         """
@@ -715,5 +720,5 @@ if __name__ == '__main__':
     # have a great time
     print('Bye, bye!')
 
-# * $Id: CANAPI.py 922 2021-01-05 19:27:05Z eris $ *** (C) UV Software, Berlin ***
+# * $Id: CANAPI.py 923 2021-01-08 23:19:03Z eris $ *** (C) UV Software, Berlin ***
 #

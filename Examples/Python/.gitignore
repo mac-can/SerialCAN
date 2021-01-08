@@ -1,5 +1,7 @@
 .svn
 .idea
+CANAPI_SocketCAN.py
+CANAPI_RocketCAN.py
 __pycache__
 *.pyc
 *.log
