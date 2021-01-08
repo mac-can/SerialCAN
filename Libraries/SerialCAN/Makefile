@@ -161,6 +161,7 @@ ifeq ($(current_OS),Linux)
 endif
 	@echo "Copying header files..."
 	$(CP) $(SOURCE_DIR)/SerialCAN.h $(INCLUDE)
+	$(CP) $(CANAPI_DIR)/CANAPI.h $(INCLUDE)
 	$(CP) $(CANAPI_DIR)/CANAPI_Types.h $(INCLUDE)
 	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCLUDE)
 	$(CP) $(CANAPI_DIR)/CANAPI_SerialCAN.h $(INCLUDE)
