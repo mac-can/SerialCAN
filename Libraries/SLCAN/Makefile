@@ -1,7 +1,7 @@
 #
 #	Controler Area Network - Lawicel SLCAN Protocol (Serial-Line CAN)
 #
-#	Copyright (C) 2016-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (C) 2016-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #
 #	This library is part of the SourceMedley repository.
 #
@@ -23,17 +23,24 @@ current_OS := $(patsubst CYGWIN%,Cygwin,$(current_OS))
 current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
+MAJOR = 0
+MINOR = 1
+PATCH = 0
+
 HOME_DIR = ../..
 
 SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN_Driver
 
-ifeq ($(current_OS),Darwin) # macOS - libUVCANSLC.dylib - - - - - - -
+ifeq ($(current_OS),Darwin) # macOS - libSLCAN.dylib
 
 LIBRARY = libSLCAN
 
-VERSION = 0.1
-
+VERSION = $(MAJOR).$(MINOR)
 TARGET  = $(LIBRARY).$(VERSION).dylib
+
+INSTALL_NAME = $(TARGET)
+CURRENT_VERSION = $(MAJOR).$(MINOR).0
+COMPATIBILITY_VERSION = $(MAJOR).$(MINOR).0
 
 INSTALL = /usr/local/lib
 
@@ -56,15 +63,18 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 
 LIBRARIES =
 
-LDFLAGS  += -nostartfiles -dynamiclib -fvisibility=hidden
+LDFLAGS  += -nostartfiles -dynamiclib -fvisibility=hidden \
+	-install_name $(INSTALL_NAME) \
+	-current_version $(CURRENT_VERSION) \
+	-compatibility_version $(COMPATIBILITY_VERSION)
 
 endif
 
-ifeq ($(current_OS),Linux) # linux - libuvcan300.so.1 - - - - - - - -
+ifeq ($(current_OS),Linux) # linux - libslcan.so.1
 
 LIBRARY = libslcan
 
-VERSION = 0.1
+VERSION = $(MAJOR).$(MINOR)
 
 SONAME  = $(LIBRARY).so.1
 

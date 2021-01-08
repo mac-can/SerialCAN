@@ -1,6 +1,6 @@
 ### Driver for CAN-over-Serial-Line Interfaces (SLCAN Protocol)
 
-_Copyright &copy; 2016,2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
+_Copyright &copy; 2016, 2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
 
 # CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 
@@ -59,6 +59,7 @@ public:
 
     CANAPI_Return_t InitializeChannel(int32_t channel, can_mode_t opMode, const void *param = NULL);
     CANAPI_Return_t TeardownChannel();
+    CANAPI_Return_t SignalChannel();
 
     CANAPI_Return_t StartController(CANAPI_Bitrate_t bitrate);
     CANAPI_Return_t ResetController();
@@ -94,19 +95,19 @@ private:
 
 _Important note_: To build any of the following build targets run the `build_no.sh` script to generate a pseudo build number.
 ```
-uv-pc013mac:~ eris$ cd ~/Projects/MacCAN/SerialCAN/Sources/
-uv-pc013mac:Sources eris$ ./build_no.sh
+uranus@uv-pc007linux:~$ cd ~/Projects/CAN/DRV/Drivers/SerialCAN
+uranus@uv-pc007linux:~/Projects/CAN/DRV/Drivers/SerialCAN$ ./build_no.sh
 ```
 Repeat this step after each `git commit`, `git pull`, `git clone`, etc.
 
-Then go back to root folder and compile the whole _bleep_ by typing the usual commands:
+Then you can build the whole _bleep_ by typing the usual commands:
 ```
-uv-pc013mac:Sources eris$ cd ~/Projects/MacCAN/SerialCAN
-uv-pc013mac:SerialCAN eris$ make clean
-uv-pc013mac:SerialCAN eris$ make all
-uv-pc013mac:SerialCAN eris$ sudo make install
+uranus@uv-pc007linux:~$ cd ~/Projects/CAN/DRV/Drivers/SerialCAN
+uranus@uv-pc007linux:~/Projects/CAN/DRV/Drivers/SerialCAN$ make clean
+uranus@uv-pc007linux:~/Projects/CAN/DRV/Drivers/SerialCAN$ make all
+uranus@uv-pc007linux:~/Projects/CAN/DRV/Drivers/SerialCAN$ sudo make install
 ```
-_(The version number of the libraries can be adapted by editing the `Makefile`s in the subfolders and changing the variable `VERSION` accordingly.)_
+_(The version number of the libraries can be adapted by editing the `Makefile`s in the subfolders and changing the variable `VERSION` accordingly.  Don´t forget to set the version number also in the source files.)_
 
 #### libSerialCAN
 
@@ -152,11 +153,11 @@ Windows&reg; (x64 operating systems):
 
 ### Development Environments
 
-#### macOS Catalina
+#### macOS Big Sur
 
-- macOS Catalina (10.15) on a MacBook Pro (2019)
-- Apple clang version 11.0.3 (clang-1103.0.32.62)
-- Xcode Version 11.5 (11E608c)
+- macOS Catalina (11.1) on a MacBook Pro (2019)
+- Apple clang version 12.0.0 (clang-1200.0.32.28)
+- Xcode Version 12.3 (12C33)
 
 #### macOS High Sierra
 
@@ -164,10 +165,10 @@ Windows&reg; (x64 operating systems):
 - Apple LLVM version 10.0.0 (clang-1000.11.45.5)
 - Xcode Version 10.1 (10B61)
 
-#### Debian Stretch (9.12)
+#### Debian Buster (10.7)
 
-- Debian 4.9.210-1 (2020-01-20) x86_64 GNU/Linux
-- gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+- Debian 4.19.160-2 (2020-11-18) x86_64 GNU/Linux
+- gcc (Debian 8.3.0-6) 8.3.0
 
 #### Cygwin (64-bit)
 
