@@ -806,7 +806,7 @@ EXPORT
 CANAPI_Return_t CSerialCAN::MapString2Bitrate(const char *string, CANAPI_Bitrate_t &bitrate) {
     bool brse = false;
     // TODO: rework function 'btr_string2bitrate'
-    return (CANAPI_Return_t)btr_string2bitrate((const btr_string_t)string, &bitrate, &brse);
+    return (CANAPI_Return_t)btr_string2bitrate((btr_string_t)string, &bitrate, &brse);
 }
 
 EXPORT
