@@ -1,12 +1,12 @@
-### Driver for CAN-over-Serial-Line Interfaces (SLCAN Protocol)
+### Library for CAN-over-Serial-Line Interfaces (SLCAN Protocol)
 
 _Copyright &copy; 2016, 2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
 
-# CAN API V3 Driver for CAN-over-Serial-Line Interfaces
+# CAN API V3 Library for CAN-over-Serial-Line Interfaces
 
 CAN API V3 is a wrapper specification to have a uniform CAN Interface API for various CAN interfaces from different vendors running under multiple operating systems.
 
-This repo contains the source code for a _CAN-over-Serial-Line_ driver based on
+This repo contains the source code for a _CAN-over-Serial-Line_ interfacess based on
 [Lawicel SLCAN protocol](http://www.can232.com/docs/canusb_manual.pdf).
 It provides the build environments to build dynamic libraries with GNU C/C++&reg; compilers,
 either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
