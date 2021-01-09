@@ -1,5 +1,5 @@
 __CAN Tester for CAN-over-Serial-Line Interfaces, Version 0.1.0__ \
-Copyright &copy; 2007,2016-2020 by Uwe Vogt, UV Software, Berlin
+Copyright &copy; 2007, 2016-2020 by Uwe Vogt, UV Software, Berlin
 
 ```
 Usage: can_test <interface> [<option>...]

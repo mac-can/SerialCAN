@@ -1,7 +1,7 @@
 #
 #	SerialCAN - CAN-over-Serial-Line Interfaces
 #
-#	Copyright (C) 2007,2016-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (C) 2007,2016-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #
 #	This file is part of SerialCAN.
 #
@@ -20,29 +20,30 @@
 #
 
 all:
+	@./build_no.sh
+	@echo "Building SerialCAN (build "$(shell git log -1 --pretty=format:%h)")..."
 	$(MAKE) -C Libraries/SerialCAN $@
-	@echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 	$(MAKE) -C Libraries/CANAPI $@
-	@echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 	$(MAKE) -C Libraries/SLCAN $@
-	@echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-	$(MAKE) -C Examples/can_test $@
-	@echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-	$(MAKE) -C Examples/can_moni $@
-	@echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+	$(MAKE) -C Utilities/can_test $@
+	$(MAKE) -C Utilities/can_moni $@
 	$(MAKE) -C Trial $@
 
 clean:
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
 	$(MAKE) -C Libraries/SLCAN $@
-	$(MAKE) -C Examples/can_test $@
-	$(MAKE) -C Examples/can_moni $@
+	$(MAKE) -C Utilities/can_test $@
+	$(MAKE) -C Utilities/can_moni $@
 	$(MAKE) -C Trial $@
 
 install:
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
 	$(MAKE) -C Libraries/SLCAN $@
-#	$(MAKE) -C Examples/can_test $@
-#	$(MAKE) -C Examples/can_moni $@
+#	$(MAKE) -C Utilities/can_test $@
+#	$(MAKE) -C Utilities/can_moni $@
+
+build_no:
+	@./build_no.sh
+	@cat Sources/build_no.h

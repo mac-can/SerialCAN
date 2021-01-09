@@ -33,9 +33,17 @@ int usleep(unsigned int usec);
 #endif
 #define LOG_FILE  "./slcan.log"
 
+#define OPTION_NO   (0)
+#define OPTION_YES  (1)
+
+#define OPTION_TIME_DRIVER  (0)
+#define OPTION_TIME_ZERO    (1)
+#define OPTION_TIME_ABS     (2)
+#define OPTION_TIME_REL     (3)
+
 static void sigterm(int signo);
 
-static void verbose(const can_bitrate_t *bitrate, const can_speed_t *speed);
+static void verbose(const can_mode_t mode, const can_bitrate_t bitrate, const can_speed_t speed);
 
 static volatile int running = 1;
 
@@ -75,12 +83,13 @@ int main(int argc, const char * argv[]) {
     uint8_t u8Val;
     int32_t i32Val;
     int frames = 0;
-    int option_log = 0;
-    int option_info = 0;
-    int option_test = 0;
-    int option_stop = 0;
-    int option_repeat = 0;
-    int option_transmit = 0;
+    int option_log = OPTION_NO;
+    int option_info = OPTION_NO;
+    int option_test = OPTION_NO;
+    int option_stop = OPTION_NO;
+    int option_echo = OPTION_YES;
+    int option_repeat = OPTION_NO;
+    int option_transmit = OPTION_NO;
 
     for (int i = 1, opt = 0; i < argc; i++) {
         /* serial port number */
@@ -110,11 +119,20 @@ int main(int argc, const char * argv[]) {
         if (!strncmp(argv[i], "C:", 2) && sscanf(argv[i], "C:%i", &opt) == 1) delay = (unsigned int)opt * 1000U;
         if (!strncmp(argv[i], "U:", 2) && sscanf(argv[i], "U:%i", &opt) == 1) delay = (unsigned int)opt;
         /* receive messages */
-        if (!strcmp(argv[i], "STOP")) option_stop = 1;
-        if (!strcmp(argv[i], "REPEAT")) option_repeat = 1;
+        if (!strcmp(argv[i], "STOP")) option_stop = OPTION_YES;
+//        if (!strcmp(argv[i], "IGNORE")) option_check = OPTION_NO;
+        if (!strcmp(argv[i], "REPEAT")) option_repeat = OPTION_YES;
+        if (!strcmp(argv[i], "SILENT")) option_echo = OPTION_NO;
+        /* time-stamps */
+//        if (!strcmp(argv[i], "ZERO")) option_time = OPTION_TIME_ZERO;
+//        if (!strcmp(argv[i], "ABS") || !strcmp(argv[i], "ABSOLUTE")) option_time = OPTION_TIME_ABS;
+//        if (!strcmp(argv[i], "REL") || !strcmp(argv[i], "RELATIVE")) option_time = OPTION_TIME_REL;
+        /* logging and debugging */
+//        if (!strcmp(argv[i], "TRACE")) option_trace = OPTION_YES;
+        if (!strcmp(argv[i], "LOG")) option_log = OPTION_YES;
         /* query some informations: hw, sw, etc. */
-        if (!strcmp(argv[i], "INFO")) option_info = 1;
-        if (!strcmp(argv[i], "TEST")) option_test = 1;
+        if (!strcmp(argv[i], "INFO")) option_info = OPTION_YES;
+        if (!strcmp(argv[i], "TEST")) option_test = OPTION_YES;
         /* additional operation modes */
         if (!strcmp(argv[i], "SHARED")) opMode.shrd = 1;
         if (!strcmp(argv[i], "MONITOR")) opMode.mon = 1;
@@ -122,11 +140,6 @@ int main(int argc, const char * argv[]) {
         if (!strcmp(argv[i], "ERR:ON")) opMode.err = 1;
         if (!strcmp(argv[i], "XTD:OFF")) opMode.nxtd = 1;
         if (!strcmp(argv[i], "RTR:OFF")) opMode.nrtr = 1;
-        /* logging and data recording */
-        if(!strcmp(argv[i], "LOG")) option_log = 1;
-#if (0)
-        if(!strcmp(argv[i], "TRACE")) option_trace = 1;
-#endif
     }
     (void)channel;
     (void)option_stop;
@@ -145,130 +158,130 @@ int main(int argc, const char * argv[]) {
     if (option_info) {
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_CANAPI, (void *)&u16Val, sizeof(uint16_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_CANAPI): value = %u.%u\n", (uint8_t)(u16Val >> 8), (uint8_t)u16Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_CANAPI): value = %u.%u\n", (uint8_t)(u16Val >> 8), (uint8_t)u16Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_CANAPI) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_CANAPI) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_VERSION, (void *)&u16Val, sizeof(uint16_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_VERSION): value = %u.%u\n", (uint8_t)(u16Val >> 8), (uint8_t)u16Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_VERSION): value = %u.%u\n", (uint8_t)(u16Val >> 8), (uint8_t)u16Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_VERSION) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_VERSION) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_PATCH_NO, (void *)&u8Val, sizeof(uint8_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_PATCH_NO): value = %u\n", (uint8_t)u8Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_PATCH_NO): value = %u\n", (uint8_t)u8Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_PATCH_NO) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_PATCH_NO) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_BUILD_NO, (void *)&u32Val, sizeof(uint32_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_BUILD_NO): value = %" PRIx32 "\n", (uint32_t)u32Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_BUILD_NO): value = %" PRIx32 "\n", (uint32_t)u32Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_BUILD_NO) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_BUILD_NO) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_ID, (void *)&i32Val, sizeof(int32_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_ID): value = %d\n", i32Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_ID): value = %d\n", i32Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_ID) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_ID) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_NAME, (void *)szVal, CANPROP_MAX_BUFFER_SIZE);
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_NAME): value = '%s'\n", szVal);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_NAME): value = '%s'\n", szVal);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_NAME) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_NAME) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_VENDOR, (void *)szVal, CANPROP_MAX_BUFFER_SIZE);
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_VENDOR): value = '%s'\n", szVal);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_VENDOR): value = '%s'\n", szVal);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_VENDOR) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_LIBRARY_VENDOR) returned %i\n", retVal);
     }
     if (option_test) {
         for (int32_t ch = 0; ch < 8; ch++) {
             retVal = CSerialCAN::ProbeChannel(ch, opMode, state);
-            fprintf(stdout, ">>> SerialCAN.ProbeChannel(%i): state = %s", ch,
+            fprintf(stdout, ">>> mySerialCAN.ProbeChannel(%i): state = %s", ch,
                             (state == CSerialCAN::ChannelOccupied) ? "occupied" :
                             (state == CSerialCAN::ChannelAvailable) ? "available" :
                             (state == CSerialCAN::ChannelNotAvailable) ? "not available" : "not testable");
-            fprintf(stdout, "%s", (retVal != CSerialCAN::NoError) ? " (waring: Op.-Mode not supported)\n" : "\n");
+            fprintf(stdout, "%s", (retVal == CSerialCAN::IllegalParameter) ? " (waring: Op.-Mode not supported)\n" : "\n");
         }
     }
     retVal = mySerialCAN.InitializeChannel(SERIAL_PORT, opMode);
     if (retVal != CSerialCAN::NoError) {
-        fprintf(stderr, "+++ error: SerialCAN.InitializeChannel(%s) returned %i\n", SERIAL_PORT, retVal);
+        fprintf(stderr, "+++ error: mySerialCAN.InitializeChannel(%s) returned %i\n", SERIAL_PORT, retVal);
         goto end;
     }
     else if (mySerialCAN.GetStatus(status) == CSerialCAN::NoError) {
-        fprintf(stdout, ">>> SerialCAN.InitializeChannel(%s): status = 0x%02X\n", SERIAL_PORT, status.byte);
+        fprintf(stdout, ">>> mySerialCAN.InitializeChannel(%s): status = 0x%02X\n", SERIAL_PORT, status.byte);
     }
     if (option_test) {
         retVal = mySerialCAN.ProbeChannel(SERIAL_PORT, opMode, state);
-        fprintf(stdout, ">>> SerialCAN.ProbeChannel(%s): state = %s", SERIAL_PORT,
+        fprintf(stdout, ">>> mySerialCAN.ProbeChannel(%s): state = %s", SERIAL_PORT,
                         (state == CSerialCAN::ChannelOccupied) ? "now occupied" :
                         (state == CSerialCAN::ChannelAvailable) ? "available" :
                         (state == CSerialCAN::ChannelNotAvailable) ? "not available" : "not testable");
-        fprintf(stdout, "%s", (retVal != CSerialCAN::NoError) ? " (waring: Op.-Mode not supported)\n" : "\n");
+        fprintf(stdout, "%s", (retVal == CSerialCAN::IllegalParameter) ? " (waring: Op.-Mode not supported)\n" : "\n");
     }
     if (option_info) {
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_TYPE, (void *)&i32Val, sizeof(int32_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_TYPE): value = %d\n", i32Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_TYPE): value = %d\n", i32Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_TYPE) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_TYPE) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_NAME, (void *)szVal, CANPROP_MAX_BUFFER_SIZE);
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_NAME): value = '%s'\n", szVal);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_NAME): value = '%s'\n", szVal);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_NAME) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_NAME) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_VENDOR, (void *)szVal, CANPROP_MAX_BUFFER_SIZE);
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_VENDOR): value = '%s'\n", szVal);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_VENDOR): value = '%s'\n", szVal);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_VENDOR) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_VENDOR) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_DLLNAME, (void *)szVal, CANPROP_MAX_BUFFER_SIZE);
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_DLLNAME): value = '%s'\n", szVal);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_DLLNAME): value = '%s'\n", szVal);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_DLLNAME) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_DLLNAME) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_PARAM, (void *)&param, sizeof(can_sio_param_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_PARAM): value = '%s:%u,%u-%c-%u'\n", param.name,
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_PARAM): value = '%s:%u,%u-%c-%u'\n", param.name,
                     param.attr.baudrate, param.attr.bytesize, param.attr.parity == 0 ? 'N' : 'X', param.attr.stopbits);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_PARAM) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_PARAM) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_SERIAL_NUMBER, (void *)&u32Val, sizeof(uint32_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_SERIAL_NUMBER): value = '%X'\n", u32Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_SERIAL_NUMBER): value = '%X'\n", u32Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_SERIAL_NUMBER) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_SERIAL_NUMBER) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_CLOCK_DOMAIN, (void *)&i32Val, sizeof(int32_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_CLOCK_DOMAIN): value = %d\n", i32Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_CLOCK_DOMAIN): value = %d\n", i32Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_CLOCK_DOMAIN) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_CLOCK_DOMAIN) returned %i\n", retVal);
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_OP_CAPABILITY, (void *)&u8Val, sizeof(uint8_t));
         if (retVal == CSerialCAN::NoError)
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_OP_CAPABILITY): value = 0x%02X\n", (uint8_t)u8Val);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_OP_CAPABILITY): value = 0x%02X\n", (uint8_t)u8Val);
         else
-            fprintf(stderr, "+++ error: SerialCAN.GetProperty(SERIALCAN_PROPERTY_OP_CAPABILITY) returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.GetProperty(SERIALCAN_PROPERTY_OP_CAPABILITY) returned %i\n", retVal);
         if (mySerialCAN.GetProperty(SERIALCAN_PROPERTY_OP_MODE, (void *)&opMode.byte, sizeof(uint8_t)) == CSerialCAN::NoError)
             fprintf(stdout, ">>> Op.-Mode: 0x%02X\n", (uint8_t)opMode.byte);
     }
     retVal = mySerialCAN.StartController(bitrate);
     if (retVal != CSerialCAN::NoError) {
-        fprintf(stderr, "+++ error: SerialCAN.StartController returned %i\n", retVal);
+        fprintf(stderr, "+++ error: mySerialCAN.StartController returned %i\n", retVal);
         goto teardown;
     }
     else if (mySerialCAN.GetStatus(status) == CSerialCAN::NoError) {
-        fprintf(stdout, ">>> SerialCAN.StartController: status = 0x%02X\n", status.byte);
+        fprintf(stdout, ">>> mySerialCAN.StartController: status = 0x%02X\n", status.byte);
     }
     if (option_info) {
         CANAPI_BusSpeed_t speed;
         if ((mySerialCAN.GetBitrate(bitrate) == CSerialCAN::NoError) &&
             (mySerialCAN.GetBusSpeed(speed) == CSerialCAN::NoError))
-            verbose(&bitrate, &speed);
+            verbose(opMode, bitrate, speed);
     }
     fprintf(stdout, "Press Ctrl+C to abort...\n");
     while (running && (option_transmit-- > 0)) {
         retVal = mySerialCAN.WriteMessage(message);
         if (retVal != CSerialCAN::NoError) {
-            fprintf(stderr, "+++ error: SerialCAN.WriteMessage returned %i\n", retVal);
+            fprintf(stderr, "+++ error: mySerialCAN.WriteMessage returned %i\n", retVal);
             goto teardown;
         }
         if (delay)
@@ -276,51 +289,58 @@ int main(int argc, const char * argv[]) {
     }
     while (running) {
         if ((retVal = mySerialCAN.ReadMessage(message, timeout)) == CSerialCAN::NoError) {
-            fprintf(stdout, "%i\t%7li.%04li\t%03x\t%c%c [%i]", frames++,
-                             (long)message.timestamp.tv_sec, message.timestamp.tv_nsec / 100000,
-                             message.id, message.xtd? 'X' : 'S', message.rtr? 'R' : ' ', message.dlc);
-            if (!message.rtr)  // normal frame
-                for (int i = 0; i < message.dlc; i++)
-                    fprintf(stdout, " %02x", message.data[i]);
-            if (message.sts)   // status frame
-                fprintf(stdout, " <<< status frame");
-            else if (option_repeat) {
-                retVal = mySerialCAN.WriteMessage(message);
-                if (retVal != CSerialCAN::NoError) {
-                    fprintf(stderr, "+++ error: SerialCAN.WriteMessage returned %i\n", retVal);
-                    goto teardown;
+            if (option_echo) {
+                fprintf(stdout, "%i\t%7li.%04li\t%03x\t%c%c [%i]", frames++,
+                                 (long)message.timestamp.tv_sec, message.timestamp.tv_nsec / 100000,
+                                 message.id, message.xtd? 'X' : 'S', message.rtr? 'R' : ' ', message.dlc);
+                if (!message.rtr)  // normal frame
+                    for (int i = 0; i < message.dlc; i++)
+                        fprintf(stdout, " %02x", message.data[i]);
+                if (message.sts)   // status frame
+                    fprintf(stdout, " <<< status frame");
+                else if (option_repeat) {
+                    retVal = mySerialCAN.WriteMessage(message);
+                    if (retVal != CSerialCAN::NoError) {
+                        fprintf(stderr, "+++ error: mySerialCAN.WriteMessage returned %i\n", retVal);
+                        goto teardown;
+                    }
+                }
+                fprintf(stdout, "\n");
+            } else {
+                if(!(frames++ % 2048)) {
+                    fprintf(stdout, ".");
+                    fflush(stdout);
                 }
             }
-            fprintf(stdout, "\n");
         }
         else if (retVal != CSerialCAN::ReceiverEmpty) {
             running = 0;
         }
     }
     if (mySerialCAN.GetStatus(status) == CSerialCAN::NoError) {
-        fprintf(stdout, "\n>>> SerialCAN.ReadMessage: status = 0x%02X\n", status.byte);
+        fprintf(stdout, "\n>>> mySerialCAN.ReadMessage: status = 0x%02X\n", status.byte);
     }
     if (option_info) {
         uint64_t u64TxCnt, u64RxCnt, u64ErrCnt;
         if ((mySerialCAN.GetProperty(SERIALCAN_PROPERTY_TX_COUNTER, (void *)&u64TxCnt, sizeof(uint64_t)) == CSerialCAN::NoError) &&
             (mySerialCAN.GetProperty(SERIALCAN_PROPERTY_RX_COUNTER, (void *)&u64RxCnt, sizeof(uint64_t)) == CSerialCAN::NoError) &&
             (mySerialCAN.GetProperty(SERIALCAN_PROPERTY_ERR_COUNTER, (void *)&u64ErrCnt, sizeof(uint64_t)) == CSerialCAN::NoError))
-            fprintf(stdout, ">>> SerialCAN.GetProperty(SERIALCAN_PROPERTY_*_COUNTER): TX = %" PRIi64 " RX = %" PRIi64 " ERR = %" PRIi64 "\n", u64TxCnt, u64RxCnt, u64ErrCnt);
+            fprintf(stdout, ">>> mySerialCAN.GetProperty(SERIALCAN_PROPERTY_*_COUNTER): TX = %" PRIi64 " RX = %" PRIi64 " ERR = %" PRIi64 "\n", u64TxCnt, u64RxCnt, u64ErrCnt);
         char *hardware = mySerialCAN.GetHardwareVersion();
         if (hardware)
-            fprintf(stdout, ">>> SerialCAN.GetHardwareVersion: '%s'\n", hardware);
+            fprintf(stdout, ">>> mySerialCAN.GetHardwareVersion: '%s'\n", hardware);
         char *firmware = mySerialCAN.GetFirmwareVersion();
         if (firmware)
-            fprintf(stdout, ">>> SerialCAN.GetFirmwareVersion: '%s'\n", firmware);
+            fprintf(stdout, ">>> mySerialCAN.GetFirmwareVersion: '%s'\n", firmware);
     }
 teardown:
     retVal = mySerialCAN.TeardownChannel();
     if (retVal != CSerialCAN::NoError) {
-        fprintf(stderr, "+++ error: SerialCAN.TeardownChannel returned %i\n", retVal);
+        fprintf(stderr, "+++ error: mySerialCAN.TeardownChannel returned %i\n", retVal);
         goto end;
     }
     else if (mySerialCAN.GetStatus(status) == CSerialCAN::NoError) {
-        fprintf(stdout, ">>> SerialCAN.TeardownChannel: status = 0x%02X\n", status.byte);
+        fprintf(stdout, ">>> mySerialCAN.TeardownChannel: status = 0x%02X\n", status.byte);
     }
     else {
         fprintf(stdout, "@@@ Resistance is futile!\n");
@@ -332,43 +352,51 @@ end:
     return retVal;
 }
 
-static void verbose(const can_bitrate_t *bitrate, const can_speed_t *speed)
+static void verbose(const can_mode_t mode, const can_bitrate_t bitrate, const can_speed_t speed)
 {
-   if (bitrate->btr.frequency > 0) {
-       fprintf(stdout, ">>> Bit-rate: %.0fkbps@%.1f%%",
-           speed->nominal.speed / 1000., speed->nominal.samplepoint * 100.);
 #if (OPTION_CAN_2_0_ONLY == 0)
-       if (speed->data.brse)
+    fprintf(stdout, "Op.-Mode: 0x%02X (fdoe=%u,brse=%u,niso=%u,shrd=%u,nxtd=%u,nrtr=%u,err=%u,mon=%u)\n",
+            mode.byte, mode.fdoe, mode.brse, mode.niso, mode.shrd, mode.nxtd, mode.nrtr, mode.err, mode.mon);
+#else
+    fprintf(stdout, "Op.-Mode: 0x%02X (shrd=%u,nxtd=%u,nrtr=%u,err=%u,mon=%u)\n",
+            mode.byte, mode.shrd, mode.nxtd, mode.nrtr, mode.err, mode.mon);
+#endif
+   if (bitrate.btr.frequency > 0) {
+        fprintf(stdout, "Baudrate: %.0fkbps@%.1f%%",
+           speed.nominal.speed / 1000., speed.nominal.samplepoint * 100.);
+#if (OPTION_CAN_2_0_ONLY == 0)
+        if(/*speed.data.brse*/mode.fdoe && mode.brse)
            fprintf(stdout, ":%.0fkbps@%.1f%%",
-               speed->data.speed / 1000., speed->data.samplepoint * 100.);
+               speed.data.speed / 1000., speed.data.samplepoint * 100.);
 #endif
        fprintf(stdout, " (f_clock=%i,nom_brp=%u,nom_tseg1=%u,nom_tseg2=%u,nom_sjw=%u,nom_sam=%u",
-           bitrate->btr.frequency,
-           bitrate->btr.nominal.brp,
-           bitrate->btr.nominal.tseg1,
-           bitrate->btr.nominal.tseg2,
-           bitrate->btr.nominal.sjw,
-           bitrate->btr.nominal.sam);
+           bitrate.btr.frequency,
+           bitrate.btr.nominal.brp,
+           bitrate.btr.nominal.tseg1,
+           bitrate.btr.nominal.tseg2,
+           bitrate.btr.nominal.sjw,
+           bitrate.btr.nominal.sam);
 #if (OPTION_CAN_2_0_ONLY == 0)
-       if (speed->data.brse)
+        if(mode.fdoe && mode.brse)
            fprintf(stdout, ",data_brp=%u,data_tseg1=%u,data_tseg2=%u,data_sjw=%u",
-               bitrate->btr.data.brp,
-               bitrate->btr.data.tseg1,
-               bitrate->btr.data.tseg2,
-               bitrate->btr.data.sjw);
+               bitrate.btr.data.brp,
+               bitrate.btr.data.tseg1,
+               bitrate.btr.data.tseg2,
+               bitrate.btr.data.sjw);
 #endif
        fprintf(stdout, ")\n");
-   } else {
-       fprintf(stdout, ">>> Bit-rate: %skbps (bit-timing index %i)\n",
-           bitrate->index == CANBDR_1000 ? "1000" :
-           bitrate->index == -CANBDR_800 ? "800" :
-           bitrate->index == -CANBDR_500 ? "500" :
-           bitrate->index == -CANBDR_250 ? "250" :
-           bitrate->index == -CANBDR_125 ? "125" :
-           bitrate->index == -CANBDR_100 ? "100" :
-           bitrate->index == -CANBDR_50 ? "50" :
-           bitrate->index == -CANBDR_20 ? "20" :
-           bitrate->index == -CANBDR_10 ? "10" : "?", -bitrate->index);
+    }
+    else {
+        fprintf(stdout, "Baudrate: %skbps (CiA index %i)\n",
+           bitrate.index == CANBDR_1000 ? "1000" :
+           bitrate.index == -CANBDR_800 ? "800" :
+           bitrate.index == -CANBDR_500 ? "500" :
+           bitrate.index == -CANBDR_250 ? "250" :
+           bitrate.index == -CANBDR_125 ? "125" :
+           bitrate.index == -CANBDR_100 ? "100" :
+           bitrate.index == -CANBDR_50 ? "50" :
+           bitrate.index == -CANBDR_20 ? "20" :
+           bitrate.index == -CANBDR_10 ? "10" : "?", -bitrate.index);
    }
 }
 

@@ -1,7 +1,7 @@
 /*
  *  CAN Interface API, Version 3 (CAN-over-Serial-Line)
  *
- *  Copyright (C) 2004-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (C) 2004-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *
  *  This file is part of CAN API V3.
  *
@@ -18,7 +18,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
  */
-/** @file        CANAPI_Defines.h
+/** @file        CANAPI_Serial.h
  *
  *  @brief       CAN API V3 for generic CAN Interfaces - CAN-over-Serial-Line
  *
@@ -57,7 +57,7 @@ extern "C" {
 /** @} */
 
 /** @name  Data size option
- *  @brief Number fo data bits (5, 6, 7, 8)
+ *  @brief Number of data bits (5, 6, 7, 8)
  *  @{ */
 #define CANSIO_5DATABITS        5U      /**< 5 bits per data byte */
 #define CANSIO_6DATABITS        6U      /**< 6 bits per data byte */
