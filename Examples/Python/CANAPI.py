@@ -26,9 +26,9 @@
     Interface API for various CAN interfaces from different
     vendors running under multiple operating systems.
 
-    $Author: eris $
+    $Author: haumea $
 
-    $Rev: 923 $
+    $Rev: 924 $
 """
 from ctypes import *
 import platform
@@ -372,10 +372,7 @@ class CANAPI:
         # constructor: loads the given CAN API V3 driver library
         #
         try:
-            if platform.system() == 'Windows':
-                self.__m_dllBasic = windll.LoadLibrary(library)
-            else:
-                self.__m_library = cdll.LoadLibrary(library)
+            self.__m_library = cdll.LoadLibrary(library)
         except Exception as e:
             print('+++ exception: {}'.format(e))
             raise
@@ -640,7 +637,15 @@ if __name__ == '__main__':
     #
     # Simple testing of the wrapper
     #
-    lib = 'libUVCANPCD.dylib'
+    if platform.system() == 'Darwin':
+        # macOS dynamic library
+        lib = 'libUVCANPCB.dylib'
+    elif platform.system() != 'Windows':
+        # shared object library
+        lib = 'libuvcansoc.so.1'
+    else:
+        # Windows DLL
+        lib = 'u3canpcb.dll'
     chn = 81
 
     # parse the command line
@@ -720,5 +725,5 @@ if __name__ == '__main__':
     # have a great time
     print('Bye, bye!')
 
-# * $Id: CANAPI.py 923 2021-01-08 23:19:03Z eris $ *** (C) UV Software, Berlin ***
+# * $Id: CANAPI.py 924 2021-01-09 15:54:05Z haumea $ *** (C) UV Software, Berlin ***
 #
