@@ -79,7 +79,7 @@ LDFLAGS  += -nostartfiles -dynamiclib -fvisibility=hidden \
 
 endif
 
-ifeq ($(current_OS),Linux) # linux - libuvcan300.so.1
+ifeq ($(current_OS),Linux) # linux - libuvcanslc.so.1
 
 LIBRARY = libuvcanslc
 

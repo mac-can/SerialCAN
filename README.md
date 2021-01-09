@@ -11,7 +11,7 @@ This repo contains the source code for a _CAN-over-Serial-Line_ driver based on
 It provides the build environments to build dynamic libraries with GNU C/C++&reg; compilers,
 either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
 or as a _CAN API V3_ driver library ([_libUVCANSLC_](#libUVCANSLC)),
-as well as some C/C++ example programs ([`can_moni`](can_moni-for-serialcan) and [`can_test`](can_test-for-serialcan)).
+as well as some C/C++ example programs and the utilities [`can_moni`](can_moni-for-serialcan) and [`can_test`](can_test-for-serialcan).
 
 ## SerialCAN API
 
@@ -198,8 +198,10 @@ Windows&reg; (x64 operating systems):
 5. Findings from Code Analysis:
    The companion module `can_btr.c` contains some dead stores.
 
-6. No libraries are build under Cygwin; only the example programs
+6. No libraries are build under Cygwin; only the utilities
    [`can_moni`](can_moni-for-serialcan) and [`can_test`](can_test-for-serialcan).
+
+7. The Phython examples didn't catch Ctrl-C on Linux.
 
 ## This and That
 
