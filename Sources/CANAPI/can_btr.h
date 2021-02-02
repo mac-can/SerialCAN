@@ -22,9 +22,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces (Bit-rate Conversion)
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 915 $
+ *  @version     $Rev: 980 $
  *
  *  @defgroup    can_btr CAN Bit-rate Conversion
  *  @{
@@ -58,8 +58,12 @@ extern "C" {
  *         compile with supported PCANBasic frequencies only (e.g. in the
  *         build environment).
  */
-/*#define CANBTR_PEAK_FREQUENCIES       // use only supported PCANBasic frequencies */
-
+/** @note  Set define OPTION_CAN_2_0_ONLY to a non-zero value to compile
+ *         with CAN 2.0 frame format only (e.g. in the build environment).
+ */
+ #if (OPTION_CAN_2_0_ONLY != 0)
+ #warning Compilation with with legacy CAN 2.0 frame format!
+ #endif
 
 /*  -----------  defines  ------------------------------------------------
  */

@@ -28,9 +28,9 @@
  *               |  SJW  |          BRP          |SAM|   TSEG2   |     TSEG1     |<br>
  *               +-7-+-6-+-5-+---+---+---+---+-0-+-7-+-6-+---+-4-+-3-+---+---+-0-+<br>
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 915 $
+ *  @version     $Rev: 951 $
  *
  *  @addtogroup  can_btr
  *  @{

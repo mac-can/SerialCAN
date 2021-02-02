@@ -1,32 +1,23 @@
 //
 //  CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)
 //
-//  Copyright (C) 2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (C) 2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This file is part of SerialCAN.
 //
 //  SerialCAN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
+//  it under the terms of the GNU Lesser General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 //
 //  SerialCAN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
 //
-#include "can_api.h"
-
-#include "CANAPI.h"
-#include "SerialCAN.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-
 #include "build_no.h"
 #define VERSION_MAJOR    0
 #define VERSION_MINOR    1
@@ -46,11 +37,17 @@
 #else
 #error Unsupported architecture
 #endif
-#ifdef _DEBUG
-    static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING " (" PLATFORM ") _DEBUG";
-#else
-    static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING " (" PLATFORM ")";
-#endif
+static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
+
+#include "can_defs.h"
+#include "can_api.h"
+
+#include "CANAPI.h"
+#include "SerialCAN.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
 
 #if (OPTION_CANAPI_SERIALCAN_DYLIB != 0)
 __attribute__((constructor))

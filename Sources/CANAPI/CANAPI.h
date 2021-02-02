@@ -34,9 +34,21 @@
 /// \remarks     Additionally the class CCANAPI provides static methods for
 ///              bit-rate conversion using CiA bit-timing indexes as a base.
 //
-/// \author      $Author: eris $
+/// \note        Set define OPTION_CANAPI_LIBRARY to a non-zero value to compile
+///              the master loader library (e.g. in the build environment). Or
+///              optionally set define OPTION_CANAPI_DRIVER to a non-zero value
+///              to compile a driver/wrapper library.
 //
-/// \version     $Rev: 918 $
+/// \note        Set define OPTION_CANCPP_DLLEXPORT to a non-zero value to compile
+///              as a dynamic link library (e.g. in the build environment).
+///              In your project set define OPTION_CANCPP_DLLIMPORT to a non-zero
+///              value to load the dynamic link library at run-time. Or set it to
+///              zero to compile your program with the CAN API source files or to
+///              link your program with the static library at compile-time.
+///
+/// \author      $Author: haumea $
+//
+/// \version     $Rev: 980 $
 //
 /// \defgroup    can_api CAN Interface API, Version 3
 /// \{
@@ -46,6 +58,22 @@
 
 #include "CANAPI_Defines.h"
 #include "CANAPI_Types.h"
+
+#if (CAN_API_SPEC != 0x300)
+#error Requires version 3.0 of CANAPI_Types.h
+#endif
+#if (OPTION_CANAPI_LIBRARY == 0)
+#if  (OPTION_CANAPI_DRIVER == 0)
+#define OPTION_CANAPI_DRIVER  1
+#endif
+#endif
+#if (OPTION_CANCPP_DLLEXPORT != 0)
+#define CANCPP  __declspec(dllexport)
+#elif (OPTION_CANCPP_DLLIMPORT != 0)
+#define CANCPP  __declspec(dllimport)
+#else
+#define CANCPP
+#endif
 
 /// \name   Aliases
 /// \brief  CAN API V3 Data-types.
@@ -87,7 +115,7 @@ typedef int CANAPI_Return_t;
 /// \name   CAN API V3
 /// \brief  An abstract class for CAN API V3 campatible CAN driver implementations.
 /// \{
-class CCANAPI {
+class CANCPP CCANAPI {
 public:
     /// \brief  CAN channel states
     enum EChannelState {
@@ -109,7 +137,9 @@ public:
         ReceiverEmpty = CANERR_RX_EMPTY,  ///< receiver empty
         ErrorFrame = CANERR_ERR_FRAME,  ///< error frame
         Timeout = CANERR_TIMEOUT,  ///< timed out
+        ResourceError = CANERR_RESOURCE,  ///< resource allocation
         InvalidBaudrate = CANERR_BAUDRATE,  ///<  illegal baudrate
+        InvalidHandle = CANERR_HANDLE,  ///<  illegal handle
         IllegalParameter = CANERR_ILLPARA,  ///< illegal parameter
         NullPointer = CANERR_NULLPTR,  ///< null-pointer assignment
         NotInitialized = CANERR_NOTINIT,  ///< not initialized
@@ -119,12 +149,14 @@ public:
         VendorSpecific = CANERR_VENDOR  ///< offset for vendor-specific error code
     };
     /// \brief       probes if the CAN interface (hardware and driver) given by
-    ///              the argument 'channel' is present, and if the requested
-    ///              operation mode is supported by the CAN controller.
+    ///              the argument [ 'library' and ] 'channel' is present,
+    ///              and if the requested operation mode is supported by the
+    ///              CAN controller.
     //
     /// \note        When a requested operation mode is not supported by the
     ///              CAN controller, error CANERR_ILLPARA will be returned.
     //
+    /// \param[in]   library - library id of the CAN interface
     /// \param[in]   channel - channel number of the CAN interface
     /// \param[in]   opMode  - operation mode to be checked
     /// \param[in]   param   - pointer to channel-specific parameters
@@ -135,14 +167,20 @@ public:
     //
     /// \returns     0 if successful, or a negative value on error.
     //
+#if (OPTION_CANAPI_LIBRARY != 0)
+    static CANAPI_Return_t ProbeChannel(int32_t library, int32_t channel, CANAPI_OpMode_t opMode, const void *param, EChannelState &state);
+    static CANAPI_Return_t ProbeChannel(int32_t library, int32_t channel, CANAPI_OpMode_t opMode, EChannelState &state);
+#else
     static CANAPI_Return_t ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode, const void *param, EChannelState &state);
     static CANAPI_Return_t ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode, EChannelState &state);
+#endif
 
     /// \brief       initializes the CAN interface (hardware and driver) given by
-    ///              the argument 'channel'.
+    ///              the argument [ 'library' and ] 'channel'.
     ///              The operation state of the CAN controller is set to 'stopped';
     ///              no communication is possible in this state.
     //
+    /// \param[in]   library - library id of the CAN interface
     /// \param[in]   channel - channel number of the CAN interface
     /// \param[in]   opMode  - operation mode of the CAN controller
     /// \param[in]   param   - pointer to channel-specific parameters
@@ -150,7 +188,11 @@ public:
     /// \returns     handle of the CAN interface if successful,
     ///              or a negative value on error.
     //
+#if (OPTION_CANAPI_LIBRARY != 0)
+    virtual CANAPI_Return_t InitializeChannel(int32_t library, int32_t channel, CANAPI_OpMode_t opMode, const void *param = NULL) = 0;
+#else
     virtual CANAPI_Return_t InitializeChannel(int32_t channel, CANAPI_OpMode_t opMode, const void *param = NULL) = 0;
+#endif
 
     /// \brief       stops any operation of the CAN interface and sets the operation
     ///              state of the CAN controller to 'stopped'.
@@ -260,21 +302,21 @@ public:
     //
     /// \param[in]   param    - property id to be read
     /// \param[out]  value    - pointer to a buffer for the value to be read
-    /// \param[in]   nbytes   - size of the given buffer in bytes
+    /// \param[in]   nbyte   -  size of the given buffer in byte
     //
     /// \returns     0 if successful, or a negative value on error.
     //
-    virtual CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbytes) = 0;
+    virtual CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbyte) = 0;
 
     /// \brief       modifies a property value of the CAN interface.
     //
     /// \param[in]   param    - property id to be written
     /// \param[in]   value    - pointer to a buffer with the value to be written
-    /// \param[in]   nbytes   - size of the given buffer in bytes
+    /// \param[in]   nbyte   -  size of the given buffer in byte
     //
     /// \returns     0 if successful, or a negative value on error.
     //
-    virtual CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbytes) = 0;
+    virtual CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbyte) = 0;
 
     /// \brief       retrieves the hardware version of the CAN controller
     ///              board as a zero-terminated string.
@@ -307,8 +349,38 @@ public:
     static CANAPI_Return_t MapBitrate2String(CANAPI_Bitrate_t bitrate, char *string, size_t length);
     static CANAPI_Return_t MapBitrate2Speed(CANAPI_Bitrate_t bitrate, CANAPI_BusSpeed_t &speed);
 /// \}
+
+/// \name   CAN FD Data Length Code
+/// \brief  Methods for DLC conversion.
+/// \{
+public:
+    static uint8_t DLc2Len(uint8_t dlc) {
+        const static uint8_t dlc_table[16] = {
+#if (OPTION_CAN_2_0_ONLY == 0)
+            0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U
+#else
+            0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 8U, 8U, 8U, 8U, 8U, 8U, 8U
+#endif
+        };
+        return dlc_table[dlc & 0xFU];
+    }
+    static uint8_t Len2Dlc(uint8_t len) {
+#if (OPTION_CAN_2_0_ONLY == 0)
+        if(len > 48U) return 0x0FU;
+        if(len > 32U) return 0x0EU;
+        if(len > 24U) return 0x0DU;
+        if(len > 20U) return 0x0CU;
+        if(len > 16U) return 0x0BU;
+        if(len > 12U) return 0x0AU;
+        if(len > 8U) return 0x09U;
+#else
+        if(len > 8U) return 0x08U;
+#endif
+    return len;
+    }
+/// \}
 };
 /// \}
 #endif // CANAPI_H_INCLUDED
 /// \}
-// $Id: CANAPI.h 918 2021-01-04 20:34:30Z eris $  Copyright (C) UV Software //
+// $Id: CANAPI.h 980 2021-01-27 10:15:44Z haumea $  Copyright (C) UV Software //
