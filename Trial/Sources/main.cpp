@@ -199,7 +199,7 @@ int main(int argc, const char * argv[]) {
                             (state == CSerialCAN::ChannelOccupied) ? "occupied" :
                             (state == CSerialCAN::ChannelAvailable) ? "available" :
                             (state == CSerialCAN::ChannelNotAvailable) ? "not available" : "not testable");
-            fprintf(stdout, "%s", (retVal == CSerialCAN::IllegalParameter) ? " (waring: Op.-Mode not supported)\n" : "\n");
+            fprintf(stdout, "%s", (retVal == CSerialCAN::IllegalParameter) ? " (warning: Op.-Mode not supported)\n" : "\n");
         }
     }
     retVal = mySerialCAN.InitializeChannel(SERIAL_PORT, opMode);
@@ -216,7 +216,7 @@ int main(int argc, const char * argv[]) {
                         (state == CSerialCAN::ChannelOccupied) ? "now occupied" :
                         (state == CSerialCAN::ChannelAvailable) ? "available" :
                         (state == CSerialCAN::ChannelNotAvailable) ? "not available" : "not testable");
-        fprintf(stdout, "%s", (retVal == CSerialCAN::IllegalParameter) ? " (waring: Op.-Mode not supported)\n" : "\n");
+        fprintf(stdout, "%s", (retVal == CSerialCAN::IllegalParameter) ? " (warning: Op.-Mode not supported)\n" : "\n");
     }
     if (option_info) {
         retVal = mySerialCAN.GetProperty(SERIALCAN_PROPERTY_DEVICE_TYPE, (void *)&i32Val, sizeof(int32_t));

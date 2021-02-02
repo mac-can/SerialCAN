@@ -533,7 +533,7 @@ CANAPI_Return_t CSerialCAN::GetBusSpeed(CANAPI_BusSpeed_t &speed) {
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nbytes) {
+CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nbyte) {
     CANAPI_Return_t retVal = CSerialCAN::IllegalParameter;
     can_sio_param_t sioParam = {};
 
@@ -542,44 +542,44 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
 
     switch (param) {
         case SERIALCAN_PROPERTY_CANAPI:
-            if ((size_t)nbytes >= sizeof(uint16_t)) {
+            if ((size_t)nbyte >= sizeof(uint16_t)) {
                 *(uint16_t*)value = (uint16_t)CAN_API_SPEC;
                 retVal = CSerialCAN::NoError;
             }
             break;
         case SERIALCAN_PROPERTY_VERSION:
-            if ((size_t)nbytes >= sizeof(uint16_t)) {
+            if ((size_t)nbyte >= sizeof(uint16_t)) {
                 *(uint16_t*)value = ((uint16_t)VERSION_MAJOR << 8) | (uint16_t)VERSION_MINOR;
                 retVal = CSerialCAN::NoError;
             }
             break;
         case SERIALCAN_PROPERTY_PATCH_NO:
-            if ((size_t)nbytes >= sizeof(uint8_t)) {
+            if ((size_t)nbyte >= sizeof(uint8_t)) {
                 *(uint8_t*)value = (uint8_t)VERSION_PATCH;
                 retVal = CSerialCAN::NoError;
             }
             break;
         case SERIALCAN_PROPERTY_BUILD_NO:
-            if ((size_t)nbytes >= sizeof(uint32_t)) {
+            if ((size_t)nbyte >= sizeof(uint32_t)) {
                 *(uint32_t*)value = (uint32_t)VERSION_BUILD;
                 retVal = CSerialCAN::NoError;
             }
             break;
         case SERIALCAN_PROPERTY_LIBRARY_ID:
-            if ((size_t)nbytes >= sizeof(int32_t)) {
+            if ((size_t)nbyte >= sizeof(int32_t)) {
                 *(int32_t*)value = (int32_t)SERIALCAN_LIBRARY_ID;
                 retVal = CSerialCAN::NoError;
             }
             break;
         case SERIALCAN_PROPERTY_LIBRARY_VENDOR:
-            if ((nbytes > strlen(SERIALCAN_LIBRARY_VENDOR)) && (nbytes <= CANPROP_MAX_BUFFER_SIZE)) {
-                STRCPY_S((char*)value, nbytes, SERIALCAN_LIBRARY_VENDOR);
+            if ((nbyte > strlen(SERIALCAN_LIBRARY_VENDOR)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+                STRCPY_S((char*)value, nbyte, SERIALCAN_LIBRARY_VENDOR);
                 retVal = CSerialCAN::NoError;
             }
             break;
         case SERIALCAN_PROPERTY_LIBRARY_NAME:
-            if ((nbytes > strlen(SERIALCAN_LIBRARY_NAME)) && (nbytes <= CANPROP_MAX_BUFFER_SIZE)) {
-                STRCPY_S((char*)value, nbytes, SERIALCAN_LIBRARY_NAME);
+            if ((nbyte > strlen(SERIALCAN_LIBRARY_NAME)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+                STRCPY_S((char*)value, nbyte, SERIALCAN_LIBRARY_NAME);
                 retVal = CSerialCAN::NoError;
             }
             break;
@@ -588,31 +588,31 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
             if (m_pSLCAN->m_bInitialized) {
                 switch (param) {
                     case SERIALCAN_PROPERTY_DEVICE_TYPE:
-                        if ((size_t)nbytes >= sizeof(int32_t)) {
+                        if ((size_t)nbyte >= sizeof(int32_t)) {
                             *(int32_t*)value = (int32_t)DEVICE_TYPE;
                             retVal = CSerialCAN::NoError;
                         }
                         break;
                     case SERIALCAN_PROPERTY_DEVICE_NAME:
-                        if ((nbytes > strlen(m_szTtyName)) && (nbytes <= CANPROP_MAX_BUFFER_SIZE)) {
-                            STRCPY_S((char*)value, nbytes, m_szTtyName);
+                        if ((nbyte > strlen(m_szTtyName)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+                            STRCPY_S((char*)value, nbyte, m_szTtyName);
                             retVal = CSerialCAN::NoError;
                         }
                         break;
                     case SERIALCAN_PROPERTY_DEVICE_VENDOR:
-                        if ((nbytes > strlen(VENDOR_NAME)) && (nbytes <= CANPROP_MAX_BUFFER_SIZE)) {
-                            STRCPY_S((char*)value, nbytes, VENDOR_NAME);
+                        if ((nbyte > strlen(VENDOR_NAME)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+                            STRCPY_S((char*)value, nbyte, VENDOR_NAME);
                             retVal = CSerialCAN::NoError;
                         }
                         break;
                     case SERIALCAN_PROPERTY_DEVICE_DLLNAME:
-                        if ((nbytes > strlen(VENDOR_DLLNAME)) && (nbytes <= CANPROP_MAX_BUFFER_SIZE)) {
-                            STRCPY_S((char*)value, nbytes, VENDOR_DLLNAME);
+                        if ((nbyte > strlen(VENDOR_DLLNAME)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+                            STRCPY_S((char*)value, nbyte, VENDOR_DLLNAME);
                             retVal = CSerialCAN::NoError;
                         }
                         break;
                     case SERIALCAN_PROPERTY_DEVICE_PARAM:
-                        if ((size_t)nbytes >= sizeof(can_sio_param_t)) {
+                        if ((size_t)nbyte >= sizeof(can_sio_param_t)) {
                             sioParam.name = m_szTtyName;  // FIXME: this is insecure
                             sioParam.attr.baudrate = m_pSLCAN->m_Attr.baudrate;
                             sioParam.attr.bytesize = m_pSLCAN->m_Attr.bytesize;
@@ -624,13 +624,13 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
                         }
                         break;
                     case SERIALCAN_PROPERTY_OP_CAPABILITY:
-                        if ((size_t)nbytes >= sizeof(uint8_t)) {
+                        if ((size_t)nbyte >= sizeof(uint8_t)) {
                             *(uint8_t*)value = (uint8_t)SUPPORTED_OP_MODE;
                             retVal = CSerialCAN::NoError;
                         }
                         break;
                     case SERIALCAN_PROPERTY_OP_MODE:
-                        if ((size_t)nbytes >= sizeof(uint8_t)) {
+                        if ((size_t)nbyte >= sizeof(uint8_t)) {
                             *(uint8_t*)value = (uint8_t)m_OpMode.byte;
                             retVal = CSerialCAN::NoError;
                         }
@@ -638,7 +638,7 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
                     case SERIALCAN_PROPERTY_BITRATE:
                         CANAPI_Bitrate_t bitrate;
                         if ((retVal = GetBitrate(bitrate)) == CANERR_NOERROR) {
-                            if (nbytes >= sizeof(CANAPI_Bitrate_t)) {
+                            if (nbyte >= sizeof(CANAPI_Bitrate_t)) {
                                 memcpy(value, &bitrate, sizeof(CANAPI_Bitrate_t));
                                 retVal = CSerialCAN::NoError;
                             }
@@ -647,7 +647,7 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
                     case SERIALCAN_PROPERTY_SPEED:
                         CANAPI_BusSpeed_t speed;
                         if ((retVal = GetBusSpeed(speed)) == CANERR_NOERROR) {
-                            if (nbytes >= sizeof(CANAPI_BusSpeed_t)) {
+                            if (nbyte >= sizeof(CANAPI_BusSpeed_t)) {
                                 memcpy(value, &speed, sizeof(CANAPI_BusSpeed_t));
                                 retVal = CSerialCAN::NoError;
                             }
@@ -656,7 +656,7 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
                     case SERIALCAN_PROPERTY_STATUS:
                         CANAPI_Status_t status;
                         if ((retVal = GetStatus(status)) == CANERR_NOERROR) {
-                            if ((size_t)nbytes >= sizeof(uint8_t)) {
+                            if ((size_t)nbyte >= sizeof(uint8_t)) {
                                 *(uint8_t*)value = (uint8_t)status.byte;
                                 retVal = CSerialCAN::NoError;
                             }
@@ -665,32 +665,32 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
                     case SERIALCAN_PROPERTY_BUSLOAD:
                         uint8_t load;
                         if ((retVal = GetBusLoad(load)) == CANERR_NOERROR) {
-                            if ((size_t)nbytes >= sizeof(uint8_t)) {
+                            if ((size_t)nbyte >= sizeof(uint8_t)) {
                                 *(uint8_t*)value = (uint8_t)load;
                                 retVal = CSerialCAN::NoError;
                             }
                         }
                         break;
                     case SERIALCAN_PROPERTY_TX_COUNTER:
-                        if ((size_t)nbytes >= sizeof(uint64_t)) {
+                        if ((size_t)nbyte >= sizeof(uint64_t)) {
                             *(uint64_t*)value = (uint64_t)m_Counter.u64TxMessages;
                             retVal = CSerialCAN::NoError;
                         }
                         break;
                     case SERIALCAN_PROPERTY_RX_COUNTER:
-                        if ((size_t)nbytes >= sizeof(uint64_t)) {
+                        if ((size_t)nbyte >= sizeof(uint64_t)) {
                             *(uint64_t*)value = (uint64_t)m_Counter.u64RxMessages;
                             retVal = CSerialCAN::NoError;
                         }
                         break;
                     case SERIALCAN_PROPERTY_ERR_COUNTER:
-                        if ((size_t)nbytes >= sizeof(uint64_t)) {
+                        if ((size_t)nbyte >= sizeof(uint64_t)) {
                             *(uint64_t*)value = (uint64_t)m_Counter.u64ErrorFrames;
                             retVal = CSerialCAN::NoError;
                         }
                         break;
                     case SERIALCAN_PROPERTY_CLOCK_DOMAIN:
-                        if ((size_t)nbytes >= sizeof(int32_t)) {
+                        if ((size_t)nbyte >= sizeof(int32_t)) {
                             *(int32_t*)value = (int32_t)CLOCK_DOMAIN;
                             retVal = CSerialCAN::NoError;
                         }
@@ -698,7 +698,7 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
                     case SERIALCAN_PROPERTY_HARDWARE_VERSION:
                         uint8_t hw_version;
                         if ((retVal = slcan_version_number(m_pSLCAN->m_Port, &hw_version, NULL)) == CANERR_NOERROR) {
-                            if ((size_t)nbytes >= sizeof(uint8_t)) {
+                            if ((size_t)nbyte >= sizeof(uint8_t)) {
                                 *(uint8_t*)value = (uint8_t)hw_version;
                                 retVal = CSerialCAN::NoError;
                             }
@@ -707,7 +707,7 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
                     case SERIALCAN_PROPERTY_SOFTWARE_VERSION:
                         uint8_t sw_version;
                         if ((retVal = slcan_version_number(m_pSLCAN->m_Port, NULL, &sw_version)) == CANERR_NOERROR) {
-                            if ((size_t)nbytes >= sizeof(uint8_t)) {
+                            if ((size_t)nbyte >= sizeof(uint8_t)) {
                                 *(uint8_t*)value = (uint8_t)sw_version;
                                 retVal = CSerialCAN::NoError;
                             }
@@ -716,7 +716,7 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
                     case SERIALCAN_PROPERTY_SERIAL_NUMBER:
                         uint32_t serial_no;
                         if ((retVal = slcan_serial_number(m_pSLCAN->m_Port, &serial_no)) == CANERR_NOERROR) {
-                            if ((size_t)nbytes >= sizeof(uint32_t)) {
+                            if ((size_t)nbyte >= sizeof(uint32_t)) {
                                 *(uint32_t*)value = (uint32_t)serial_no;
                                 retVal = CSerialCAN::NoError;
                             }
@@ -735,7 +735,7 @@ CANAPI_Return_t CSerialCAN::GetProperty(uint16_t param, void *value, uint32_t nb
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::SetProperty(uint16_t param, const void *value, uint32_t nbytes) {
+CANAPI_Return_t CSerialCAN::SetProperty(uint16_t param, const void *value, uint32_t nbyte) {
     CANAPI_Return_t retVal = CSerialCAN::IllegalParameter;
 
     if (!value)
@@ -743,7 +743,7 @@ CANAPI_Return_t CSerialCAN::SetProperty(uint16_t param, const void *value, uint3
 
     // TODO: insert coin here
     (void)param;
-    (void)nbytes;
+    (void)nbyte;
 
     return retVal;
 }

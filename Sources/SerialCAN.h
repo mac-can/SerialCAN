@@ -94,8 +94,8 @@ public:
     CANAPI_Return_t GetBitrate(CANAPI_Bitrate_t &bitrate);
     CANAPI_Return_t GetBusSpeed(CANAPI_BusSpeed_t &speed);
 
-    CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbytes);
-    CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbytes);
+    CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbyte);
+    CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbyte);
 
     char *GetHardwareVersion();  // (for compatibility reasons)
     char *GetFirmwareVersion();  // (for compatibility reasons)
