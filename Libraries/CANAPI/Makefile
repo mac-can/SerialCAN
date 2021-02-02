@@ -23,10 +23,6 @@ current_OS := $(patsubst CYGWIN%,Cygwin,$(current_OS))
 current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
-MAJOR = 0
-MINOR = 1
-PATCH = 0
-
 HOME_DIR = ../..
 
 SOURCE_DIR = $(HOME_DIR)/Sources
@@ -34,12 +30,22 @@ CANAPI_DIR = $(HOME_DIR)/Sources/CANAPI
 SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN_Driver
 WRAPPER_DIR = $(HOME_DIR)/Sources/SLCAN_Wrapper
 
+OBJECTS = $(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o \
+	$(OUTDIR)/SerialCAN.o $(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
+	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o
+
+
 ifeq ($(current_OS),Darwin) # macOS - libUVCANSLC.dylib
 
 LIBRARY = libUVCANSLC
 
+MAJOR = 0
+MINOR = 1
+PATCH = 0
+
 VERSION = $(MAJOR).$(MINOR)
 TARGET  = $(LIBRARY).$(VERSION).dylib
+STATIC  = $(LIBRARY).a
 
 INSTALL_NAME = $(TARGET)
 CURRENT_VERSION = $(MAJOR).$(MINOR).0
@@ -74,10 +80,13 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 
 LIBRARIES =
 
-LDFLAGS  += -nostartfiles -dynamiclib -fvisibility=hidden \
+LDFLAGS  += -lpthread \
+	-nostartfiles -dynamiclib -fvisibility=hidden \
 	-install_name $(INSTALL_NAME) \
 	-current_version $(CURRENT_VERSION) \
 	-compatibility_version $(COMPATIBILITY_VERSION)
+
+ARFLAGS = r
 
 endif
 
@@ -85,11 +94,14 @@ ifeq ($(current_OS),Linux) # linux - libuvcanslc.so.1
 
 LIBRARY = libuvcanslc
 
+MAJOR = 0
+MINOR = 1
+PATCH = 0
+
 VERSION = $(MAJOR).$(MINOR)
-
 SONAME  = $(LIBRARY).so.1
-
 TARGET  = $(SONAME).$(VERSION)
+STATIC  = $(LIBRARY).a
 
 INSTALL = /usr/local/lib
 
@@ -119,54 +131,65 @@ CXXFLAGS += -fPIC -g -Wall -Wextra -pthread \
 
 LIBRARIES =
 
-LDFLAGS  += --shared -Wl,-soname,$(SONAME) -lc
+LDFLAGS  += -lpthread \
+	--shared -Wl,-soname,$(SONAME) -lc
+
+ARFLAGS = r
 
 endif
-
-OBJECTS = $(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o \
-	$(OUTDIR)/SerialCAN.o $(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
-	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o
 
 CXX = g++
 CC = gcc
 LD = g++
+AR = ar
 RM = rm -f
 CP = cp -f
+LN = ln -s
 
 OUTDIR = .objects
+BINDIR = $(HOME_DIR)/Binaries
+INCDIR = $(HOME_DIR)/Includes
+
+.PHONY: info outdir bindir incdir
 
 
-.PHONY: info outdir
-
-
-all: info outdir $(TARGET)
+all: info outdir bindir incdir $(STATIC) $(TARGET)
 
 info:
 	@echo $(CXX)" on "$(current_OS)
-	@echo "Target: "$(TARGET)
+	@echo "target: "$(TARGET)
 	@echo "install: "$(INSTALL)
 
 outdir:
 	@mkdir -p $(OUTDIR)
 
+bindir:
+	@mkdir -p $(BINDIR)
+
+incdir:
+	@mkdir -p $(INCDIR)
+	$(CP) $(SOURCE_DIR)/SerialCAN_Defines.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/can_api.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/CANAPI_Types.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCDIR)
+
 clean:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+
+distclean:
+	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(BINDIR)/$(TARGET) $(BINDIR)/$(STATIC) $(BINDIR)/$(LIBRARY).dylib
 
 install:
 	@echo "Copying library file..."
 	$(CP) $(TARGET) $(INSTALL)
 ifeq ($(current_OS),Darwin)
-	$(RM) $(INSTALL)/$(LIBRARY).dylib ; ln -s $(INSTALL)/$(TARGET) $(INSTALL)/$(LIBRARY).dylib
+	$(RM) $(INSTALL)/$(LIBRARY).dylib ; $(LN) $(INSTALL)/$(TARGET) $(INSTALL)/$(LIBRARY).dylib
 endif
 ifeq ($(current_OS),Linux)
 	$(RM) $(INSTALL)/$(SONAME) ; ln -s $(INSTALL)/$(TARGET) $(INSTALL)/$(SONAME)
 	$(RM) $(INSTALL)/$(LIBRARY).so ; ln -s $(INSTALL)/$(SONAME) $(INSTALL)/$(LIBRARY).so
 endif
-	@echo "Copying header files..."
-	$(CP) $(CANAPI_DIR)/can_api.h $(INCLUDE)
-	$(CP) $(CANAPI_DIR)/CANAPI_Types.h $(INCLUDE)
-	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCLUDE)
-	$(CP) $(CANAPI_DIR)/CANAPI_SerialCAN.h $(INCLUDE)
 
 
 $(OUTDIR)/SerialCAN.o: $(SOURCE_DIR)/SerialCAN.cpp
@@ -194,6 +217,12 @@ $(OUTDIR)/can_api.o: $(WRAPPER_DIR)/can_api.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 
+$(STATIC): $(OBJECTS)
+	$(AR) $(ARFLAGS) $@ $(OBJECTS) $(LIBRARIES)
+	$(CP) $(STATIC) $(BINDIR)
+
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
-	@echo "Target '"$@"' successfully build"
+	$(CP) $(TARGET) $(BINDIR)
+	$(RM) $(BINDIR)/$(LIBRARY).dylib ; $(LN) $(BINDIR)/$(TARGET) $(BINDIR)/$(LIBRARY).dylib
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"

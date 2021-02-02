@@ -23,20 +23,25 @@ current_OS := $(patsubst CYGWIN%,Cygwin,$(current_OS))
 current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
-MAJOR = 0
-MINOR = 1
-PATCH = 0
-
 HOME_DIR = ../..
 
 SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN_Driver
+
+OBJECTS = $(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
+	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o
+
 
 ifeq ($(current_OS),Darwin) # macOS - libSLCAN.dylib
 
 LIBRARY = libSLCAN
 
+MAJOR = 0
+MINOR = 1
+PATCH = 0
+
 VERSION = $(MAJOR).$(MINOR)
 TARGET  = $(LIBRARY).$(VERSION).dylib
+STATIC  = $(LIBRARY).a
 
 INSTALL_NAME = $(TARGET)
 CURRENT_VERSION = $(MAJOR).$(MINOR).0
@@ -63,10 +68,13 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 
 LIBRARIES =
 
-LDFLAGS  += -nostartfiles -dynamiclib -fvisibility=hidden \
+LDFLAGS  += -lpthread \
+	-nostartfiles -dynamiclib -fvisibility=hidden \
 	-install_name $(INSTALL_NAME) \
 	-current_version $(CURRENT_VERSION) \
 	-compatibility_version $(COMPATIBILITY_VERSION)
+
+ARFLAGS = r
 
 endif
 
@@ -74,11 +82,14 @@ ifeq ($(current_OS),Linux) # linux - libslcan.so.1
 
 LIBRARY = libslcan
 
+MAJOR = 0
+MINOR = 1
+PATCH = 0
+
 VERSION = $(MAJOR).$(MINOR)
-
 SONAME  = $(LIBRARY).so.1
-
 TARGET  = $(SONAME).$(VERSION)
+STATIC  = $(LIBRARY).a
 
 INSTALL = /usr/local/lib
 
@@ -99,50 +110,63 @@ CXXFLAGS += -fPIC -g -Wall -Wextra -pthread \
 
 LIBRARIES =
 
-LDFLAGS  += --shared -Wl,-soname,$(SONAME) -lc
+LDFLAGS  += -lpthread \
+	--shared -Wl,-soname,$(SONAME) -lc
+
+ARFLAGS = r
 
 endif
-
-OBJECTS = $(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
-	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o
 
 CXX = g++
 CC = gcc
 LD = gcc
+AR = ar
 RM = rm -f
 CP = cp -f
+LN = ln -s
 
 OUTDIR = .objects
+BINDIR = $(HOME_DIR)/Binaries
+INCDIR = $(HOME_DIR)/Includes
+
+.PHONY: info outdir bindir incdir
 
 
-.PHONY: info outdir
-
-
-all: info outdir $(TARGET)
+all: info outdir bindir incdir $(STATIC) $(TARGET)
 
 info:
 	@echo $(CXX)" on "$(current_OS)
-	@echo "Target: "$(TARGET)
+	@echo "target: "$(TARGET)
 	@echo "install: "$(INSTALL)
 
 outdir:
 	@mkdir -p $(OUTDIR)
 
+bindir:
+	@mkdir -p $(BINDIR)
+
+incdir:
+	@mkdir -p $(INCDIR)
+	$(CP) $(SERIAL_DIR)/slcan.h $(INCDIR)
+
 clean:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+
+distclean:
+	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(BINDIR)/$(TARGET) $(BINDIR)/$(STATIC) $(BINDIR)/$(LIBRARY).dylib
 
 install:
 	@echo "Copying library file..."
 	$(CP) $(TARGET) $(INSTALL)
 ifeq ($(current_OS),Darwin)
-	$(RM) $(INSTALL)/$(LIBRARY).dylib ; ln -s $(INSTALL)/$(TARGET) $(INSTALL)/$(LIBRARY).dylib
+	$(RM) $(INSTALL)/$(LIBRARY).dylib ; $(LN) $(INSTALL)/$(TARGET) $(INSTALL)/$(LIBRARY).dylib
 endif
 ifeq ($(current_OS),Linux)
 	$(RM) $(INSTALL)/$(SONAME) ; ln -s $(INSTALL)/$(TARGET) $(INSTALL)/$(SONAME)
 	$(RM) $(INSTALL)/$(LIBRARY).so ; ln -s $(INSTALL)/$(SONAME) $(INSTALL)/$(LIBRARY).so
 endif
-	@echo "Copying header file..."
-	$(CP) $(SERIAL_DIR)/slcan.h $(INCLUDE)
+
 
 
 $(OUTDIR)/slcan.o: $(SERIAL_DIR)/slcan.c
@@ -161,6 +185,12 @@ $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 
+$(STATIC): $(OBJECTS)
+	$(AR) $(ARFLAGS) $@ $(OBJECTS) $(LIBRARIES)
+	$(CP) $(STATIC) $(BINDIR)
+
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
-	@echo "Target '"$@"' successfully build"
+	$(CP) $(TARGET) $(BINDIR)
+	$(RM) $(BINDIR)/$(LIBRARY).dylib ; $(LN) $(BINDIR)/$(TARGET) $(BINDIR)/$(LIBRARY).dylib
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"

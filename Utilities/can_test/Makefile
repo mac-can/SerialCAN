@@ -21,11 +21,6 @@ current_OS := $(patsubst CYGWIN%,Cygwin,$(current_OS))
 current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
-
-TARGET  = can_test
-
-INSTALL = ~/bin
-
 HOME_DIR = ../..
 MAIN_DIR = ./Sources
 
@@ -37,8 +32,16 @@ OBJECTS = $(OUTDIR)/main.o $(OUTDIR)/Timer.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/SerialCAN.o $(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
 	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o
 
-DEFINES = -DOPTION_CAN_2_0_ONLY=1 \
-	-DOPTION_CANAPI_DRIVER=1 \
+
+ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
+
+VERSION = 0
+
+TARGET  = can_test
+
+INSTALL = ~/bin
+
+DEFINES = -DOPTION_CANAPI_DRIVER=1 \
 	-DOPTION_CANAPI_RETVALS=1 \
 	-DOPTION_CANAPI_COMPANIONS=1 \
 	-DOPTION_CANAPI_DEBUG_LEVEL=0 \
@@ -63,6 +66,9 @@ LIBRARIES =
 
 LDFLAGS  += -lpthread
 
+endif
+
+
 CXX = g++
 CC = gcc
 LD = g++
@@ -70,25 +76,37 @@ RM = rm -f
 CP = cp -f
 
 OUTDIR = .objects
+BINDIR = $(HOME_DIR)/Binaries
+INCDIR = $(HOME_DIR)/Includes
+
+.PHONY: info outdir bindir incdir
 
 
-.PHONY: info outdir
-
-
-all: info outdir $(TARGET)
+all: info outdir bindir incdir $(TARGET)
 
 info:
 	@echo $(CXX)" on "$(current_OS)
-	@echo "Target: "$(TARGET)
+	@echo "target: "$(TARGET)
 	@echo "install: "$(INSTALL)
 
 outdir:
 	@mkdir -p $(OUTDIR)
 
+bindir:
+	@mkdir -p $(BINDIR)
+
+incdir:
+	@mkdir -p $(INCDIR)
+
 clean:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
+distclean:
+	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(BINDIR)/$(TARGET)
+
 install:
+	@echo "Copying binary file..."
 	$(CP) $(TARGET) $(INSTALL)
 
 
@@ -122,4 +140,5 @@ $(OUTDIR)/can_btr.o: $(CANAPI_DIR)/can_btr.c
 
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
-	@echo "Target '"$@"' successfully build"
+	$(CP) $(TARGET) $(BINDIR)
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"

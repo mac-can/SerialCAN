@@ -40,7 +40,7 @@ OBJECTS = $(OUTDIR)/SerialCAN.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o \
 	$(OUTDIR)/main.o
 
-DEFINES = -DOPTION_CAN_2_0_ONLY=1 \
+DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
 	-DOPTION_CANAPI_DRIVER=1 \
 	-DOPTION_CANAPI_RETVALS=0 \
 	-DOPTION_CANAPI_COMPANIONS=1 \
@@ -82,13 +82,16 @@ all: info outdir $(TARGET)
 
 info:
 	@echo $(CXX)" on "$(current_OS)
-	@echo "Target: "$(TARGET)
+	@echo "target: "$(TARGET)
 	@echo "install: "$(INSTALL)
 
 outdir:
 	@mkdir -p $(OUTDIR)
 
 clean:
+	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+
+distclean:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
 install:
@@ -122,4 +125,4 @@ $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
 
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
-	@echo "Target '"$@"' successfully build"
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"

@@ -21,23 +21,32 @@
 
 all:
 	@./build_no.sh
-	@echo "Building SerialCAN (build "$(shell git log -1 --pretty=format:%h)")..."
+	@echo "\033[1mBuilding SerialCAN...\033[0m"
+	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
 	$(MAKE) -C Libraries/SLCAN $@
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
-	$(MAKE) -C Trial $@
 
 clean:
+	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
 	$(MAKE) -C Libraries/SLCAN $@
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
+
+distclean:
 	$(MAKE) -C Trial $@
+	$(MAKE) -C Libraries/SerialCAN $@
+	$(MAKE) -C Libraries/CANAPI $@
+	$(MAKE) -C Libraries/SLCAN $@
+	$(MAKE) -C Utilities/can_test $@
+	$(MAKE) -C Utilities/can_moni $@
 
 install:
+#	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
 	$(MAKE) -C Libraries/SLCAN $@
