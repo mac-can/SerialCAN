@@ -18,16 +18,6 @@
 //  You should have received a copy of the GNU General Public License
 //  along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
 //
-#include "SerialCAN.h"
-#include "slcan.h"
-#include "debug.h"
-#include "can_btr.h"
-
-#include <string.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <assert.h>
-
 #include "build_no.h"
 #define VERSION_MAJOR    0
 #define VERSION_MINOR    1
@@ -48,6 +38,16 @@
 #error Unsupported architecture
 #endif
 static const char version[] = PLATFORM " Driver for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
+
+#include "SerialCAN.h"
+#include "slcan.h"
+#include "debug.h"
+#include "can_btr.h"
+
+#include <string.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <assert.h>
 
 #if (OPTION_SERIALCAN_DYLIB != 0)
 __attribute__((constructor))

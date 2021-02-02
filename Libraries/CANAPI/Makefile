@@ -32,6 +32,7 @@ HOME_DIR = ../..
 SOURCE_DIR = $(HOME_DIR)/Sources
 CANAPI_DIR = $(HOME_DIR)/Sources/CANAPI
 SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN_Driver
+WRAPPER_DIR = $(HOME_DIR)/Sources/SLCAN_Wrapper
 
 ifeq ($(current_OS),Darwin) # macOS - libUVCANSLC.dylib
 
@@ -59,7 +60,8 @@ DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
 
 HEADERS = -I$(SOURCE_DIR) \
 	-I$(CANAPI_DIR) \
-	-I$(SERIAL_DIR)
+	-I$(SERIAL_DIR) \
+	-I$(WRAPPER_DIR)
 
 CFLAGS += -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
@@ -103,7 +105,8 @@ DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
 
 HEADERS = -I$(SOURCE_DIR) \
 	-I$(CANAPI_DIR) \
-	-I$(SERIAL_DIR)
+	-I$(SERIAL_DIR) \
+	-I$(WRAPPER_DIR)
 
 CFLAGS += -fPIC -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
@@ -166,9 +169,6 @@ endif
 	$(CP) $(CANAPI_DIR)/CANAPI_SerialCAN.h $(INCLUDE)
 
 
-$(OUTDIR)/can_api.o: ./can_api.cpp
-	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -o $@ -c $<
-
 $(OUTDIR)/SerialCAN.o: $(SOURCE_DIR)/SerialCAN.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -o $@ -c $<
 
@@ -189,6 +189,9 @@ $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
 
 $(OUTDIR)/can_btr.o: $(CANAPI_DIR)/can_btr.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
+
+$(OUTDIR)/can_api.o: $(WRAPPER_DIR)/can_api.cpp
+	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 
 $(TARGET): $(OBJECTS)

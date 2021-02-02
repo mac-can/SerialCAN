@@ -22,7 +22,7 @@
 #define SERIALCAN_H_INCLUDED
 
 #include "CANAPI.h"
-#include "CANAPI_SerialCAN.h"
+#include "SerialCAN_Defines.h"
 
 /// \name   SerialCAN
 /// \brief  SerialCAN dynamic library
