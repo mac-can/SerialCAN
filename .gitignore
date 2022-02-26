@@ -16,6 +16,7 @@ Utilities/can_moni/.objects
 Utilities/can_moni/can_moni
 Utilities/can_test/.objects
 Utilities/can_test/can_test
+SerialCAN-cppcheck-build-dir
 Binaries
 Includes
 Testing
