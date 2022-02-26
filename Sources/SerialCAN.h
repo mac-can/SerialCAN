@@ -1,7 +1,7 @@
 //
 //  SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 //
-//  Copyright (C) 2016,2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (C) 2016,2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This file is part of SerialCAN.
 //
@@ -31,7 +31,7 @@
 #define SERIALCAN_LIBRARY_NAME  CANDLL_SERIALCAN
 #define SERIALCAN_LIBRARY_VENDOR  "UV Software, Berlin"
 #define SERIALCAN_LIBRARY_LICENSE  "GNU Lesser General Public License, Version 3"
-#define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (C) 2016,2020-2021  Uwe Vogt, UV Software, Berlin"
+#define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (C) 2016,2020-2022  Uwe Vogt, UV Software, Berlin"
 #define SERIALCAN_LIBRARY_HAZARD_NOTE  "If you connect your CAN device to a real CAN network when using this library,\n" \
                                        "you might damage your application."
 /// \}
@@ -39,9 +39,9 @@
 
 /// \name   SerialCAN API
 /// \brief  CAN API V3 driver for CAN-over-Serial-Line interfaces
-/// \note   See CCANAPI for a description of the overridden methods
+/// \note   See CCanApi for a description of the overridden methods
 /// \{
-class CSerialCAN : public CCANAPI {
+class CANCPP CSerialCAN : public CCanApi {
 private:
     char m_szTtyName[CANPROP_MAX_BUFFER_SIZE];  ///< TTY device name
     CANAPI_OpMode_t m_OpMode;  ///< CAN operation mode
@@ -68,17 +68,23 @@ public:
     typedef can_sio_attr_t SSerialAttributes;
 
     // CSerial methods
-    static CANAPI_Return_t ProbeChannel(const char *device, CANAPI_OpMode_t opMode, EChannelState &state);
-    static CANAPI_Return_t ProbeChannel(const char *device, CANAPI_OpMode_t opMode, SSerialAttributes sioAttr, EChannelState &state);
+    //static bool GetFirstChannel(SChannelInfo &info, SSerialAttributes &sioAttr);
+    //static bool GetNextChannel(SChannelInfo &info, SSerialAttributes &sioAttr);
 
-    CANAPI_Return_t InitializeChannel(const char *device, can_mode_t opMode);
-    CANAPI_Return_t InitializeChannel(const char *device, can_mode_t opMode, SSerialAttributes sioAttr);
+    static CANAPI_Return_t ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, EChannelState &state);
+    static CANAPI_Return_t ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr, EChannelState &state);
 
-    // CCANAPI overrides
-    static CANAPI_Return_t ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode, const void *param, EChannelState &state);
-    static CANAPI_Return_t ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode, EChannelState &state);
+    CANAPI_Return_t InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode);
+    CANAPI_Return_t InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr);
 
-    CANAPI_Return_t InitializeChannel(int32_t channel, can_mode_t opMode, const void *param = NULL);
+    // CCanApi overrides
+    //static bool GetFirstChannel(SChannelInfo &info, void *param = NULL);
+    //static bool GetNextChannel(SChannelInfo &info, void *param = NULL);
+
+    static CANAPI_Return_t ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state);
+    static CANAPI_Return_t ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state);
+
+    CANAPI_Return_t InitializeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param = NULL);
     CANAPI_Return_t TeardownChannel();
     CANAPI_Return_t SignalChannel();
 
@@ -109,6 +115,9 @@ private:
     CANAPI_Return_t MapBitrate2Sja1000(CANAPI_Bitrate_t bitrate, uint16_t &btr0btr1);
     CANAPI_Return_t MapSja10002Bitrate(uint16_t btr0btr1, CANAPI_Bitrate_t &bitrate);
     CANAPI_Return_t MapErrorCode(int code);
+public:
+    static uint8_t Dlc2Len(uint8_t dlc) { return CCanApi::Dlc2Len(dlc); }
+    static uint8_t Len2Dlc(uint8_t len) { return CCanApi::Len2Dlc(len); }
 };
 /// \}
 

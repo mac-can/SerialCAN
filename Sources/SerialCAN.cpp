@@ -158,13 +158,13 @@ CSerialCAN::~CSerialCAN() {
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode, EChannelState &state) {
+CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state) {
     // delegate with value NULL for parameter 'param'
     return ProbeChannel(channel, opMode, NULL, state);
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode, const void *param, EChannelState &state) {
+CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state) {
     char device[CANPROP_MAX_BUFFER_SIZE];
     SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
     (void)param;  // TODO: map comm attributes
@@ -174,7 +174,7 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, CANAPI_OpMode_t opMode, EChannelState &state) {
+CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, EChannelState &state) {
     SSerialAttributes sioAttr = {};
     sioAttr.baudrate = SERIAL_BAUDRATE;
     sioAttr.bytesize = SERIAL_BYTESIZE;
@@ -186,7 +186,7 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, CANAPI_OpMode_t opM
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, CANAPI_OpMode_t opMode, SSerialAttributes sioAttr, EChannelState &state) {
+CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr, EChannelState &state) {
     (void)device;
     (void)opMode;
     (void)sioAttr;
@@ -196,7 +196,7 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, CANAPI_OpMode_t opM
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::InitializeChannel(int32_t channel, can_mode_t opMode, const void *param) {
+CANAPI_Return_t CSerialCAN::InitializeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param) {
     char device[CANPROP_MAX_BUFFER_SIZE];
     SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
     (void)param;  // TODO: map comm attributes
@@ -206,7 +206,7 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(int32_t channel, can_mode_t opMode
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, can_mode_t opMode) {
+CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode) {
     SSerialAttributes sioAttr = {};
     sioAttr.baudrate = SERIAL_BAUDRATE;
     sioAttr.bytesize = SERIAL_BYTESIZE;
@@ -218,7 +218,7 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, can_mode_t opM
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, can_mode_t opMode, SSerialAttributes sioAttr) {
+CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr) {
     CANAPI_Return_t retVal = CSerialCAN::AlreadyInitialized;
     int result = -1;
 
