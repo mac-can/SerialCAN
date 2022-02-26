@@ -95,6 +95,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -111,6 +112,7 @@
       <PreprocessorDefinitions>_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,6 +131,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,6 +152,7 @@
       <PreprocessorDefinitions>NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -192,37 +196,37 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.;..;..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN_Driver;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.;..;..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN_Driver;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\buffer_w.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\buffer_w.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\logger_w.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\logger_w.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\queue_w.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\queue_w.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\serial_w.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\serial_w.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\slcan.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\slcan.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\can_api.cpp">
+    <ClCompile Include="..\..\..\Sources\Wrapper\can_api.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

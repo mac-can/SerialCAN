@@ -1,7 +1,7 @@
 //
 //  CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)
 //
-//  Copyright (C) 2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (C) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This file is part of SerialCAN.
 //
@@ -86,7 +86,7 @@ static bool init = false;  // initialization flag
 EXPORT
 int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
 {
-    CCANAPI::EChannelState state = CCANAPI::ChannelNotTestable;
+    CCanApi::EChannelState state = CCanApi::ChannelNotTestable;
     CANAPI_Return_t retVal = CANERR_FATAL;
     CANAPI_OpMode_t opMode = {};
     opMode.byte = mode;
@@ -95,13 +95,13 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
     retVal = CSerialCAN::ProbeChannel(channel, opMode, state);
     if (result) {
         switch (state) {
-        case CCANAPI::ChannelOccupied:
+        case CCanApi::ChannelOccupied:
             *result = CANBRD_OCCUPIED;
             break;
-        case CCANAPI::ChannelAvailable:
+        case CCanApi::ChannelAvailable:
             *result = CANBRD_PRESENT;
             break;
-        case CCANAPI::ChannelNotAvailable:
+        case CCanApi::ChannelNotAvailable:
             *result = CANBRD_NOT_PRESENT;
             break;
         default:
@@ -110,7 +110,7 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
         }
     }
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI::ProbeChannel(%i): returned %i\n", channel, retVal);
+    fprintf(stdout, "CCanApi::ProbeChannel(%i): returned %i\n", channel, retVal);
 #endif
     (void) param;
     return (int)retVal;
@@ -154,7 +154,7 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     } else
         result = (int)retVal;  // on error return the error code (< 0)
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].InitializeChannel(%s): returned %i\n", channel, device->name, retVal);
+    fprintf(stdout, "CCanApi[%i].InitializeChannel(%s): returned %i\n", channel, device->name, retVal);
 #endif
     return result;
 }
@@ -183,7 +183,7 @@ int can_exit(int handle)
         retVal = CANERR_NOERROR;
     }
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].TeardownChannel: returned %i\n", handle, retVal);
+    fprintf(stdout, "CCanApi[%i].TeardownChannel: returned %i\n", handle, retVal);
 #endif
     return (int)retVal;
 }
@@ -210,7 +210,7 @@ int can_kill(int handle)
         retVal = CANERR_NOERROR;
     }
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].SignalChannel: returned %i\n", handle, retVal);
+    fprintf(stdout, "CCanApi[%i].SignalChannel: returned %i\n", handle, retVal);
 #endif
     return (int)retVal;
 }
@@ -231,7 +231,7 @@ int can_start(int handle, const can_bitrate_t *bitrate)
     // start CAN communication (operation maode and bit-rate settings)
     retVal = canDevices[handle].StartController(*bitrate);
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].StartController: returned %i\n", handle, retVal);
+    fprintf(stdout, "CCanApi[%i].StartController: returned %i\n", handle, retVal);
 #endif
     return (int)retVal;
 }
@@ -250,7 +250,7 @@ int can_reset(int handle)
     // pause CAN communication
     retVal = canDevices[handle].ResetController();
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].ResetController: returned %i\n", handle, retVal);
+    fprintf(stdout, "CCanApi[%i].ResetController: returned %i\n", handle, retVal);
 #endif
     return (int)retVal;
 }
@@ -271,7 +271,7 @@ int can_write(int handle, const can_message_t *message, uint16_t timeout)
     // send a CAN message
     retVal = canDevices[handle].WriteMessage(*message, timeout);
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].WriteMessage: returned %i\n", handle, retVal);
+    fprintf(stdout, "CCanApi[%i].WriteMessage: returned %i\n", handle, retVal);
 #endif
     return (int)retVal;
 }
@@ -292,8 +292,8 @@ int can_read(int handle, can_message_t *message, uint16_t timeout)
     // read a CAN message from reception queue, if any
     retVal = canDevices[handle].ReadMessage(*message, timeout);
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    if (retVal != CCANAPI::ReceiverEmpty)
-        fprintf(stdout, "CCANAPI[%i].ReadMessage: returned %i\n", handle, retVal);
+    if (retVal != CCanApi::ReceiverEmpty)
+        fprintf(stdout, "CCanApi[%i].ReadMessage: returned %i\n", handle, retVal);
 #endif
     return (int)retVal;
 }
@@ -315,7 +315,7 @@ int can_status(int handle, uint8_t *status)
     if (status)
         *status = tmpStatus.byte;
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].GetStatus: returned %i\n", handle, retVal);
+    fprintf(stdout, "CCanApi[%i].GetStatus: returned %i\n", handle, retVal);
 #endif
     return (int)retVal;
 }
@@ -339,14 +339,14 @@ int can_busload(int handle, uint8_t *load, uint8_t *status)
     if (load && (retVal1 == CANERR_NOERROR))
         *load = tmpLoad;
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].GetBusLoad: returned %i\n", handle, retVal1);
+    fprintf(stdout, "CCanApi[%i].GetBusLoad: returned %i\n", handle, retVal1);
 #endif
     // and status register
     retVal2 = canDevices[handle].GetStatus(tmpStatus);
     if (status && (retVal2 == CANERR_NOERROR))
         *status = tmpStatus.byte;
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].GetStatus: returned %i\n", handle, retVal2);
+    fprintf(stdout, "CCanApi[%i].GetStatus: returned %i\n", handle, retVal2);
 #endif
     return (retVal1 != CANERR_NOERROR) ? (int)retVal1 : (int)retVal2;
 }
@@ -370,14 +370,14 @@ int can_bitrate(int handle, can_bitrate_t *bitrate, can_speed_t *speed)
     if (bitrate && (retVal1 == CANERR_NOERROR))
         *bitrate = tmpBitrate;
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].GetBitrate: returned %i\n", handle, retVal1);
+    fprintf(stdout, "CCanApi[%i].GetBitrate: returned %i\n", handle, retVal1);
 #endif
     // and transmission rate
     retVal2 = canDevices[handle].GetBusSpeed(tmpSpeed);
     if (speed && (retVal2 == CANERR_NOERROR))
         *speed = tmpSpeed;
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].GetBusSpeed: returned %i\n", handle, retVal2);
+    fprintf(stdout, "CCanApi[%i].GetBusSpeed: returned %i\n", handle, retVal2);
 #endif
     return (retVal1 != CANERR_NOERROR) ? (int)retVal1 : (int)retVal2;
 }
@@ -396,7 +396,7 @@ int can_property(int handle, uint16_t param, void *value, uint32_t nbytes)
     // read a property value
     retVal = canDevices[handle].GetProperty(param, value, nbytes);
 #if (OPTION_CANAPI_DEBUG_LEVEL != 0)
-    fprintf(stdout, "CCANAPI[%i].GetProperty: returned %i\n", handle, retVal);
+    fprintf(stdout, "CCanApi[%i].GetProperty: returned %i\n", handle, retVal);
 #endif
     // TODO: Hmm, what's about SetProperty? (Lucky me, there's nothing to be set)
 

@@ -1,7 +1,7 @@
 #
 #	SerialCAN - CAN-over-Serial-Line Interfaces
 #
-#	Copyright (C) 2007,2016-2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (C) 2007,2016-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #
 #	This file is part of SerialCAN.
 #
@@ -33,7 +33,7 @@ MAIN_DIR = ./Sources
 
 SOURCE_DIR = $(HOME_DIR)/Sources
 CANAPI_DIR = $(HOME_DIR)/Sources/CANAPI
-SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN_Driver
+SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN
 
 OBJECTS = $(OUTDIR)/SerialCAN.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/slcan.o $(OUTDIR)/serial.o \

@@ -74,22 +74,22 @@
     <ClCompile Include="..\..\..\Sources\CANAPI\can_btr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\buffer_w.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\buffer_w.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\logger_w.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\logger_w.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\queue_w.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\queue_w.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\serial_w.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\serial_w.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\SLCAN_Driver\slcan.c">
+    <ClCompile Include="..\..\..\Sources\SLCAN\slcan.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\can_api.cpp">
+    <ClCompile Include="..\..\..\Sources\Wrapper\can_api.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,7 +1,7 @@
 #
 #	Controler Area Network - Lawicel SLCAN Protocol (Serial-Line CAN)
 #
-#	Copyright (C) 2016-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (C) 2016-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #
 #	This library is part of the SourceMedley repository.
 #
@@ -25,7 +25,7 @@ current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
 HOME_DIR = ../..
 
-SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN_Driver
+SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN
 
 OBJECTS = $(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
 	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o

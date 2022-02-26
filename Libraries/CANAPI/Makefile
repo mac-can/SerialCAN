@@ -1,7 +1,7 @@
 #
 #	CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)
 #
-#	Copyright (C) 2007,2016-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (C) 2007,2016-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #
 #	This library is part of SerialCAN.
 #
@@ -27,8 +27,8 @@ HOME_DIR = ../..
 
 SOURCE_DIR = $(HOME_DIR)/Sources
 CANAPI_DIR = $(HOME_DIR)/Sources/CANAPI
-SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN_Driver
-WRAPPER_DIR = $(HOME_DIR)/Sources/SLCAN_Wrapper
+SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN
+WRAPPER_DIR = $(HOME_DIR)/Sources/Wrapper
 
 OBJECTS = $(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/SerialCAN.o $(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
