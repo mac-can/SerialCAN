@@ -6,7 +6,7 @@ _Copyright &copy; 2016, 2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-softwa
 
 CAN API V3 is a wrapper specification to have a uniform CAN Interface API for various CAN interfaces from different vendors running under multiple operating systems.
 
-This repo contains the source code for a _CAN-over-Serial-Line_ interfacess based on
+This repo contains the source code for a _CAN-over-Serial-Line_ interfaces based on
 [Lawicel SLCAN protocol](http://www.can232.com/docs/canusb_manual.pdf).
 It provides the build environments to build dynamic libraries with GNU C/C++&reg; compilers,
 either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
@@ -73,8 +73,8 @@ public:
     CANAPI_Return_t GetBitrate(CANAPI_Bitrate_t &bitrate);
     CANAPI_Return_t GetBusSpeed(CANAPI_BusSpeed_t &speed);
 
-    CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbytes);
-    CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbytes);
+    CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbyte);
+    CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbyte);
 
     char *GetHardwareVersion();  // (for compatibility reasons)
     char *GetFirmwareVersion();  // (for compatibility reasons)
@@ -155,9 +155,9 @@ Windows&reg; (x64 operating systems):
 
 #### macOS Big Sur
 
-- macOS Catalina (11.1) on a MacBook Pro (2019)
-- Apple clang version 12.0.0 (clang-1200.0.32.28)
-- Xcode Version 12.3 (12C33)
+- macOS Big Sur (11.2) on a MacBook Pro (2019)
+- Apple clang version 12.0.0 (clang-1200.0.32.29)
+- Xcode Version 12.4 (12D4e)
 
 #### macOS High Sierra
 
@@ -230,16 +230,16 @@ along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
 #### SerialCAN License
 
 SerialCAN is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
+it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
 SerialCAN is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+GNU Lesser General Public License for more details.
 
-You should have received a copy of the GNU General Public License
+You should have received a copy of the GNU Lesser General Public License
 along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
 
 ### Trademarks
@@ -256,12 +256,6 @@ Cygwin is a registered trademark of Red Hat, Inc.
 _If you connect your CAN device to a real CAN network when using this library, you might damage your application._
 
 ### Contact
-
-Uwe Vogt \
-UV Software \
-Chausseestrasse 33a \
-10115 Berlin \
-Germany
 
 E-Mail: mailto://info@mac.can.com \
 Internet: https://www.mac-can.com

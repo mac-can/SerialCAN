@@ -22,9 +22,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 918 $
+ *  @version     $Rev: 980 $
  *
  *  @defgroup    can_api CAN Interface API, Version 3
  *  @{
@@ -39,28 +39,38 @@ extern "C" {
 /*  -----------  includes  -----------------------------------------------
  */
 
-#include "CANAPI_Defines.h"             /* CAN definitions and options */
 #include "CANAPI_Types.h"               /* CAN API data types and defines */
 
 
 /*  -----------  options  ------------------------------------------------
  */
 
+/** @note  Set define OPTION_CANAPI_LIBRARY to a non-zero value to compile
+ *         the master loader library (e.g. in the build environment). Or
+ *         optionally set define OPTION_CANAPI_DRIVER to a non-zero value
+ *         to compile a driver/wrapper library.
+ */
+/** @note  Set define OPTION_CANAPI_DLLEXPORT to a non-zero value to compile
+ *         as a dynamic link library (e.g. in the build environment).
+ *         In your project set define OPTION_CANAPI_DLLIMPORT to a non-zero
+ *         value to load the dynamic link library at run-time. Or set it to
+ *         zero to compile your program with the CAN API source files or to
+ *         link your program with the static library at compile-time.
+ */
 #if (CAN_API_SPEC != 0x300)
-    #error Requires version 3.0 of CANAPI_Types.h
+#error Requires version 3.0 of CANAPI_Types.h
 #endif
-#if (OPTION_CAN_2_0_ONLY != 0)
-    #error Requires CAN FD message format
+#if (OPTION_CANAPI_LIBRARY == 0)
+#if  (OPTION_CANAPI_DRIVER == 0)
+#define OPTION_CANAPI_DRIVER  1
 #endif
-#if (OPTION_CANAPI_LIBRARY == 0) && (OPTION_CANAPI_DRIVER == 0)
-    #error Option for function signatures not set
 #endif
 #if (OPTION_CANAPI_DLLEXPORT != 0)
-    #define CANAPI  __declspec(dllexport)
+#define CANAPI  __declspec(dllexport)
 #elif (OPTION_CANAPI_DLLIMPORT != 0)
-    #define CANAPI  __declspec(dllimport)
+#define CANAPI  __declspec(dllimport)
 #else
-    #define CANAPI  extern
+#define CANAPI  extern
 #endif
 
 /*  -----------  defines  ------------------------------------------------
@@ -128,10 +138,10 @@ CANAPI can_board_t can_boards[];        /**< list of CAN interface boards */
 /*  -----------  prototypes  ---------------------------------------------
  */
 
-/** @brief       tests if the CAN interface (hardware and driver) given by
- *               the arguments 'library' and 'board' is present, and if the
- *               requested operation mode is supported by the CAN controller
- *               board.
+/** @brief       probes if the CAN interface (hardware and driver) given by
+ *               the argument [ 'library' and ] 'channel' is present, and
+ *               if the requested operation mode is supported by the CAN
+ *               controller.
  *
  *  @note        When a requested operation mode is not supported by the
  *               CAN controller, error CANERR_ILLPARA will be returned.
@@ -140,13 +150,13 @@ CANAPI can_board_t can_boards[];        /**< list of CAN interface boards */
  *               by another initialized CAN interface.
  *
  *  @param[in]   library - library id of the CAN interface
- *  @param[in]   board   - type of the CAN controller board
+ *  @param[in]   channel - channel number of the CAN interface
  *  @param[in]   mode    - operation mode to be checked
- *  @param[in]   param   - pointer to board-specific parameters
- *  @param[out]  result  - result of the board test:
- *                             < 0 - board is not present,
- *                             = 0 - board is present,
- *                             > 0 - board is present, but in use
+ *  @param[in]   param   - pointer to interface-specific parameters
+ *  @param[out]  result  - result of the channel test:
+ *                             < 0 - channel is not present,
+ *                             = 0 - channel is present,
+ *                             > 0 - channel is present, but in use
  *
  *  @returns     0 if successful, or a negative value on error.
  *
@@ -156,19 +166,19 @@ CANAPI can_board_t can_boards[];        /**< list of CAN interface boards */
  *  @retval      others           - vendor-specific
  */
 #if (OPTION_CANAPI_LIBRARY != 0)
-CANAPI int can_test(int32_t library, int32_t board, uint8_t mode, const void *param, int *result);
+CANAPI int can_test(int32_t library, int32_t channel, uint8_t mode, const void *param, int *result);
 #else
-CANAPI int can_test(int32_t board, uint8_t mode, const void *param, int *result);
+CANAPI int can_test(int32_t channel, uint8_t mode, const void *param, int *result);
 #endif
 
 /** @brief       initializes the CAN interface (hardware and driver) by loading
  *               and starting the appropriate DLL for the specified CAN controller
- *               board given by the arguments 'library' and 'board'.
+ *               board given by the argument [ 'library' and ] 'channel'.
  *               The operation state of the CAN controller is set to 'stopped';
  *               no communication is possible in this state.
  *
  *  @param[in]   library - library id of the CAN interface
- *  @param[in]   board   - type of the CAN controller board
+ *  @param[in]   channel - channel number of the CAN interface
  *  @param[in]   mode    - operation mode of the CAN controller
  *  @param[in]   param   - pointer to board-specific parameters
  *
@@ -181,9 +191,9 @@ CANAPI int can_test(int32_t board, uint8_t mode, const void *param, int *result)
  *  @retval      others           - vendor-specific
  */
 #if (OPTION_CANAPI_LIBRARY != 0)
-CANAPI int can_init(int32_t library, int32_t board, uint8_t mode, const void *param);
+CANAPI int can_init(int32_t library, int32_t channel, uint8_t mode, const void *param);
 #else
-CANAPI int can_init(int32_t board, uint8_t mode, const void *param);
+CANAPI int can_init(int32_t channel, uint8_t mode, const void *param);
 #endif
 
 
@@ -376,19 +386,19 @@ CANAPI int can_bitrate(int handle, can_bitrate_t *bitrate, can_speed_t *speed);
  *  @param[in]   param    - property id to be read or to be written
  *  @param[out]  value    - pointer to a buffer for the value to be read
  *  @param[in]   value    - pointer to a buffer with the value to be written
- *  @param[in]   nbytes   - size of the given buffer in bytes
+ *  @param[in]   nbyte   -  size of the given buffer in byte
  *
  *  @returns     0 if successful, or a negative value on error.
  *
  *  @retval      CANERR_NOTINIT   - library not initialized
  *  @retval      CANERR_HANDLE    - invalid interface handle
  *  @retval      CANERR_NULLPTR   - null-pointer assignment
- *  @retval      CANERR_ILLPARA   - illegal parameter, value or nbytes
+ *  @retval      CANERR_ILLPARA   - illegal parameter, value or nbyte
  *  @retval      CANERR_...       - tbd.
  *  @retval      CANERR_NOTSUPP   - property or function not supported
  *  @retval      others           - vendor-specific
  */
-CANAPI int can_property(int handle, uint16_t param, void *value, uint32_t nbytes);
+CANAPI int can_property(int handle, uint16_t param, void *value, uint32_t nbyte);
 
 
 /** @brief       retrieves the hardware version of the CAN controller
@@ -431,7 +441,7 @@ CANAPI char *can_library(int handle);
  *
  *  @returns     pointer to a zero-terminated string, or NULL on error.
  */
-CANAPI char* can_version();
+CANAPI char* can_version(void);
 
 
 #ifdef __cplusplus

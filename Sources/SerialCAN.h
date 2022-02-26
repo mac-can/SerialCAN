@@ -6,23 +6,23 @@
 //  This file is part of SerialCAN.
 //
 //  SerialCAN is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
+//  it under the terms of the GNU Lesser General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 //
 //  SerialCAN is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+//  GNU Lesser General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
+//  You should have received a copy of the GNU Lesser General Public License
 //  along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
 //
 #ifndef SERIALCAN_H_INCLUDED
 #define SERIALCAN_H_INCLUDED
 
 #include "CANAPI.h"
-#include "CANAPI_SerialCAN.h"
+#include "SerialCAN_Defines.h"
 
 /// \name   SerialCAN
 /// \brief  SerialCAN dynamic library
@@ -30,7 +30,7 @@
 #define SERIALCAN_LIBRARY_ID  CANLIB_SERIALCAN
 #define SERIALCAN_LIBRARY_NAME  CANDLL_SERIALCAN
 #define SERIALCAN_LIBRARY_VENDOR  "UV Software, Berlin"
-#define SERIALCAN_LIBRARY_LICENSE  "GNU General Public License, Version 3"
+#define SERIALCAN_LIBRARY_LICENSE  "GNU Lesser General Public License, Version 3"
 #define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (C) 2016,2020-2021  Uwe Vogt, UV Software, Berlin"
 #define SERIALCAN_LIBRARY_HAZARD_NOTE  "If you connect your CAN device to a real CAN network when using this library,\n" \
                                        "you might damage your application."
@@ -94,8 +94,8 @@ public:
     CANAPI_Return_t GetBitrate(CANAPI_Bitrate_t &bitrate);
     CANAPI_Return_t GetBusSpeed(CANAPI_BusSpeed_t &speed);
 
-    CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbytes);
-    CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbytes);
+    CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbyte);
+    CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbyte);
 
     char *GetHardwareVersion();  // (for compatibility reasons)
     char *GetFirmwareVersion();  // (for compatibility reasons)

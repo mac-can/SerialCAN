@@ -6,16 +6,16 @@
 #	This file is part of SerialCAN.
 #
 #	SerialCAN is free software: you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
+#	it under the terms of the GNU Lesser General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.
 #
 #	SerialCAN is distributed in the hope that it will be useful,
 #	but WITHOUT ANY WARRANTY; without even the implied warranty of
 #	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+#	GNU Lesser General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
+#	You should have received a copy of the GNU Lesser General Public License
 #	along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
 #
 current_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown OS')
@@ -40,7 +40,7 @@ OBJECTS = $(OUTDIR)/SerialCAN.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o \
 	$(OUTDIR)/main.o
 
-DEFINES = -DOPTION_CAN_2_0_ONLY=1 \
+DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
 	-DOPTION_CANAPI_DRIVER=1 \
 	-DOPTION_CANAPI_RETVALS=0 \
 	-DOPTION_CANAPI_COMPANIONS=1 \
@@ -82,13 +82,16 @@ all: info outdir $(TARGET)
 
 info:
 	@echo $(CXX)" on "$(current_OS)
-	@echo "Target: "$(TARGET)
+	@echo "target: "$(TARGET)
 	@echo "install: "$(INSTALL)
 
 outdir:
 	@mkdir -p $(OUTDIR)
 
 clean:
+	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+
+distclean:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
 install:
@@ -122,4 +125,4 @@ $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
 
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
-	@echo "Target '"$@"' successfully build"
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"

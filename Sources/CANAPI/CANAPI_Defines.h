@@ -24,7 +24,7 @@
  *
  *  @author      $Author: eris $
  *
- *  @version     $Rev: 915 $
+ *  @version     $Rev: 966 $
  *
  *  @addtogroup  can_api
  *  @{
@@ -63,6 +63,7 @@ extern "C" {
 #define CANLIB_ROCKETCAN        700     /**< CAN-over-IP (RocketCAN) */
 #define CANLIB_SERIALCAN        900     /**< Serial-Line (SerialCAN) */
 #define CANLIB_SOCKETCAN        1000    /**< Linux CAN (SocketCAN) */
+#define CANLIB_CANAPILIB        (-1)    /**< CAN API Main Library */
 /** @note  Peak's PCAN-Light DLL is outdated, so the library ID can be reused.
  *  @} */
 
@@ -79,7 +80,7 @@ extern "C" {
 #elif defined(__APPLE__)
  #define CANAPI_PLATFORM       "macOS"
  #define CANDLL_CANAPILIB      "libUVCAN300.dylib"
- #define CANDLL_PCANBasic      "libUVCANPCB.dylib"
+ #define CANDLL_PCANBASIC      "libUVCANPCB.dylib"
  #define CANDLL_RUSOKU_LT      "libUVCANTOU.dylib"
  #define CANDLL_SERIALCAN      "libUVCANSLC.dylib"
  #define CANDLL_KVASERCAN      "libUVCANKVD.dylib"
@@ -91,7 +92,7 @@ extern "C" {
  #define CANAPI_PLATFORM       "x86"
  #endif
  #define CANDLL_CANAPILIB      "uvcan300.dll"
- #define CANDLL_PCANBasic      "u3canpcb.dll"
+ #define CANDLL_PCANBASIC      "u3canpcb.dll"
  #define CANDLL_KVASER_32      "u3cankvl.dll"
  #define CANDLL_RUSOKU_LT      "u3cantou.dll"
  #define CANDLL_SERIALCAN      "u3canslc.dll"
@@ -101,13 +102,13 @@ extern "C" {
  #define CAN200_IXXAT_CAC      "uvcancac.dll"
  #define CAN200_PEAK_PCAN      "uvcanpcl.dll"
  #define CAN200_VECTOR_XL      "uvcanvxl.dll"
- #define CAN200_PCANBasic      "uvcanpcb.dll"
+ #define CAN200_PCANBASIC      "uvcanpcb.dll"
  #define CAN200_UVS_TCPIP      "uvcantcp.dll"
  #define CAN200_UCAN_VCP       "uvcanvcp.dll"
 
  #define CAN100_CANAPILIB      "uvcan100.dll"
  #define CAN100_VECTOR_XL      "u1canvxl.dll"
- #define CAN100_PCANBasic      "u1canpcb.dll"
+ #define CAN100_PCANBASIC      "u1canpcb.dll"
  #define CAN100_ROCKETCAN      "u1canroc.dll"
  #define CAN100_SERIALCAN      "u1canslc.dll"
 #endif
@@ -118,11 +119,24 @@ extern "C" {
 
 #define SYSERR_OFFSET         (-10000)  /**< offset for system errors */
 
+/** @name  Miscellaneous
+ *  @brief More or less useful stuff
+ *  @{ */
+#define CAN_API_VENDOR         "UV Software, Berlin"
+#define CAN_API_AUTHOR         "Uwe Vogt, UV Software"
+#define CAN_API_WEBSITE        "www.uv-software.com"
+#define CAN_API_CONTACT        "info@uv-software.com"
+#define CAN_API_LICENSE        "GNU Lesser General Public License, Version 3"
+#define CAN_API_COPYRIGHT      "Copyright (C) 2005-20%02u, UV Software, Berlin"
+#define CAN_API_HAZARD_NOTE    "Do not connect your CAN device to a real CAN network when using this program.\n" \
+                               "This can damage your application."
+/** @} */
+
 
 /*  -----------  types  --------------------------------------------------
  */
 
-/** @brief Linux-CAN (a.k.a. SocketCAN) parameters
+/** @brief Linux-CAN (aka SocketCAN) parameters
  */
 typedef struct can_netdev_param_t_ {    /* device parameters: */
     char* ifname;                       /**< interface name (string) */

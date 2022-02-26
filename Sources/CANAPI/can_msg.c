@@ -22,9 +22,9 @@
  *
  *  @brief       CAN Message Formatter
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 909 $
+ *  @version     $Rev: 951 $
  *
  *  @addtogroup  can_msg
  *  @{
@@ -704,9 +704,9 @@ static void format_time(char *string, const msg_message_t *message)
     case MSG_FMT_TIME_SEC:
     default:
         if (msg_option.time_usec)
-            sprintf(string, "%3li.%06li", difftime.tv_sec, (long)difftime.tv_nsec / 1000L);
+            sprintf(string, "%3li.%06li", (long)difftime.tv_sec, (long)difftime.tv_nsec / 1000L);
         else/* resolution is 0.1 milliseconds! */
-            sprintf(string, "%3li.%04li", difftime.tv_sec, (long)difftime.tv_nsec / 100000L);
+            sprintf(string, "%3li.%04li", (long)difftime.tv_sec, (long)difftime.tv_nsec / 100000L);
         break;
     }
 }
