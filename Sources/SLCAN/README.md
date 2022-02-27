@@ -1,6 +1,7 @@
 ### CAN-over-Serial-Line (Lawicel SLCAN Protocol)
 
-_Copyright &copy; 2016,2020  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
+_Copyright &copy; 2016,2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
+_All rights reserved._
 
 # SLCAN
 
@@ -347,39 +348,24 @@ extern int slcan_serial_number(slcan_port_t port, uint32_t *number);
 
 ### SourceMedley Repo
 
-The modules in this folder are from the SourceMedley repo which is a collection of reusable sources for C and C++ projects.
+The modules in this folder are from the **SourceMedley** repo which is a collection of reusable sources for C and C++ projects.
 
-### License
+### Dual-License
 
-SourceMedley is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This work is dual-licensed under the terms of the BSD 2-Clause "Simplified" License and under the terms of the GNU General Public License v3.0 (or any later version).
+You can choose between one of them if you use this work in whole or in part.
 
-SourceMedley is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SourceMedley.  If not, see <http://www.gnu.org/licenses/>.
+`SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later`
 
 ### Trademarks
 
 Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other countries. \
 Windows is a registered trademarks of Microsoft Corporation in the United States and/or other countries. \
 POSIX is a registered of the Institute of Electrical and Electronic Engineers, Inc. \
-Linux is a registered trademark of Linus Torvalds.
+Linux is a registered trademark of Linus Torvalds. \
+All other company, product and service names mentioned herein are trademarks, registered trademarks or service marks of their respective owners.
 
 ### Contact
 
-Uwe Vogt \
-UV Software \
-Chausseestrasse 33a \
-10115 Berlin \
-Germany
-
-E-Mail: mailto://info@mac.can.com \
-Internet: https://www.mac-can.com
-
-##### *Have a lot of fun!*
+E-Mail: mailto://info@uv-software.com \
+Internet: https://www.uv-software.com
