@@ -2,7 +2,7 @@
 /*
  *  Controler Area Network - Lawicel SLCAN Protocol (Serial-Line CAN)
  *
- *  Copyright (c) 2016-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2016-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -47,9 +47,9 @@
  *
  *  @brief       Lawicel SLCAN protocol.
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 710 $
+ *  @version     $Rev: 711 $
  *
  *  @defgroup    slcan Lawicel SLCAN Protocol
  *  @{

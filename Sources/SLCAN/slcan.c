@@ -2,7 +2,7 @@
 /*
  *  Controler Area Network - Lawicel SLCAN Protocol (Serial-Line CAN)
  *
- *  Copyright (c) 2016-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2016-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -47,9 +47,9 @@
  *
  *  @brief       Lawicel SLCAN protocol.
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 710 $
+ *  @version     $Rev: 711 $
  *
  *  @addtogroup  slcan
  *  @{
@@ -796,14 +796,14 @@ static bool encode_message(const slcan_message_t *message, uint8_t *buffer, size
             buffer[index++] = (uint8_t)'T';
         else
             buffer[index++] = (uint8_t)'R';
-        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_STD_MASK) >> 28);
-        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_STD_MASK) >> 24);
-        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_STD_MASK) >> 20);
-        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_STD_MASK) >> 16);
-        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_STD_MASK) >> 12);
-        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_STD_MASK) >> 8);
-        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_STD_MASK) >> 4);
-        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_STD_MASK) >> 0);
+        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_XTD_MASK) >> 28);
+        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_XTD_MASK) >> 24);
+        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_XTD_MASK) >> 20);
+        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_XTD_MASK) >> 16);
+        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_XTD_MASK) >> 12);
+        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_XTD_MASK) >> 8);
+        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_XTD_MASK) >> 4);
+        buffer[index++] = (uint8_t)BCD2CHR((message->can_id & CAN_XTD_MASK) >> 0);
     }
     if(!(message->can_id & CAN_RTR_FRAME)) {
         buffer[index++] = (uint8_t)BCD2CHR(MAX_DLC(message->can_dlc));
