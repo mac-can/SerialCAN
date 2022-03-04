@@ -142,21 +142,24 @@
     <ClCompile Include="..\..\Sources\SLCAN\queue_w.c" />
     <ClCompile Include="..\..\Sources\SLCAN\serial_w.c" />
     <ClCompile Include="..\..\Sources\SLCAN\slcan.c" />
+    <ClCompile Include="..\..\Sources\Wrapper\can_api.c" />
     <ClCompile Include="..\Sources\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Sources\build_no.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Defines.h" />
-    <ClInclude Include="..\..\Sources\CANAPI\CANAPI_SerialCAN.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Types.h" />
+    <ClInclude Include="..\..\Sources\CANAPI\can_api.h" />
     <ClInclude Include="..\..\Sources\CANAPI\can_btr.h" />
     <ClInclude Include="..\..\Sources\SerialCAN.h" />
+    <ClInclude Include="..\..\Sources\SerialCAN_Defines.h" />
     <ClInclude Include="..\..\Sources\SLCAN\buffer.h" />
     <ClInclude Include="..\..\Sources\SLCAN\logger.h" />
     <ClInclude Include="..\..\Sources\SLCAN\queue.h" />
     <ClInclude Include="..\..\Sources\SLCAN\serial.h" />
     <ClInclude Include="..\..\Sources\SLCAN\slcan.h" />
+    <ClInclude Include="..\..\Sources\Wrapper\can_defs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

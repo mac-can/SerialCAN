@@ -7,6 +7,9 @@
     <Filter Include="Sources\CANAPI">
       <UniqueIdentifier>{1743d300-2c4c-4c82-a51f-4eac54cf266b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Wrapper">
+      <UniqueIdentifier>{0346e967-a44a-40bb-bb7f-b3ece2126f69}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Sources\SLCAN">
       <UniqueIdentifier>{1aedc2be-67a7-4c98-881e-cd8a7b35ddb0}</UniqueIdentifier>
     </Filter>
@@ -16,9 +19,6 @@
       <Filter>Sources\CANAPI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Sources\SerialCAN.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\main.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Sources\SLCAN\buffer_w.c">
@@ -35,6 +35,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Sources\SLCAN\slcan.c">
       <Filter>Sources\SLCAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\Wrapper\can_api.c">
+      <Filter>Sources\Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\main.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,9 +62,6 @@
     <ClInclude Include="..\..\Sources\build_no.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Sources\CANAPI\CANAPI_SerialCAN.h">
-      <Filter>Sources\CANAPI</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Sources\SLCAN\buffer.h">
       <Filter>Sources\SLCAN</Filter>
     </ClInclude>
@@ -73,6 +76,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Sources\SLCAN\slcan.h">
       <Filter>Sources\SLCAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\Wrapper\can_defs.h">
+      <Filter>Sources\Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\CANAPI\can_api.h">
+      <Filter>Sources\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Sources\SerialCAN_Defines.h">
+      <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
