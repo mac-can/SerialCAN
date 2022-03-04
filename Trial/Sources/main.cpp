@@ -161,6 +161,7 @@ int main(int argc, const char * argv[]) {
         if (!strcmp(argv[i], "RTR:OFF")) opMode.nrtr = 1;
     }
     fprintf(stdout, ">>> %s\n", CSerialCAN::GetVersion());
+    (void)channel;
 
     if((signal(SIGINT, sigterm) == SIG_ERR) ||
 #if !defined(_WIN32) && !defined(_WIN64)

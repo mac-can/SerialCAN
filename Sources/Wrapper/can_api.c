@@ -92,6 +92,7 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <errno.h>
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include "slcan.h"

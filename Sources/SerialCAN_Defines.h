@@ -125,6 +125,9 @@ extern "C" {
 #elif defined(__APPLE__)
 #define SLCAN_LIB_DRIVER        "(none)"
 #define SLCAN_LIB_WRAPPER       "libUVCANSLC.dylib"
+#elif defined(__CYGWIN__)
+#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_WRAPPER       "u3canslc.dll"
 #else
 #error Platform not supported
 #endif
