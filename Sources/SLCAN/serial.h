@@ -2,7 +2,7 @@
 /*
  *  Software for Industrial Communication, Motion Control and Automation
  *
- *  Copyright (c) 2002-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2002-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -47,9 +47,9 @@
  *
  *  @brief       Serial data transmission.
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 710 $
+ *  @version     $Rev: 712 $
  *
  *  @defgroup    serial Serial Data Transmission
  *  @{
@@ -139,6 +139,8 @@ extern int sio_destroy(sio_port_t port);
  *  @param[in]   param   - serial port attributes
  *
  *  @returns     a file descriptor if successful, or a negative value on error.
+ * 
+ *  @remarks     On Windows, the file handle of the communication port is returned.
  *
  *  @note        System variable 'errno' will be set in case of an error.
  *

@@ -226,6 +226,7 @@ EXPORT
 int can_init(int32_t channel, uint8_t mode, const void *param)
 {
     int rc = CANERR_FATAL;              // return code
+    int fd = -1;                        // file descriptor
     int i;
 
     if (channel != CANDEV_SERIAL)       // must be serial port device!
@@ -286,10 +287,10 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
         rc = slcan_error(-1);
         goto err_init;
     }
-    // (5) connect serial interface
-    rc = slcan_connect(can[i].port, name);
-    rc = slcan_error(rc);
-    if (rc != CANERR_NOERROR) {         // errno is set in this case
+    // (5) connect serial interface (returns a file descriptor)
+    fd = slcan_connect(can[i].port, name);
+    rc = slcan_error(fd);
+    if (fd < 0) {                       // errno is set in this case
         (void)slcan_destroy(can[i].port);
         goto err_init;
     }
@@ -309,7 +310,10 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     // :-) CAN controller is in INIT state
     can[i].mode.byte = mode;            // store selected operation mode
     can[i].status.byte = CANSTAT_RESET; // CAN controller not started yet!
-    strncpy(can[i].name, name, CANPROP_MAX_BUFFER_SIZE);
+    if (strncmp(name, "\\\\.\\", 4))
+        strncpy(can[i].name, &name[0], CANPROP_MAX_BUFFER_SIZE);
+    else
+        strncpy(can[i].name, &name[4], CANPROP_MAX_BUFFER_SIZE);
     can[i].name[CANPROP_MAX_BUFFER_SIZE - 1] = '\0';
 
     return i;                           // return the handle
@@ -647,7 +651,7 @@ int can_property(int handle, uint16_t param, void *value, uint32_t nbyte)
 EXPORT
 char *can_hardware(int handle)
 {
-    static char hardware[CANPROP_MAX_BUFFER_SIZE + 36] = "";
+    static char hardware[2*CANPROP_MAX_BUFFER_SIZE] = "";
     uint8_t hw_version = 0x00U;
 
     if (!init)                          // must be initialized
@@ -662,8 +666,10 @@ char *can_hardware(int handle)
         return NULL;
 
     // note: TTY name has at worst 255 characters plus terminating zero
-    snprintf(hardware, CANPROP_MAX_BUFFER_SIZE + 36, "Hardware %u.%u (at %s)",
-        (hw_version >> 4), (hw_version & 0xFU), can[handle].name);
+    snprintf(hardware, 2*CANPROP_MAX_BUFFER_SIZE, "Hardware %u.%u (%s:%u,%u-%c-%u)",
+        (hw_version >> 4), (hw_version & 0xFU), can[handle].name, can[handle].attr.baudrate, can[handle].attr.bytesize,
+        can[handle].attr.parity == CANSIO_EVENPARITY ? 'E' : (can[handle].attr.parity == CANSIO_ODDPARITY ? 'O' : 'N'),
+        can[handle].attr.stopbits);
     hardware[CANPROP_MAX_BUFFER_SIZE - 1] = '\0';  // to be safe
 
     return (char*)hardware;             // hardware version

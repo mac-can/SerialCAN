@@ -49,7 +49,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 711 $
+ *  @version     $Rev: 712 $
  *
  *  @defgroup    slcan Lawicel SLCAN Protocol
  *  @{
@@ -198,7 +198,9 @@ extern int slcan_destroy(slcan_port_t port);
  *  @param[in]   device  - name of the serial device
  *  !param[in]   param   - serial port attributes
  *
- *  @returns     0 if successful, or a negative value on error.
+ *  @returns     a file descriptor if successful, or a negative value on error.
+ *
+ *  @remarks     On Windows, the file handle of the communication port is returned.
  *
  *  @note        System variable 'errno' will be set in case of an error.
  *
