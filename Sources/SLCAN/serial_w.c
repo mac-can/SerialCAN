@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 712 $
+ *  @version     $Rev: 713 $
  *
  *  @addtogroup  serial
  *  @{
@@ -332,7 +332,8 @@ int sio_disconnect(sio_port_t port) {
 
 int sio_transmit(sio_port_t port, const uint8_t *buffer, size_t nbytes) {
     serial_t *serial = (serial_t*)port;
-    DWORD res = 0, errors;
+    DWORD sent = 0U;
+    DWORD errors;
 
     /* sanity check */
     errno = 0;
@@ -349,7 +350,6 @@ int sio_transmit(sio_port_t port, const uint8_t *buffer, size_t nbytes) {
         return -1;
     }
     /* send n bytes (set errno on error) */
-	DWORD sent = 0U;
     if (!WriteFile(serial->hPort, buffer, (DWORD)nbytes, &sent, NULL)) {
         (void)ClearCommError(serial->hPort, &errors, NULL);
         errno = EBUSY;
@@ -391,12 +391,12 @@ static DWORD WINAPI reception_loop(LPVOID lpParam) {
     errno = 0;
     if (!serial) {
         errno = ENODEV;
-        perror("+++ serial");
+        perror("serial");
         abort();
     }
     if (serial->hPort == INVALID_HANDLE_VALUE) {
         errno = EBADF;
-        perror("+++ serial");
+        perror("serial");
         abort();
     }
     /* the torture never stops */

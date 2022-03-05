@@ -2,7 +2,7 @@
 /*
  *  Software for Industrial Communication, Motion Control and Automation
  *
- *  Copyright (c) 2002-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2002-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -49,9 +49,9 @@
  *
  *  @remarks     POSIX compatible variant (Linux, macOS)
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 710 $
+ *  @version     $Rev: 713 $
  *
  *  @addtogroup  serial
  *  @{
@@ -357,6 +357,7 @@ static void *reception_loop(void *arg) {
             return NULL;
         }
     }
+    return NULL;
 }
 
 /*  ----------------------------------------------------------------------

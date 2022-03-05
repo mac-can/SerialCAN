@@ -49,7 +49,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 711 $
+ *  @version     $Rev: 713 $
  *
  *  @addtogroup  slcan
  *  @{
@@ -460,7 +460,6 @@ int slcan_write_message(slcan_port_t port, const slcan_message_t *message, uint1
     slcan_t *slcan = (slcan_t*)port;
     uint8_t buffer[BUFFER_SIZE];
     size_t length;
-    uint8_t response[2];
     int nbytes;
     int res = -1;
     (void)timeout;
@@ -485,6 +484,7 @@ int slcan_write_message(slcan_port_t port, const slcan_message_t *message, uint1
     /* send CAN message to the device via serial port */
     nbytes = sio_transmit(slcan->port, buffer, length);
     if (nbytes == (int)length) {
+        uint8_t response[2];
         /* wait for response in the reception buffer */
         nbytes = buffer_get(slcan->response, (void*)response, 2, TRANSMIT_TIMEOUT);
         if ((nbytes == 2) && (response[1] == '\r') &&
@@ -777,7 +777,6 @@ static int send_command(slcan_t *slcan, const uint8_t *request, size_t nbytes,
 
 static bool encode_message(const slcan_message_t *message, uint8_t *buffer, size_t *nbytes) {
     size_t index = 0;
-    uint8_t i;
 
     assert(message);
     assert(buffer);
@@ -807,7 +806,7 @@ static bool encode_message(const slcan_message_t *message, uint8_t *buffer, size
     }
     if(!(message->can_id & CAN_RTR_FRAME)) {
         buffer[index++] = (uint8_t)BCD2CHR(MAX_DLC(message->can_dlc));
-        for (i = 0; i < (uint8_t)MAX_DLC(message->can_dlc); i++) {
+        for (uint8_t i = 0; i < (uint8_t)MAX_DLC(message->can_dlc); i++) {
             buffer[index++] = (uint8_t)BCD2CHR(message->data[i] >> 4);
             buffer[index++] = (uint8_t)BCD2CHR(message->data[i] >> 0);
         }
@@ -889,12 +888,11 @@ static bool decode_message(slcan_message_t *message, const uint8_t *buffer, size
 static void reception_loop(const void *port, const uint8_t *buffer, size_t nbytes) {
     slcan_t *slcan = (slcan_t*)port;
     slcan_message_t message;
-    size_t index;
 
     if (slcan && buffer) {
         assert(slcan->response);
         assert(slcan->messages);
-        for (index = 0; index < nbytes; index++) {
+        for (size_t index = 0; index < nbytes; index++) {
             /* get next byte (asynchronous reception) */
             if ((slcan->index + 1) < BUFFER_SIZE)
                 slcan->buffer[slcan->index++] = buffer[index];

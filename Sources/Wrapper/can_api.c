@@ -326,7 +326,7 @@ err_init:                               // otherwise:
 EXPORT
 int can_exit(int handle)
 {
-    int rc = CANERR_FATAL;              // return code
+    int rc;                             // return code
     int i;
 
     if (!init)                          // must be initialized
@@ -369,7 +369,7 @@ int can_exit(int handle)
 EXPORT
 int can_kill(int handle)
 {
-    int rc = CANERR_FATAL;              // return code
+    int rc;                             // return code
     int i;
 
     if (!init)                          // must be initialized
@@ -562,7 +562,7 @@ EXPORT
 int can_status(int handle, uint8_t *status)
 {
     slcan_flags_t flags;                // SLCAN flags
-    int rc = CANERR_FATAL;              // return code
+    int rc;                             // return code
 
     if (!init)                          // must be initialized
         return CANERR_NOTINIT;
@@ -667,7 +667,8 @@ char *can_hardware(int handle)
 
     // note: TTY name has at worst 255 characters plus terminating zero
     snprintf(hardware, 2*CANPROP_MAX_BUFFER_SIZE, "Hardware %u.%u (%s:%u,%u-%c-%u)",
-        (hw_version >> 4), (hw_version & 0xFU), can[handle].name, can[handle].attr.baudrate, can[handle].attr.bytesize,
+        (uint8_t)(hw_version >> 4), (uint8_t)(hw_version & 0xFU), 
+        can[handle].name, can[handle].attr.baudrate, can[handle].attr.bytesize,
         can[handle].attr.parity == CANSIO_EVENPARITY ? 'E' : (can[handle].attr.parity == CANSIO_ODDPARITY ? 'O' : 'N'),
         can[handle].attr.stopbits);
     hardware[CANPROP_MAX_BUFFER_SIZE - 1] = '\0';  // to be safe
@@ -692,8 +693,9 @@ char *can_firmware(int handle)
     if (slcan_version_number(can[handle].port, NULL, &sw_version) < 0)
         return NULL;
 
-    snprintf(firmware, CANPROP_MAX_BUFFER_SIZE, "Firmware %u.%u (SLCAN protocol)",
-        (sw_version >> 4), (sw_version & 0xFU));
+    snprintf(firmware, CANPROP_MAX_BUFFER_SIZE, "Firmware %u.%u (%s protocol)",
+        (uint8_t)(sw_version >> 4), (uint8_t)(sw_version & 0xFU),
+        can[handle].attr.options == CANSIO_SLCAN ? "SLCAN" : "?");
     firmware[CANPROP_MAX_BUFFER_SIZE - 1] = '\0';  // to be safe
 
     return (char*)firmware;             // firmware version
@@ -898,8 +900,8 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
     can_speed_t speed;
     uint8_t status = 0U;
     uint8_t load = 0U;
-    uint8_t version = 0x00U;
-    uint32_t serial = 0x00000000U;
+    uint8_t version_no = 0x00U;
+    uint32_t serial_no = 0x00000000U;
  
     assert(IS_HANDLE_VALID(handle));    // just to make sure
 
@@ -1027,8 +1029,8 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
     /* vendor-specific properties */
     case (CANPROP_GET_VENDOR_PROP + SLCAN_SERIAL_NUMBER):       // serial no (uint32_t)
         if (nbyte >= sizeof(uint32_t)) {
-            if ((rc = slcan_serial_number(can[handle].port, &serial)) == 0) {
-                *(uint32_t*)value = (uint32_t)serial;
+            if ((rc = slcan_serial_number(can[handle].port, &serial_no)) == 0) {
+                *(uint32_t*)value = (uint32_t)serial_no;
                 rc = CANERR_NOERROR;
             }
             else {
@@ -1038,9 +1040,9 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         break;
     case (CANPROP_GET_VENDOR_PROP + SLCAN_HARDWARE_VERSION):    // hardware version (uint16_t)
         if (nbyte >= sizeof(uint16_t)) {
-            if ((rc = slcan_version_number(can[handle].port, &version, NULL)) == 0) {
-                *(uint16_t*)value = ((uint16_t)(version & 0xF0U) << 4)
-                                  | ((uint16_t)version & 0xFU);
+            if ((rc = slcan_version_number(can[handle].port, &version_no, NULL)) == 0) {
+                *(uint16_t*)value = ((uint16_t)(version_no & 0xF0U) << 4)
+                                  | ((uint16_t)version_no & 0xFU);
                 rc = CANERR_NOERROR;
             }
             else {
@@ -1050,9 +1052,9 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         break;
     case (CANPROP_GET_VENDOR_PROP + SLCAN_FIRMWARE_VERSION):    // firmware version (uint16_t)
         if (nbyte >= sizeof(uint16_t)) {
-            if ((rc = slcan_version_number(can[handle].port, NULL, &version)) == 0) {
-                *(uint16_t*)value = ((uint16_t)(version & 0xF0U) << 4)
-                                  | ((uint16_t)version & 0xFU);
+            if ((rc = slcan_version_number(can[handle].port, NULL, &version_no)) == 0) {
+                *(uint16_t*)value = ((uint16_t)(version_no & 0xF0U) << 4)
+                                  | ((uint16_t)version_no & 0xFU);
                 rc = CANERR_NOERROR;
             }
             else {
@@ -1065,7 +1067,6 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
             *(int32_t*)value = (int32_t)CAN_CLOCK_FREQUENCY;
             rc = CANERR_NOERROR;
         }
-        break;
         break;
     default:
         rc = lib_parameter(param, value, nbyte);
