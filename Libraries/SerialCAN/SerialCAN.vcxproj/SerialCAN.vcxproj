@@ -126,35 +126,35 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_dll|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>u3canslc</TargetName>
+    <TargetName>uvSerialCAN</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_lib|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>u3canslc</TargetName>
+    <TargetName>uvSerialCAN</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_dll|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>u3canslc</TargetName>
+    <TargetName>uvSerialCAN</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_lib|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>u3canslc</TargetName>
+    <TargetName>uvSerialCAN</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_dll|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>u3canslc</TargetName>
+    <TargetName>uvSerialCAN</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_lib|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>u3canslc</TargetName>
+    <TargetName>uvSerialCAN</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_dll|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>u3canslc</TargetName>
+    <TargetName>uvSerialCAN</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_lib|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>u3canslc</TargetName>
+    <TargetName>uvSerialCAN</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_dll|Win32'">
     <ClCompile>
@@ -162,7 +162,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANCPP_DLLEXPORT=1;OPTION_CANAPI_DLLEXPORT=0;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -179,7 +179,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANCPP_DLLEXPORT=1;OPTION_CANAPI_DLLEXPORT=0;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -196,7 +196,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANCPP_DLLEXPORT=1;OPTION_CANAPI_DLLEXPORT=0;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -213,7 +213,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANCPP_DLLEXPORT=1;OPTION_CANAPI_DLLEXPORT=0;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -232,7 +232,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANCPP_DLLEXPORT=1;OPTION_CANAPI_DLLEXPORT=0;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -253,7 +253,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANCPP_DLLEXPORT=1;OPTION_CANAPI_DLLEXPORT=0;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -274,7 +274,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANCPP_DLLEXPORT=1;OPTION_CANAPI_DLLEXPORT=0;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -295,7 +295,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;UVCANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANCPP_DLLEXPORT=1;OPTION_CANAPI_DLLEXPORT=0;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\..\..\Sources;..\..\..\Sources\CANAPI;..\..\..\Sources\SLCAN;..\..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -316,6 +316,8 @@
     <ClInclude Include="..\..\..\Sources\CANAPI\CANAPI_Types.h" />
     <ClInclude Include="..\..\..\Sources\CANAPI\can_api.h" />
     <ClInclude Include="..\..\..\Sources\CANAPI\can_btr.h" />
+    <ClInclude Include="..\..\..\Sources\SerialCAN.h" />
+    <ClInclude Include="..\..\..\Sources\SerialCAN_Defines.h" />
     <ClInclude Include="..\..\..\Sources\SLCAN_Driver\buffer.h" />
     <ClInclude Include="..\..\..\Sources\SLCAN_Driver\logger.h" />
     <ClInclude Include="..\..\..\Sources\SLCAN_Driver\queue.h" />
@@ -334,6 +336,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_lib|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_dll|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_lib|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\SerialCAN.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_dll|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_lib|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_dll|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_lib|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_dll|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_lib|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_dll|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_lib|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\Sources\SLCAN\buffer_w.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_dll|Win32'">NotUsing</PrecompiledHeader>
