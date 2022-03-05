@@ -23,6 +23,7 @@
 int usleep(unsigned int usec);
 #endif
 
+#include "SerialCAN_Defines.h"
 #include "SerialCAN.h"
 
 #ifndef BAUDRATE
@@ -52,17 +53,17 @@ int main(int argc, const char * argv[]) {
         perror("+++ error");
         return errno;
     }
-    if ((retVal = mySerialCAN.InitializeChannel(SERIAL_PORT, opMode)) != CCANAPI::NoError) {
+    if ((retVal = mySerialCAN.InitializeChannel(SERIAL_PORT, opMode)) != CSerialCAN::NoError) {
         std::cerr << "+++ error: interface could not be initialized" << std::endl;
         return retVal;
     }
-    if ((retVal = mySerialCAN.StartController(bitrate)) != CCANAPI::NoError) {
+    if ((retVal = mySerialCAN.StartController(bitrate)) != CSerialCAN::NoError) {
         std::cerr << "+++ error: interface could not be started" << std::endl;
         goto teardown;
     }
     std::cout << "Press Ctrl+C to abort..." << std::endl;
     while (running) {
-        if ((retVal = mySerialCAN.ReadMessage(message, CANREAD_INFINITE)) == CCANAPI::NoError) {
+        if ((retVal = mySerialCAN.ReadMessage(message, CANREAD_INFINITE)) == CSerialCAN::NoError) {
             fprintf(stdout, "%i\t%7li.%04li\t%03X\t%c%c [%i]", frames++,
                              message.timestamp.tv_sec, message.timestamp.tv_nsec / 100000,
                              message.id, message.xtd? 'X' : 'S', message.rtr? 'R' : ' ', message.dlc);
@@ -72,16 +73,17 @@ int main(int argc, const char * argv[]) {
                 fprintf(stdout, " <<< status frame");
             fprintf(stdout, "\n");
         }
-        else if (retVal != CCANAPI::ReceiverEmpty) {
+        else if (retVal != CSerialCAN::ReceiverEmpty) {
             fprintf(stderr, "+++ error: read message returned %i", retVal);
             running = 0;
         }
     }
     std::cout << std::endl;
 teardown:
-    if ((retVal = mySerialCAN.TeardownChannel()) != CCANAPI::NoError)
+    if ((retVal = mySerialCAN.TeardownChannel()) != CSerialCAN::NoError)
         std::cerr << "+++ error: interface could not be shutdown" << std::endl;
-    return retVal;
+     std::cout << "Cheers!" << std::endl;
+     return retVal;
 }
 
 static void sigterm(int signo) {

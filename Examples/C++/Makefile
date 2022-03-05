@@ -6,6 +6,7 @@ current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 TARGET1 = can_recv
 SOURCE1 = $(TARGET1).cpp
 DEFINES1 = -DBAUDRATE=CANBTR_INDEX_250K
+HEADERS1 = -I../../Includes
 ifeq ($(current_OS),Darwin) # macOS - libSerial.dylib
 LIBRARY1 = SerialCAN
 else ifeq ($(current_OS),Linux) # linux - libserialcan.so.1
@@ -15,6 +16,7 @@ endif
 TARGET2 = can_send
 SOURCE2 = $(TARGET2).cpp
 DEFINES2 = -DBAUDRATE=CANBTR_INDEX_250K
+HEADERS2 = -I../../Includes
 ifeq ($(current_OS),Darwin) # macOS - libUVCANSLC.dylib
 LIBRARY2 = UVCANSLC
 else ifeq ($(current_OS),Linux) # linux - libuvcanslc.so.1
@@ -31,10 +33,10 @@ RM = rm -f
 all: $(TARGET1) $(TARGET2)
 
 $(TARGET1):	$(SOURCE1)
-	$(CXX) $(SOURCE1) $(DEFINES1) $(CXXFLAGS) -l $(LIBRARY1) $(LDFLAGS) -o $(TARGET1)
+	$(CXX) $(SOURCE1) $(DEFINES1) $(HEADERS1) $(CXXFLAGS) -l $(LIBRARY1) $(LDFLAGS) -o $(TARGET1)
 
 $(TARGET2):	$(SOURCE2)
-	$(CXX) $(SOURCE2) $(DEFINES2) $(CXXFLAGS) -l $(LIBRARY2) $(LDFLAGS) -o $(TARGET2)
+	$(CXX) $(SOURCE2) $(DEFINES2) $(HEADERS2) $(CXXFLAGS) -l $(LIBRARY2) $(LDFLAGS) -o $(TARGET2)
 
 clean:
 	@-$(RM) *.o *~ $(TARGET1) $(TARGET2)

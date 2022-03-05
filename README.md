@@ -153,7 +153,7 @@ Windows&reg; (x64 operating systems):
 - Apple LLVM version 10.0.0 (clang-1000.11.45.5)
 - Xcode Version 10.1 (10B61)
 
-#### Debian Buster (10.7)
+#### Debian Buster (10.11)
 
 - Debian 4.19.160-2 (2020-11-18) x86_64 GNU/Linux
 - gcc (Debian 8.3.0-6) 8.3.0
@@ -187,7 +187,7 @@ Windows&reg; (x64 operating systems):
    The companion module `can_btr.c` contains some dead stores.
 
 6. No libraries are build under Cygwin; only the utilities
-   [`can_moni`](can_moni-for-serialcan) and [`can_test`](can_test-for-serialcan).
+   [`can_moni`](#can_moni) and [`can_test`](#can_test).
 
 7. The Phython examples didn't catch Ctrl-C on Linux.
 

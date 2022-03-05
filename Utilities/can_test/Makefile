@@ -36,8 +36,6 @@ OBJECTS = $(OUTDIR)/SerialCAN.o \
 	$(OUTDIR)/main.o $(OUTDIR)/Timer.o
 
 
-ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
-
 VERSION = 0
 
 TARGET  = can_test
@@ -69,8 +67,6 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 LIBRARIES =
 
 LDFLAGS  += -lpthread
-
-endif
 
 
 CXX = g++
