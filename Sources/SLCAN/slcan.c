@@ -49,7 +49,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 713 $
+ *  @version     $Rev: 714 $
  *
  *  @addtogroup  slcan
  *  @{
@@ -266,8 +266,6 @@ int slcan_signal(slcan_port_t port) {
 EXPORT
 int slcan_connect(slcan_port_t port, const char *device) {
     slcan_t *slcan = (slcan_t*)port;
-//    uint8_t cr = 0xAU;
-//    uint8_t waste[42];
     int res = -1;
 
     /* sanity check */
@@ -284,6 +282,8 @@ int slcan_connect(slcan_port_t port, const char *device) {
     res = sio_connect(slcan->port, device, NULL);
     /* send three [CR] to purge the data terminal */
 #if (0)
+//    uint8_t cr = 0xAU;
+//    uint8_t waste[42];
     // FIXME: this does not work
     for (int i = 0; i < 3; i++)
         if (sio_transmit(slcan->port, &cr, 1) == 1)

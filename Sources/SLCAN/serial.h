@@ -49,7 +49,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 712 $
+ *  @version     $Rev: 714 $
  *
  *  @defgroup    serial Serial Data Transmission
  *  @{
@@ -140,7 +140,7 @@ extern int sio_destroy(sio_port_t port);
  *
  *  @returns     a file descriptor if successful, or a negative value on error.
  * 
- *  @remarks     On Windows, the file handle of the communication port is returned.
+ *  @remarks     On Windows, the communication port number (zero based) is returned.
  *
  *  @note        System variable 'errno' will be set in case of an error.
  *

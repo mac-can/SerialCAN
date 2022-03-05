@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 713 $
+ *  @version     $Rev: 714 $
  *
  *  @addtogroup  serial
  *  @{
@@ -253,14 +253,14 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
     dcb.fParity = FALSE;                    // enable parity checking
     dcb.fOutxCtsFlow = FALSE;               // CTS output flow control
     dcb.fOutxDsrFlow = FALSE;               // DSR output flow control
-    dcb.fDtrControl = DTR_CONTROL_ENABLE;   // DTR flow control type
+    dcb.fDtrControl = DTR_CONTROL_DISABLE;  // DTR flow control type
     dcb.fDsrSensitivity = FALSE;            // DSR sensitivity
     dcb.fTXContinueOnXoff = FALSE;          // XOFF continues Tx
     dcb.fOutX = FALSE;                      // XON/XOFF out flow control
     dcb.fInX = FALSE;                       // XON/XOFF in flow control
     dcb.fErrorChar = FALSE;                 // enable error replacement
     dcb.fNull = FALSE;                      // enable null stripping
-    dcb.fRtsControl = RTS_CONTROL_ENABLE;   // RTS flow control
+    dcb.fRtsControl = RTS_CONTROL_DISABLE;  // RTS flow control
     dcb.fAbortOnError = FALSE;              // abort reads/writes on error
     //dcb.XonLim = 0;                       // transmit XON threshold
     //dcb.XoffLim = 30108;                  // transmit XOFF threshold
@@ -289,13 +289,9 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
         errno = ENODEV;
         return -1;
     }
-    /* return the COM file handle */
+    /* return COM port number (zero based) */
     (void)ClearCommError(serial->hPort, &errors, NULL);
-#if (0)
-    return comm;  // FIXME: return COM file handle
-#else
-    return (int)serial->hPort;
-#endif
+    return (comm - 1);
 }
 
 int sio_disconnect(sio_port_t port) {
