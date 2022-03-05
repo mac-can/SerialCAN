@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 714 $
+ *  @version     $Rev: 715 $
  *
  *  @addtogroup  serial
  *  @{
@@ -309,7 +309,12 @@ int sio_disconnect(sio_port_t port) {
         return -1;
     }
     /* kill the reception thread */
+#if (0)
     (void)TerminateThread(serial->hThread, 0);
+    // warning C6258: using TerminateThread does not allow proper thread clean up.
+#else
+    (void)SetEvent(serial->hThread);
+#endif
     (void)WaitForSingleObject(serial->hThread, 0);
     (void)CloseHandle(serial->hThread);
     serial->hThread = NULL;

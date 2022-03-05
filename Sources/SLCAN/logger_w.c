@@ -2,7 +2,7 @@
 /*
  *  Software for Industrial Communication, Motion Control and Automation
  *
- *  Copyright (c) 2016-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2016-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -49,9 +49,9 @@
  *
  *  @remarks     Windows compatible variant (_WIN32 and _WIN64)
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 710 $
+ *  @version     $Rev: 715 $
  *
  *  @addtogroup  logger
  *  @{
@@ -172,11 +172,16 @@ int log_exit(void)
         return -1;
     }
     /* kill the logging thread and release all resources */
-    (void) TerminateThread(hThread, 0);
-    (void) WaitForSingleObject(hThread, 0);
-    (void) CloseHandle(hMutex);
-    (void) CloseHandle(hPipi);
-    (void) CloseHandle(hPipo);
+#if (0)
+    (void)TerminateThread(hThread, 0);
+    // warning C6258: using TerminateThread does not allow proper thread clean up.
+#else
+    (void)SetEvent(hThread);
+#endif
+    (void)WaitForSingleObject(hThread, 0);
+    (void)CloseHandle(hMutex);
+    (void)CloseHandle(hPipi);
+    (void)CloseHandle(hPipo);
     hThread = NULL;
     hMutex = NULL;
     /* write a footer into the log file */
@@ -216,7 +221,7 @@ int log_sync(const uint8_t *buffer, size_t nbytes)
     fputc('\n', logger);
 
     /* leave critical section */
-    (void) ReleaseMutex(hMutex);
+    (void)ReleaseMutex(hMutex);
 
     /* return the number of bytes written */
     return (int)i;
@@ -264,7 +269,7 @@ int log_printf(const char *format, ...)
     fflush(logger);
 
     /* leave critical section */
-    (void) ReleaseMutex(hMutex);
+    (void)ReleaseMutex(hMutex);
 
     /* return result from printf */
     return res;
@@ -285,7 +290,7 @@ static DWORD WINAPI logging(LPVOID lpParam)
                     for (i = 0; i < nbytes; i++)
                         fprintf(logger, " %02X", buffer[i]);
                     fputc('\n', logger);
-                    (void) ReleaseMutex(hMutex);
+                    (void)ReleaseMutex(hMutex);
                 }
             }
         }
