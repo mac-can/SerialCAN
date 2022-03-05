@@ -120,7 +120,7 @@ outdir:
 clean:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
-distclean:
+pristine:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
 install:

@@ -62,7 +62,7 @@ clean:
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
 
-distclean:
+pristine:
 	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
