@@ -57,7 +57,7 @@
 #define SERIALCAN_LIBRARY_ID  CANLIB_SERIALCAN
 #define SERIALCAN_LIBRARY_NAME  CANDLL_SERIALCAN
 #define SERIALCAN_LIBRARY_VENDOR  "UV Software, Berlin"
-#define SERIALCAN_LIBRARY_LICENSE  "GNU Lesser General Public License, Version 3"
+#define SERIALCAN_LIBRARY_LICENSE  "BSD-2-Clause OR GPL-3.0-or-later"
 #define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (c) 2016-2022  Uwe Vogt, UV Software, Berlin"
 #define SERIALCAN_LIBRARY_HAZARD_NOTE  "If you connect your CAN device to a real CAN network when using this library,\n" \
                                        "you might damage your application."
@@ -71,13 +71,6 @@
 class CANCPP CSerialCAN : public CCanApi {
 private:
     CANAPI_Handle_t m_Handle;  ///< CAN interface handle
-    CANAPI_OpMode_t m_OpMode;  ///< CAN operation mode
-    CANAPI_Bitrate_t m_Bitrate;  ///< CAN bitrate settings
-    struct {
-        uint64_t u64TxMessages;  ///< number of transmitted CAN messages
-        uint64_t u64RxMessages;  ///< number of received CAN messages
-        uint64_t u64ErrorFrames;  ///< number of received status messages
-    } m_Counter;
 public:
     // constructor / destructor
     CSerialCAN();

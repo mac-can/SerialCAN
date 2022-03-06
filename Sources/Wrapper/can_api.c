@@ -135,7 +135,7 @@ static void _finalizer() {
 #define SYSERR_OFFSET           (-10000)
 #endif
 
-#define SERIAL_BAUDRATE         115200U
+#define SERIAL_BAUDRATE         57600U
 #define SERIAL_BYTESIZE         CANSIO_8DATABITS
 #define SERIAL_PARITY           CANSIO_NOPARITY
 #define SERIAL_STOPBITS         CANSIO_1STOPBIT
