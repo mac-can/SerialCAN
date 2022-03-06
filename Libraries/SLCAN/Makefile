@@ -100,8 +100,18 @@ LDFLAGS  += -lpthread \
 	-current_version $(CURRENT_VERSION) \
 	-compatibility_version $(COMPATIBILITY_VERSION)
 
-ARFLAGS = r
+LTFLAGS += -static
 
+ifeq ($(BINARY),UNIVERSAL)
+CFLAGS += -arch arm64 -arch x86_64
+CXXFLAGS += -arch arm64 -arch x86_64
+LDFLAGS += -arch arm64 -arch x86_64
+endif
+
+CXX = clang++
+CC = clang
+LD = clang
+LT = libtool
 endif
 
 ifeq ($(current_OS),Linux) # linux - libslcan.so.1
@@ -141,12 +151,12 @@ LDFLAGS  += -lpthread \
 
 ARFLAGS = r
 
-endif
-
 CXX = g++
 CC = gcc
 LD = gcc
 AR = ar
+endif
+
 RM = rm -f
 CP = cp -f
 LN = ln -s
@@ -161,7 +171,7 @@ INCDIR = $(HOME_DIR)/Includes
 all: info outdir bindir incdir $(STATIC) $(TARGET)
 
 info:
-	@echo $(CXX)" on "$(current_OS)
+	@echo $(CC)" on "$(current_OS)
 	@echo "target: "$(TARGET)
 	@echo "install: "$(INSTALL)
 
@@ -176,12 +186,16 @@ incdir:
 	$(CP) $(SERIAL_DIR)/slcan.h $(INCDIR)
 
 clean:
-	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
 pristine:
-	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 ifeq ($(current_OS),Darwin)
-	$(RM) $(BINDIR)/$(TARGET) $(BINDIR)/$(STATIC) $(BINDIR)/$(LIBRARY).dylib
+	$(RM) *.dylib *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(BINDIR)/*.dylib $(BINDIR)/*.a
+endif
+ifeq ($(current_OS),Linux)
+	$(RM) *.so *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(BINDIR)/*.so $(BINDIR)/*.a
 endif
 
 install:
@@ -214,10 +228,22 @@ $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
 
 
 $(STATIC): $(OBJECTS)
+ifeq ($(current_OS),Darwin)
+	$(LT) $(LTFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
+	@lipo -archs $@
+	$(CP) $(STATIC) $(BINDIR)
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
+endif
+ifeq ($(current_OS),Linux)
 	$(AR) $(ARFLAGS) $@ $(OBJECTS) $(LIBRARIES)
 	$(CP) $(STATIC) $(BINDIR)
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
+endif
 
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
+ifeq ($(current_OS),Darwin)
+	@lipo -archs $@
+endif
 	$(CP) $(TARGET) $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"

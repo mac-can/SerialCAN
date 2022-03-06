@@ -113,8 +113,18 @@ LDFLAGS  += -lpthread \
 	-current_version $(CURRENT_VERSION) \
 	-compatibility_version $(COMPATIBILITY_VERSION)
 
-ARFLAGS = r
+LTFLAGS += -static
 
+ifeq ($(BINARY),UNIVERSAL)
+CFLAGS += -arch arm64 -arch x86_64
+CXXFLAGS += -arch arm64 -arch x86_64
+LDFLAGS += -arch arm64 -arch x86_64
+endif
+
+CXX = clang++
+CC = clang
+LD = clang++
+LT = libtool
 endif
 
 ifeq ($(current_OS),Linux) # linux - libserial.so.1
@@ -144,7 +154,8 @@ DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
 
 HEADERS = -I$(SOURCE_DIR) \
 	-I$(CANAPI_DIR) \
-	-I$(SERIAL_DIR)
+	-I$(SERIAL_DIR) \
+	-I$(WRAPPER_DIR)
 
 CFLAGS += -fPIC -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
@@ -162,12 +173,12 @@ LDFLAGS  += -lpthread \
 
 ARFLAGS = r
 
-endif
-
 CXX = g++
 CC = gcc
 LD = g++
 AR = ar
+endif
+
 RM = rm -f
 CP = cp -f
 LN = ln -s
@@ -201,12 +212,16 @@ incdir:
 	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCDIR)
 
 clean:
-	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
 pristine:
-	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 ifeq ($(current_OS),Darwin)
-	$(RM) $(BINDIR)/$(TARGET) $(BINDIR)/$(STATIC) $(BINDIR)/$(LIBRARY).dylib
+	$(RM) *.dylib *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(BINDIR)/*.dylib $(BINDIR)/*.a
+endif
+ifeq ($(current_OS),Linux)
+	$(RM) *.so *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(BINDIR)/*.so $(BINDIR)/*.a
 endif
 
 install:
@@ -247,10 +262,22 @@ $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
 
 
 $(STATIC): $(OBJECTS)
+ifeq ($(current_OS),Darwin)
+	$(LT) $(LTFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
+	@lipo -archs $@
+	$(CP) $(STATIC) $(BINDIR)
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
+endif
+ifeq ($(current_OS),Linux)
 	$(AR) $(ARFLAGS) $@ $(OBJECTS) $(LIBRARIES)
 	$(CP) $(STATIC) $(BINDIR)
+	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
+endif
 
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
+ifeq ($(current_OS),Darwin)
+	@lipo -archs $@
+endif
 	$(CP) $(TARGET) $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
