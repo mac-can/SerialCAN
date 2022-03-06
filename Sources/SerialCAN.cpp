@@ -79,11 +79,11 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 #if (OPTION_SERIALCAN_DYLIB != 0)
 __attribute__((constructor))
 static void _initializer() {
-    LOGGER_INIT("slcan.log");
+    // default initializer
 }
 __attribute__((destructor))
 static void _finalizer() {
-    LOGGER_EXIT();
+    // default finalizer
 }
 #define EXPORT  __attribute__((visibility("default")))
 #else
