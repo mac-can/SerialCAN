@@ -22,32 +22,32 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{1EB13F5F-91E1-4540-8A69-71B6AC6FDA33}</ProjectGuid>
     <RootNamespace>SerialCAN</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN_Driver;.\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Sources;..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN;..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=1;OPTION_SERIAL_DEBUG_LEVEL=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -90,7 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN_Driver;.\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Sources;..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN;..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -106,7 +106,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN_Driver;.\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Sources;..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN;..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -124,7 +124,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN_Driver;.\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Sources;..\..\Sources;..\..\Sources\CANAPI;..\..\Sources\SLCAN;..\..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
@@ -137,26 +137,29 @@
   <ItemGroup>
     <ClCompile Include="..\..\Sources\CANAPI\can_btr.c" />
     <ClCompile Include="..\..\Sources\SerialCAN.cpp" />
-    <ClCompile Include="..\..\Sources\SLCAN_Driver\buffer_w.c" />
-    <ClCompile Include="..\..\Sources\SLCAN_Driver\logger_w.c" />
-    <ClCompile Include="..\..\Sources\SLCAN_Driver\queue_w.c" />
-    <ClCompile Include="..\..\Sources\SLCAN_Driver\serial_w.c" />
-    <ClCompile Include="..\..\Sources\SLCAN_Driver\slcan.c" />
+    <ClCompile Include="..\..\Sources\SLCAN\buffer_w.c" />
+    <ClCompile Include="..\..\Sources\SLCAN\logger_w.c" />
+    <ClCompile Include="..\..\Sources\SLCAN\queue_w.c" />
+    <ClCompile Include="..\..\Sources\SLCAN\serial_w.c" />
+    <ClCompile Include="..\..\Sources\SLCAN\slcan.c" />
+    <ClCompile Include="..\..\Sources\Wrapper\can_api.c" />
     <ClCompile Include="..\Sources\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Sources\build_no.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Defines.h" />
-    <ClInclude Include="..\..\Sources\CANAPI\CANAPI_SerialCAN.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Types.h" />
+    <ClInclude Include="..\..\Sources\CANAPI\can_api.h" />
     <ClInclude Include="..\..\Sources\CANAPI\can_btr.h" />
     <ClInclude Include="..\..\Sources\SerialCAN.h" />
-    <ClInclude Include="..\..\Sources\SLCAN_Driver\buffer.h" />
-    <ClInclude Include="..\..\Sources\SLCAN_Driver\logger.h" />
-    <ClInclude Include="..\..\Sources\SLCAN_Driver\queue.h" />
-    <ClInclude Include="..\..\Sources\SLCAN_Driver\serial.h" />
-    <ClInclude Include="..\..\Sources\SLCAN_Driver\slcan.h" />
+    <ClInclude Include="..\..\Sources\SerialCAN_Defines.h" />
+    <ClInclude Include="..\..\Sources\SLCAN\buffer.h" />
+    <ClInclude Include="..\..\Sources\SLCAN\logger.h" />
+    <ClInclude Include="..\..\Sources\SLCAN\queue.h" />
+    <ClInclude Include="..\..\Sources\SLCAN\serial.h" />
+    <ClInclude Include="..\..\Sources\SLCAN\slcan.h" />
+    <ClInclude Include="..\..\Sources\Wrapper\can_defs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

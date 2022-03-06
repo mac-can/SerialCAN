@@ -1,6 +1,7 @@
 ### Library for CAN-over-Serial-Line Interfaces (SLCAN Protocol)
 
-_Copyright &copy; 2016, 2020-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
+_Copyright &copy; 2016,2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
+_All rights reserved._
 
 # CAN API V3 Library for CAN-over-Serial-Line Interfaces
 
@@ -11,29 +12,25 @@ This repo contains the source code for a _CAN-over-Serial-Line_ interfaces based
 It provides the build environments to build dynamic libraries with GNU C/C++&reg; compilers,
 either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
 or as a _CAN API V3_ driver library ([_libUVCANSLC_](#libUVCANSLC)),
-as well as some C/C++ example programs and the utilities [`can_moni`](can_moni-for-serialcan) and [`can_test`](can_test-for-serialcan).
+as well as some C/C++ example programs and the utilities [`can_moni`](#can_moni) and [`can_test`](#can_test).
 
 ## SerialCAN API
 
 ```C++
 /// \name   SerialCAN API
 /// \brief  CAN API V3 driver for CAN-over-Serial-Line interfaces
-/// \note   See CCANAPI for a description of the overridden methods
+/// \note   See CCanApi for a description of the overridden methods
 /// \{
-class CSerialCAN : public CCANAPI {
+class CSerialCAN : public CCanApi {
 private:
-    char m_szTtyName[CANPROP_MAX_BUFFER_SIZE];  ///< TTY device name
+    CANAPI_Handle_t m_Handle;  ///< CAN interface handle
     CANAPI_OpMode_t m_OpMode;  ///< CAN operation mode
-    CANAPI_Status_t m_Status;  ///< CAN status register
     CANAPI_Bitrate_t m_Bitrate;  ///< CAN bitrate settings
     struct {
         uint64_t u64TxMessages;  ///< number of transmitted CAN messages
         uint64_t u64RxMessages;  ///< number of received CAN messages
         uint64_t u64ErrorFrames;  ///< number of received status messages
     } m_Counter;
-    // opaque data type
-    struct SSLCAN;  ///< C++ forward declaration
-    SSLCAN* m_pSLCAN;  ///< serial line interface
 public:
     // constructor / destructor
     CSerialCAN();
@@ -46,18 +43,11 @@ public:
     // serial line attributes
     typedef can_sio_attr_t SSerialAttributes;
 
-    // CSerial methods
-    static CANAPI_Return_t ProbeChannel(const char *device, CANAPI_OpMode_t opMode, EChannelState &state);
-    static CANAPI_Return_t ProbeChannel(const char *device, CANAPI_OpMode_t opMode, SSerialAttributes sioAttr, EChannelState &state);
+    // CSerialCAN methods
+    static CANAPI_Return_t ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state);
+    static CANAPI_Return_t ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state);
 
-    CANAPI_Return_t InitializeChannel(const char *device, can_mode_t opMode);
-    CANAPI_Return_t InitializeChannel(const char *device, can_mode_t opMode, SSerialAttributes sioAttr);
-
-    // CCANAPI overrides
-    static CANAPI_Return_t ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode, const void *param, EChannelState &state);
-    static CANAPI_Return_t ProbeChannel(int32_t channel, CANAPI_OpMode_t opMode, EChannelState &state);
-
-    CANAPI_Return_t InitializeChannel(int32_t channel, can_mode_t opMode, const void *param = NULL);
+    CANAPI_Return_t InitializeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param = NULL);
     CANAPI_Return_t TeardownChannel();
     CANAPI_Return_t SignalChannel();
 
@@ -79,14 +69,6 @@ public:
     char *GetHardwareVersion();  // (for compatibility reasons)
     char *GetFirmwareVersion();  // (for compatibility reasons)
     static char *GetVersion();  // (for compatibility reasons)
-
-    static CANAPI_Return_t MapIndex2Bitrate(int32_t index, CANAPI_Bitrate_t &bitrate);
-    static CANAPI_Return_t MapString2Bitrate(const char *string, CANAPI_Bitrate_t &bitrate);
-    static CANAPI_Return_t MapBitrate2String(CANAPI_Bitrate_t bitrate, char *string, size_t length);
-    static CANAPI_Return_t MapBitrate2Speed(CANAPI_Bitrate_t bitrate, CANAPI_BusSpeed_t &speed);
-private:
-    CANAPI_Return_t MapBitrate2Sja1000(CANAPI_Bitrate_t bitrate, uint16_t &btr0btr1);
-    CANAPI_Return_t MapSja10002Bitrate(uint16_t btr0btr1, CANAPI_Bitrate_t &bitrate);
 };
 /// \}
 ```
@@ -124,7 +106,7 @@ See header file `can_api.h` for a description of all API functions.
 ___libSLCAN___ is a dynamic library with a basic SLCAN application programming interface for use in __C__ applications.
 See header file `slcan.h` for a description of all API functions.
 
-#### can_moni for SerialCAN
+#### can_moni
 
 `can_moni` is a command line tool to view incoming CAN messages.
 I hate this messing around with binary masks for identifier filtering.
@@ -132,7 +114,7 @@ So I wrote this little program to have an exclude list for single identifiers or
 
 Type `can_moni --help` to display all program options.
 
-#### can_test for SerialCAN
+#### can_test
 
 `can_test` is a command line tool to test CAN communication.
 Originally developed for electronic environmental tests on an embedded Linux system with SocketCAN, I´m using it for many years as a traffic generator for CAN stress-tests.
@@ -153,11 +135,17 @@ Windows&reg; (x64 operating systems):
 
 ### Development Environments
 
+#### macOS Monterey
+
+- macOS Monterey (12.1) on a Mac mini (M1, 2020)
+- Apple clang version 13.0.0 (clang-1300.0.29.30)
+- Xcode Version 13.2.1 (13C100)
+
 #### macOS Big Sur
 
-- macOS Big Sur (11.2) on a MacBook Pro (2019)
-- Apple clang version 12.0.0 (clang-1200.0.32.29)
-- Xcode Version 12.4 (12D4e)
+- macOS Big Sur (11.6.3) on a MacBook Pro (2019)
+- Apple clang version 13.0.0 (clang-1300.0.29.30)
+- Xcode Version 13.2.1 (13C100)
 
 #### macOS High Sierra
 
@@ -165,19 +153,19 @@ Windows&reg; (x64 operating systems):
 - Apple LLVM version 10.0.0 (clang-1000.11.45.5)
 - Xcode Version 10.1 (10B61)
 
-#### Debian Buster (10.7)
+#### Debian Buster (10.11)
 
 - Debian 4.19.160-2 (2020-11-18) x86_64 GNU/Linux
 - gcc (Debian 8.3.0-6) 8.3.0
 
 #### Cygwin (64-bit)
 
-- Cygwin 3.1.7(0.340/5/3) under Windows 10 Pro (Version 1909)
-- GNU C/C++ Compiler (GCC) 10.2.0
+- Cygwin 3.3.4(0.341/5/3) under Windows 10 Pro
+- GNU C/C++ Compiler (GCC) 11.2.0
 
 #### Windows 10 Pro
 
-- Microsoft Visual Studio Community 2017 (Version 15.9.30)
+- Microsoft Visual Studio Community 2019 (Version 16.11.10)
 
 ### CAN Hardware
 
@@ -199,7 +187,7 @@ Windows&reg; (x64 operating systems):
    The companion module `can_btr.c` contains some dead stores.
 
 6. No libraries are build under Cygwin; only the utilities
-   [`can_moni`](can_moni-for-serialcan) and [`can_test`](can_test-for-serialcan).
+   [`can_moni`](#can_moni) and [`can_test`](#can_test).
 
 7. The Phython examples didn't catch Ctrl-C on Linux.
 
@@ -210,37 +198,13 @@ Windows&reg; (x64 operating systems):
 The CAN API V3 sources are maintained in a SVN repo to synchronized them
 between the different CAN API V3 driver repos via Git SVN bridge.
 
-### Licenses
+### Dual-License
 
-#### CAN API V3 License
+This work is dual-licensed under the terms of the BSD 2-Clause "Simplified" License
+and under the terms of the GNU General Public License v3.0 (or any later version).
+You can choose between one of them if you use this work in whole or in part.
 
-CAN API V3 is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-CAN API V3 is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
-
-#### SerialCAN License
-
-SerialCAN is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-SerialCAN is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License
-along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
+`SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later`
 
 ### Trademarks
 
@@ -258,6 +222,4 @@ _If you connect your CAN device to a real CAN network when using this library, y
 ### Contact
 
 E-Mail: mailto://info@mac.can.com \
-Internet: https://www.mac-can.com
-
-##### *Enjoy!*
+Internet: https://www.mac-can.net

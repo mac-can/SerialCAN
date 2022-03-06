@@ -2,3 +2,5 @@
 *.dylib
 *.so.*
 *.dll
+*.lib
+*.a

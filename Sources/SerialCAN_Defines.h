@@ -1,32 +1,52 @@
+/*  SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later */
 /*
- *  CAN Interface API, Version 3 (CAN-over-Serial-Line)
+ *  CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)
  *
- *  Copyright (C) 2004-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2005-2010 Uwe Vogt, UV Software, Friedrichshafen
+ *  Copyright (c) 2016-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  All rights reserved.
  *
- *  This file is part of CAN API V3.
+ *  This file is part of SerialCAN.
  *
- *  CAN API V3 is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
+ *  SerialCAN is dual-licensed under the BSD 2-Clause "Simplified" License
+ *  and under the GNU General Public License v3.0 (or any later version). You can
+ *  choose between one of them if you use SerialCAN in whole or in part.
+ *
+ *  BSD 2-Clause "Simplified" License:
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *  1. Redistributions of source code must retain the above copyright notice, this
+ *     list of conditions and the following disclaimer.
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *  SerialCAN IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ *  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  OF SerialCAN, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  GNU General Public License v3.0 or later:
+ *  SerialCAN is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  CAN API V3 is distributed in the hope that it will be useful,
+ *  SerialCAN is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
+ *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
  */
-/** @file        CANAPI_Serial.h
- *
- *  @brief       CAN API V3 for generic CAN Interfaces - CAN-over-Serial-Line
- *
- *  @author      $Author: eris $
- *
- *  @version     $Rev: 907 $
- *
- *  @addtogroup  can_api
+/** @addtogroup  can_api
  *  @{
  */
 #ifndef CANAPI_SERIALCAN_H_INCLUDED
@@ -80,7 +100,49 @@ extern "C" {
 #define CANSIO_2STOPBITS        2U      /**< 2 stop bits */
 /** @} */
 
-/*  -----------  types  --------------------------------------------------
+/** @name  CAN API Property Value
+ *  @brief PCAN-Pasic parameter to be read or written
+ *  @{ */
+#define SLCAN_DEVICE_ID          0x00U  //!< device id number
+#define SLCAN_SERIAL_NUMBER      0x01U  //!< device serial number
+#define SLCAN_HARDWARE_VERSION   0x02U  //!< device hardware version
+#define SLCAN_FIRMWARE_VERSION   0x03U  //!< device firmware version
+#define SLCAN_CLOCK_FREQUENCY    0x05U  //!< CAN clock frequency (in [Hz]) 
+// TODO: define more or all parameters
+// ...
+/** @} */
+
+/** @name  CAN API Library ID
+ *  @brief Library ID and dynamic library names
+ *  @{ */
+#define SLCAN_LIB_ID            900     /**< library ID (CAN/COP API V1 compatible) */
+#if defined(_WIN32) || defined (_WIN64)
+#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_WRAPPER       "u3canslc.dll"
+#elif defined(__linux__)
+#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_WRAPPER       "libuvcanslc.so"
+#elif defined(__APPLE__)
+#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_WRAPPER       "libUVCANSLC.dylib"
+#elif defined(__CYGWIN__)
+#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_WRAPPER       "u3canslc.dll"
+#else
+#error Platform not supported
+#endif
+ /** @} */
+
+ /** @name  Miscellaneous
+  *  @brief More or less useful stuff
+  *  @{ */
+#define SLCAN_LIB_VENDOR        "(unknown)"
+#define SLCAN_LIB_WEBSITE       "http://info.cern.ch/hypertext/WWW/TheProject.html"
+#define SLCAN_LIB_HAZARD_NOTE   "If you connect your CAN device to a real CAN network when using this library,\n" \
+                                "you might damage your application."
+  /** @} */
+
+  /*  -----------  types  --------------------------------------------------
  */
 
 /** @brief SerialCAN port attributes

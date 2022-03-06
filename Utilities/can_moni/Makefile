@@ -25,16 +25,16 @@ HOME_DIR = ../..
 MAIN_DIR = ./Sources
 
 SOURCE_DIR = $(HOME_DIR)/Sources
+SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN
 CANAPI_DIR = $(HOME_DIR)/Sources/CANAPI
-SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN_Driver
+WRAPPER_DIR = $(HOME_DIR)/Sources/Wrapper
 
-OBJECTS = $(OUTDIR)/main.o $(OUTDIR)/Timer.o $(OUTDIR)/can_btr.o \
-	$(OUTDIR)/SerialCAN.o $(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
+OBJECTS = $(OUTDIR)/SerialCAN.o \
+	$(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o $(OUTDIR)/can_msg.o \
+	$(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
 	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o \
-	$(OUTDIR)/Message.o $(OUTDIR)/can_msg.o
+	$(OUTDIR)/main.o $(OUTDIR)/Timer.o $(OUTDIR)/Message.o
 
-
-ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
 
 VERSION = 0
 
@@ -51,8 +51,9 @@ DEFINES = -DOPTION_CANAPI_DRIVER=1 \
 
 HEADERS = -I$(MAIN_DIR) \
 	-I$(SOURCE_DIR) \
+	-I$(SERIAL_DIR) \
 	-I$(CANAPI_DIR) \
-	-I$(SERIAL_DIR)
+	-I$(WRAPPER_DIR)
 
 CFLAGS += -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
@@ -66,8 +67,6 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 LIBRARIES =
 
 LDFLAGS  += -lpthread
-
-endif
 
 
 CXX = g++
@@ -102,9 +101,11 @@ incdir:
 clean:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
-distclean:
+pristine:
 	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+ifeq ($(current_OS),Darwin)
 	$(RM) $(BINDIR)/$(TARGET)
+endif
 
 install:
 	@echo "Copying binary file..."
@@ -123,6 +124,15 @@ $(OUTDIR)/Message.o: $(MAIN_DIR)/Message.cpp
 $(OUTDIR)/SerialCAN.o: $(SOURCE_DIR)/SerialCAN.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -o $@ -c $<
 
+$(OUTDIR)/can_api.o: $(WRAPPER_DIR)/can_api.c
+	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
+
+$(OUTDIR)/can_btr.o: $(CANAPI_DIR)/can_btr.c
+	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
+
+$(OUTDIR)/can_msg.o: $(CANAPI_DIR)/can_msg.c
+	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
+
 $(OUTDIR)/slcan.o: $(SERIAL_DIR)/slcan.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
 
@@ -136,12 +146,6 @@ $(OUTDIR)/queue.o: $(SERIAL_DIR)/queue.c $(SERIAL_DIR)/queue_p.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
-	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
-
-$(OUTDIR)/can_btr.o: $(CANAPI_DIR)/can_btr.c
-	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
-
-$(OUTDIR)/can_msg.o: $(CANAPI_DIR)/can_msg.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 

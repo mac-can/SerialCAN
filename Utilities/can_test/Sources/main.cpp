@@ -1,19 +1,20 @@
+//  SPDX-License-Identifier: GPL-3.0-or-later
 //
 //  CAN Tester for CAN-over-Serial-Line Interfaces
 //
-//  Copyright (C) 2007,2016-2021  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (C) 2007,2016-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU Lesser General Public License as published by
+//  it under the terms of the GNU General Public License as published by
 //  the Free Software Foundation, either version 3 of the License, or
 //  (at your option) any later version.
 //
 //  This program is distributed in the hope that it will be useful,
 //  but WITHOUT ANY WARRANTY; without even the implied warranty of
 //  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU Lesser General Public License for more details.
+//  GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU Lesser General Public License
+//  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 #include "SerialCAN.h"
@@ -55,19 +56,19 @@ static const char APPLICATION[] = "CAN Tester for CAN-over-Serial-Line Interface
 #else
 static const char APPLICATION[] = "CAN Tester for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 #endif
-static const char COPYRIGHT[]   = "Copyright (C) 2007,2016-2021 by Uwe Vogt, UV Software, Berlin";
+static const char COPYRIGHT[]   = "Copyright (C) 2007,2016-2022 by Uwe Vogt, UV Software, Berlin";
 static const char WARRANTY[]    = "This program comes with ABSOLUTELY NO WARRANTY!\n\n" \
                                   "This is free software, and you are welcome to redistribute it\n" \
                                   "under certain conditions; type `--version' for details.";
 static const char LICENSE[]     = "This program is free software: you can redistribute it and/or modify\n" \
-                                  "it under the terms of the GNU Lesser General Public License as published by\n" \
+                                  "it under the terms of the GNU General Public License as published by\n" \
                                   "the Free Software Foundation, either version 3 of the License, or\n" \
                                   "(at your option) any later version.\n\n" \
                                   "This program is distributed in the hope that it will be useful,\n" \
                                   "but WITHOUT ANY WARRANTY; without even the implied warranty of\n" \
                                   "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n" \
-                                  "GNU Lesser General Public License for more details.\n\n" \
-                                  "You should have received a copy of the GNU Lesser General Public License\n" \
+                                  "GNU General Public License for more details.\n\n" \
+                                  "You should have received a copy of the GNU General Public License\n" \
                                   "along with this program.  If not, see <http://www.gnu.org/licenses/>.";
 #define basename(x)  "can_test" // FIXME: Where is my `basename' function?
 
@@ -203,11 +204,11 @@ int main(int argc, const char * argv[]) {
                 case 10:   case 10000:   bitrate.index = (int32_t)CANBTR_INDEX_10K; break;
                 default:                 bitrate.index = (int32_t)-baudrate; break;
             }
-            if (CCanDriver::MapIndex2Bitrate(bitrate.index, bitrate) != CCANAPI::NoError) {
+            if (CCanDriver::MapIndex2Bitrate(bitrate.index, bitrate) != CCanApi::NoError) {
                 fprintf(stderr, "%s: illegal argument for option `--baudrate' (%c)\n", basename(argv[0]), opt);
                 return 1;
             }
-            if (CCanDriver::MapBitrate2Speed(bitrate, speed) != CCANAPI::NoError) {
+            if (CCanDriver::MapBitrate2Speed(bitrate, speed) != CCanApi::NoError) {
                 fprintf(stderr, "%s: illegal argument for option `--baudrate' (%c)\n", basename(argv[0]), opt);
                 return 1;
             }
@@ -221,11 +222,11 @@ int main(int argc, const char * argv[]) {
                 fprintf(stderr, "%s: missing argument for option `--bitrate' (%c)\n", basename(argv[0]), opt);
                 return 1;
             }
-            if (CCanDriver::MapString2Bitrate(optarg, bitrate) != CCANAPI::NoError) {
+            if (CCanDriver::MapString2Bitrate(optarg, bitrate) != CCanApi::NoError) {
                 fprintf(stderr, "%s: illegal argument for option `--bitrate'\n", basename(argv[0]));
                 return 1;
             }
-            if (CCanDriver::MapBitrate2Speed(bitrate, speed) != CCANAPI::NoError) {
+            if (CCanDriver::MapBitrate2Speed(bitrate, speed) != CCanApi::NoError) {
                 fprintf(stderr, "%s: illegal argument for option `--bitrate'\n", basename(argv[0]));
                 return 1;
             }
@@ -542,7 +543,7 @@ int main(int argc, const char * argv[]) {
     fprintf(stdout, "Hardware=%s...", port);
     fflush (stdout);
     retVal = canDriver.InitializeChannel(port, opMode);
-    if (retVal != CCANAPI::NoError) {
+    if (retVal != CCanApi::NoError) {
         fprintf(stdout, "FAILED!\n");
         fprintf(stderr, "+++ error: CAN Controller could not be initialized (%i)\n", retVal);
         goto finalize;
@@ -573,7 +574,7 @@ int main(int argc, const char * argv[]) {
     }
     fflush(stdout);
     retVal = canDriver.StartController(bitrate);
-    if (retVal != CCANAPI::NoError) {
+    if (retVal != CCanApi::NoError) {
         fprintf(stdout, "FAILED!\n");
         fprintf(stderr, "+++ error: CAN Controller could not be started (%i)\n", retVal);
         goto teardown;
@@ -604,7 +605,7 @@ int main(int argc, const char * argv[]) {
 teardown:
     /* - teardown the interface*/
     retVal = canDriver.TeardownChannel();
-    if (retVal != CCANAPI::NoError) {
+    if (retVal != CCanApi::NoError) {
         fprintf(stderr, "+++ error: CAN Controller could not be reset (%i)\n", retVal);
         goto finalize;
     }
@@ -669,15 +670,15 @@ int CCanDriver::TestCanDevices(CANAPI_OpMode_t opMode, const char *vendor) {
             fflush(stdout);
             EChannelState state;
             CANAPI_Return_t retVal = CCanDriver::ProbeChannel(CCanDriver::m_CanDevices[i].adapter, opMode, state);
-            if ((retVal == CCANAPI::NoError) || (retVal == CCANAPI::IllegalParameter)) {
+            if ((retVal == CCanApi::NoError) || (retVal == CCanApi::IllegalParameter)) {
                 CTimer::Delay(333U * CTimer::MSEC);  // to fake probing a hardware
                 switch (state) {
-                    case CCANAPI::ChannelOccupied: fprintf(stdout, "occupied\n"); n++; break;
-                    case CCANAPI::ChannelAvailable: fprintf(stdout, "available\n"); n++; break;
-                    case CCANAPI::ChannelNotAvailable: fprintf(stdout, "not available\n"); break;
+                    case CCanApi::ChannelOccupied: fprintf(stdout, "occupied\n"); n++; break;
+                    case CCanApi::ChannelAvailable: fprintf(stdout, "available\n"); n++; break;
+                    case CCanApi::ChannelNotAvailable: fprintf(stdout, "not available\n"); break;
                     default: fprintf(stdout, "not testable\n"); break;
                 }
-                if (retVal == CCANAPI::IllegalParameter)
+                if (retVal == CCanApi::IllegalParameter)
                     fprintf(stderr, "+++ warning: CAN operation mode not supported (%02x)\n", opMode.byte);
             } else
                 fprintf(stdout, "FAILED!\n");
@@ -725,9 +726,9 @@ uint64_t CCanDriver::TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, ui
 retry_tx_test:
         calls++;
         retVal = WriteMessage(message);
-        if (retVal == CCANAPI::NoError)
+        if (retVal == CCanApi::NoError)
             fprintf(stderr, "%s", prompt[(frames++ % 4)]);
-        else if ((retVal == CCANAPI::TransmitterBusy) && running)
+        else if ((retVal == CCanApi::TransmitterBusy) && running)
             goto retry_tx_test;
         else
             errors++;
@@ -800,9 +801,9 @@ uint64_t CCanDriver::TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, boo
 retry_tx_test:
         calls++;
         retVal = WriteMessage(message);
-        if (retVal == CCANAPI::NoError)
+        if (retVal == CCanApi::NoError)
             fprintf(stderr, "%s", prompt[(frames++ % 4)]);
-        else if ((retVal == CCANAPI::TransmitterBusy) && running)
+        else if ((retVal == CCanApi::TransmitterBusy) && running)
             goto retry_tx_test;
         else
             errors++;
@@ -847,7 +848,7 @@ uint64_t CCanDriver::ReceiverTest(bool checkCounter, uint64_t expectedNumber, bo
     fflush (stdout);
     for (;;) {
         retVal = ReadMessage(message);
-        if (retVal == CCANAPI::NoError) {
+        if (retVal == CCanApi::NoError) {
             fprintf(stderr, "%s", prompt[(frames++ % 4)]);
             // checking PCBUSB issue #198 (aka. MACCAN-2)
             if (checkCounter) {
@@ -873,7 +874,7 @@ uint64_t CCanDriver::ReceiverTest(bool checkCounter, uint64_t expectedNumber, bo
                     fprintf(stdout, "ISSUE#198!\n");
                     fprintf(stderr, "+++ data inconsistent: %" PRIu64 " received / %" PRIu64 " expected\n", data, expectedNumber);
                     retVal = GetStatus(status);
-                    if ((retVal == CCANAPI::NoError) && ((status.byte & ~CANSTAT_RESET) != 0x00U)) {
+                    if ((retVal == CCanApi::NoError) && ((status.byte & ~CANSTAT_RESET) != 0x00U)) {
                         fprintf(stderr, "    status register:%s%s%s%s%s%s (%02X)\n",
                             (status.bus_off) ? " BO" : "",
                             (status.warning_level) ? " WL" : "",
@@ -896,7 +897,7 @@ uint64_t CCanDriver::ReceiverTest(bool checkCounter, uint64_t expectedNumber, bo
                 }
                 expectedNumber++;  // depending on DLC received data may wrap around while number is counting up!
             }
-        } else if (retVal != CCANAPI::ReceiverEmpty)
+        } else if (retVal != CCanApi::ReceiverEmpty)
             errors++;
         calls++;
         if (!running) {
@@ -983,5 +984,5 @@ static void version(FILE *stream, const char *program)
 {
     fprintf(stdout, "%s\n%s\n\n%s\n\n", APPLICATION, COPYRIGHT, LICENSE);
     (void)program;
-    fprintf(stream, "Written by Uwe Vogt, UV Software, Berlin <http://www.uv-software.com/>\n");
+    fprintf(stream, "Written by Uwe Vogt, UV Software, Berlin <https://uv-software.com/>\n");
 }

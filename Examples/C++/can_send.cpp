@@ -23,7 +23,8 @@ int usleep(unsigned int usec);
 #define OPTION_CANAPI_DRIVER  1
 #include "can_api.h"
 
-#include "CANAPI_SerialCAN.h"
+#include "CANAPI_Defines.h"
+#include "SerialCAN_Defines.h"
 
 #ifndef BAUDRATE
 #define BAUDRATE  CANBTR_INDEX_250K
@@ -53,6 +54,7 @@ int main(int argc, const char * argv[]) {
         std::cerr << "+++ error: interface could not be started" << std::endl;
         goto end;
     }
+    std::cout << "Be patient..." << std::endl;
     message.xtd = message.rtr = message.sts = 0;
     for (uint64_t i = 0; i < FRAMES; i++) {
         message.id = (uint32_t)i & CAN_MAX_STD_ID;
@@ -65,8 +67,8 @@ int main(int argc, const char * argv[]) {
         message.data[5] = (uint8_t)((uint64_t)i >> 40);
         message.data[6] = (uint8_t)((uint64_t)i >> 48);
         message.data[7] = (uint8_t)((uint64_t)i >> 56);
-        if ((result = can_write(handle, &message, 0U)) < 0) {
-            std::cerr << "+++ error: interface could not be stopped" << std::endl;
+        if ((result = can_write(handle, &message, 100U)) < 0) {
+            std::cerr << "+++ error: message could not be sent" << std::endl;
             goto reset;;
         }
     }
@@ -77,5 +79,6 @@ reset:
 end:
     if ((result = can_exit(handle)) < 0)
         std::cerr << "+++ error: interface could not be shutdown" << std::endl;
+    std::cout << "Cheers!" << std::endl;
     return result;
 }

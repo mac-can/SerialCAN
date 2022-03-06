@@ -145,6 +145,37 @@ int main(int argc, char *argv[]) {
     return rc;
 }
 
+#if defined(_WIN32) || defined(_WIN64)
+/* usleep(3) - Linux man page
+ *
+ * Notes
+ * The type useconds_t is an unsigned integer type capable of holding integers in the range [0,1000000].
+ * Programs will be more portable if they never mention this type explicitly. Use
+ *
+ *    #include <unistd.h>
+ *    ...
+ *        unsigned int usecs;
+ *    ...
+ *        usleep(usecs);
+ */
+static int usleep(unsigned int usec)
+{
+    HANDLE timer;
+    LARGE_INTEGER ft;
+
+    ft.QuadPart = -(10 * (LONGLONG)usec); // Convert to 100 nanosecond interval, negative value indicates relative time
+    if (usec >= 100) {
+        if ((timer = CreateWaitableTimer(NULL, TRUE, NULL)) != NULL) {
+            SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+            WaitForSingleObject(timer, INFINITE);
+            CloseHandle(timer);
+            return 0;
+        }
+    }
+    return -1;
+}
+#endif
+
 static void sigterm(int signo) {
      fprintf(stderr, "%s: got signal %d\n", __FILE__, signo);
      running = 0;
