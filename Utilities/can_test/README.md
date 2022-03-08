@@ -22,7 +22,7 @@ Options for transmitter test:
      --random=<number>         optionally with random cycle time and data length
  -c, --cycle=<cycle>           cycle time in milliseconds (default=0) or
  -u, --usec=<cycle>            cycle time in microseconds (default=0)
- -d, --data=<length>           send data of given length (default=8)
+ -d, --dlc=<length>            send messages of given length (default=8)
  -i, --id=<can-id>             use given identifier (default=100h)
  -n, --number=<number>         set first up-counting number (default=0)
  -m, --mode=(2.0|FDF[+BSR])    CAN operation mode: CAN 2.0 or CAN FD format
