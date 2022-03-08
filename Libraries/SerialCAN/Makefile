@@ -127,7 +127,7 @@ LD = clang++
 LT = libtool
 endif
 
-ifeq ($(current_OS),Linux) # linux - libserial.so.1
+ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin)) # linux - libserial.so.1
 
 LIBRARY = libserialcan
 
@@ -219,7 +219,7 @@ ifeq ($(current_OS),Darwin)
 	$(RM) *.dylib *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
 	$(RM) $(BINDIR)/*.dylib $(BINDIR)/*.a
 endif
-ifeq ($(current_OS),Linux)
+ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
 	$(RM) *.so *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
 	$(RM) $(BINDIR)/*.so $(BINDIR)/*.a
 endif
@@ -230,7 +230,7 @@ install:
 ifeq ($(current_OS),Darwin)
 	$(RM) $(INSTALL)/$(LIBRARY).dylib ; $(LN) $(INSTALL)/$(TARGET) $(INSTALL)/$(LIBRARY).dylib
 endif
-ifeq ($(current_OS),Linux)
+ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
 	$(RM) $(INSTALL)/$(SONAME) ; ln -s $(INSTALL)/$(TARGET) $(INSTALL)/$(SONAME)
 	$(RM) $(INSTALL)/$(LIBRARY).so ; ln -s $(INSTALL)/$(SONAME) $(INSTALL)/$(LIBRARY).so
 endif
@@ -268,7 +268,7 @@ ifeq ($(current_OS),Darwin)
 	$(CP) $(STATIC) $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
 endif
-ifeq ($(current_OS),Linux)
+ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
 	$(AR) $(ARFLAGS) $@ $(OBJECTS) $(LIBRARIES)
 	$(CP) $(STATIC) $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
