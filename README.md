@@ -12,7 +12,8 @@ This repo contains the source code for a _CAN-over-Serial-Line_ interfaces based
 It provides the build environments to build dynamic libraries with GNU C/C++&reg; compilers,
 either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
 or as a _CAN API V3_ driver library ([_libUVCANSLC_](#libUVCANSLC)),
-as well as some C/C++ example programs and the utilities [`can_moni`](#can_moni) and [`can_test`](#can_test).
+as well as my beloved utilities [`can_moni`](#can_moni) and [`can_test`](#can_test)
+and some C/C++ example programs.
 
 ## SerialCAN API
 
@@ -24,13 +25,6 @@ as well as some C/C++ example programs and the utilities [`can_moni`](#can_moni)
 class CSerialCAN : public CCanApi {
 private:
     CANAPI_Handle_t m_Handle;  ///< CAN interface handle
-    CANAPI_OpMode_t m_OpMode;  ///< CAN operation mode
-    CANAPI_Bitrate_t m_Bitrate;  ///< CAN bitrate settings
-    struct {
-        uint64_t u64TxMessages;  ///< number of transmitted CAN messages
-        uint64_t u64RxMessages;  ///< number of received CAN messages
-        uint64_t u64ErrorFrames;  ///< number of received status messages
-    } m_Counter;
 public:
     // constructor / destructor
     CSerialCAN();
@@ -43,7 +37,14 @@ public:
     // serial line attributes
     typedef can_sio_attr_t SSerialAttributes;
 
-    // CSerialCAN methods
+    // CSerial methods
+    static CANAPI_Return_t ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, EChannelState &state);
+    static CANAPI_Return_t ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr, EChannelState &state);
+
+    CANAPI_Return_t InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode);
+    CANAPI_Return_t InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr);
+
+    // CCanApi overrides
     static CANAPI_Return_t ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state);
     static CANAPI_Return_t ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state);
 
@@ -77,17 +78,17 @@ public:
 
 _Important note_: To build any of the following build targets run the `build_no.sh` script to generate a pseudo build number.
 ```
-uranus@uv-pc007linux:~$ cd ~/Projects/CAN/DRV/Drivers/SerialCAN
-uranus@uv-pc007linux:~/Projects/CAN/DRV/Drivers/SerialCAN$ ./build_no.sh
+uranus@uv-pc007linux:~$ cd ~/Projects/CAN/Drivers/SerialCAN
+uranus@uv-pc007linux:~/Projects/CAN/Drivers/SerialCAN$ ./build_no.sh
 ```
 Repeat this step after each `git commit`, `git pull`, `git clone`, etc.
 
 Then you can build the whole _bleep_ by typing the usual commands:
 ```
-uranus@uv-pc007linux:~$ cd ~/Projects/CAN/DRV/Drivers/SerialCAN
-uranus@uv-pc007linux:~/Projects/CAN/DRV/Drivers/SerialCAN$ make clean
-uranus@uv-pc007linux:~/Projects/CAN/DRV/Drivers/SerialCAN$ make all
-uranus@uv-pc007linux:~/Projects/CAN/DRV/Drivers/SerialCAN$ sudo make install
+uranus@uv-pc007linux:~$ cd ~/Projects/CAN/Drivers/SerialCAN
+uranus@uv-pc007linux:~/Projects/CAN/Drivers/SerialCAN$ make clean
+uranus@uv-pc007linux:~/Projects/CAN/Drivers/SerialCAN$ make all
+uranus@uv-pc007linux:~/Projects/CAN/Drivers/SerialCAN$ sudo make install
 ```
 _(The version number of the libraries can be adapted by editing the `Makefile`s in the subfolders and changing the variable `VERSION` accordingly.  Don´t forget to set the version number also in the source files.)_
 
@@ -129,7 +130,7 @@ POSIX&reg; compatible operating systems:
 2. Linux&reg;
 3. Cygwin&reg;
 
-Windows&reg; (x64 operating systems):
+Windows&reg; (x64 operating system):
 
 1. Windows 10 Pro
 
@@ -178,25 +179,14 @@ Windows&reg; (x64 operating systems):
 2. Time-stamps are currently not supported.
 
 3. Serial line attributes (baud rate and mode) cannot be changed
-   (default: 115.2kBaud, 8-N-1).
+   (default: 57.6kBaud, 8-N-1).
 
 4. Transmitting messages over the TTY is extremely slow; approx. 16ms per frame.
    I guess this is because the transmission is acknowledged by the CAN device.
 
-5. Findings from Code Analysis:
-   The companion module `can_btr.c` contains some dead stores.
-
-6. No libraries are build under Cygwin; only the utilities
-   [`can_moni`](#can_moni) and [`can_test`](#can_test).
-
-7. The Phython examples didn't catch Ctrl-C on Linux.
+5. The Phython examples didn't catch Ctrl-C.
 
 ## This and That
-
-### CAN API V3 Repo
-
-The CAN API V3 sources are maintained in a SVN repo to synchronized them
-between the different CAN API V3 driver repos via Git SVN bridge.
 
 ### Dual-License
 
