@@ -32,7 +32,7 @@ int usleep(unsigned int usec);
 #define FRAMES  (CAN_MAX_STD_ID+1)
 
 int main(int argc, const char * argv[]) {
-    int handle, result;
+    int handle, result, i;
     can_bitrate_t bitrate;
     can_message_t message;
 
@@ -54,9 +54,10 @@ int main(int argc, const char * argv[]) {
         std::cerr << "+++ error: interface could not be started" << std::endl;
         goto end;
     }
-    std::cout << "Be patient..." << std::endl;
+    std::cout << ">>> Be patient..." << std::flush;
     message.xtd = message.rtr = message.sts = 0;
-    for (uint64_t i = 0; i < FRAMES; i++) {
+    //message.fdf = message.brs = message.esi = 0;
+    for (i = 0; i < FRAMES; i++) {
         message.id = (uint32_t)i & CAN_MAX_STD_ID;
         message.dlc = 8U;
         message.data[0] = (uint8_t)((uint64_t)i >> 0);
@@ -67,13 +68,21 @@ int main(int argc, const char * argv[]) {
         message.data[5] = (uint8_t)((uint64_t)i >> 40);
         message.data[6] = (uint8_t)((uint64_t)i >> 48);
         message.data[7] = (uint8_t)((uint64_t)i >> 56);
-        if ((result = can_write(handle, &message, 100U)) < 0) {
-            std::cerr << "+++ error: message could not be sent" << std::endl;
-            goto reset;;
+        do {
+            result = can_write(handle, &message, 0U);
+        } while (result == CANERR_TX_BUSY);
+        if (result < CANERR_NOERROR) {
+            std::cerr << "\n+++ error: message could not be sent" << std::endl;
+            goto reset;
         }
     }
+#if !defined(_WIN32) && !defined(_WIN64)
     usleep(1000000);  // afterburner
+#else
+    Sleep(1000);    // wait a minute
+#endif
 reset:
+    std::cout << i << " frame(s) sent" << std::endl;
     if ((result = can_reset(handle)) < 0)
         std::cerr << "+++ error: interface could not be stopped" << std::endl;
 end:
