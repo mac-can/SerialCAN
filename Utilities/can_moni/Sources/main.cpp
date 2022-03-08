@@ -107,10 +107,9 @@ static void sigterm(int signo);
 static void usage(FILE *stream, const char *program);
 static void version(FILE *stream, const char *program);
 
-static volatile int running = 1;
-
 static int can_id[MAX_ID];
 static int can_id_xtd = 1;
+static volatile int running = 1;
 
 static CCanDriver canDriver = CCanDriver();
 
@@ -160,23 +159,23 @@ int main(int argc, const char * argv[]) {
     /* default mode and bit-timing */
     opMode.byte = CANMODE_DEFAULT;
     bitrate.index = CANBTR_INDEX_250K;
-    (void) CCanDriver::MapIndex2Bitrate(bitrate.index, bitrate);
-    (void) CCanDriver::MapBitrate2Speed(bitrate, speed);
-    (void) op;
+    (void)CCanDriver::MapIndex2Bitrate(bitrate.index, bitrate);
+    (void)CCanDriver::MapBitrate2Speed(bitrate, speed);
+    (void)op;
 
     /* default format options */
-    (void) CCanMessage::SetTimestampFormat(modeTime);
-    (void) CCanMessage::SetIdentifierFormat(modeId);
-    (void) CCanMessage::SetDataFormat(modeData);
-    (void) CCanMessage::SetAsciiFormat(modeAscii);
-    (void) CCanMessage::SetWraparound(wraparound);
+    (void)CCanMessage::SetTimestampFormat(modeTime);
+    (void)CCanMessage::SetIdentifierFormat(modeId);
+    (void)CCanMessage::SetDataFormat(modeData);
+    (void)CCanMessage::SetAsciiFormat(modeAscii);
+    (void)CCanMessage::SetWraparound(wraparound);
 
     /* exclude list (11-bit IDs only) */
     for (int i = 0; i < MAX_ID; i++) {
         can_id[i] = 1;
     }
-    /* signal handler to catch ^C */
-    if((signal(SIGINT, sigterm) == SIG_ERR) ||
+    /* signal handler */
+    if ((signal(SIGINT, sigterm) == SIG_ERR) ||
 #if !defined(_WIN32) && !defined(_WIN64)
        (signal(SIGHUP, sigterm) == SIG_ERR) ||
 #endif
@@ -470,10 +469,18 @@ int main(int argc, const char * argv[]) {
             fprintf(stderr, "%s: too many arguments given\n", basename(argv[0]));
         return 1;
     }
+#if (OPTION_CAN_2_0_ONLY == 0)
+    /* - check bit-timing index (n/a for CAN FD) */
+    if (opMode.fdoe && (bitrate.btr.frequency <= 0)) {
+        fprintf(stderr, "%s: illegal combination of options `--mode' (m) and `--bitrate'\n", basename(argv[0]));
+        return 1;
+    }
+#endif
     /* - take serial device name from command line */
     port = (char*)argv[optind];
     /* CAN Monitor for CAN-over-Serial-Line interfaces */
     fprintf(stdout, "%s\n%s\n\n%s\n\n", APPLICATION, COPYRIGHT, WARRANTY);
+
     /* - show operation mode and bit-rate settings */
     if (verbose) {
         fprintf(stdout, "Op.-mode=%s", (opMode.byte & CANMODE_FDOE) ? "CANFD" : "CAN2.0");
@@ -656,17 +663,18 @@ int CCanDriver::TestCanDevices(CANAPI_OpMode_t opMode, const char *vendor) {
 
 uint64_t CCanDriver::ReceptionLoop() {
     CANAPI_Message_t message;
+    CANAPI_Return_t retVal;
     uint64_t frames = 0U;
 
     char string[CANPROP_MAX_STRING_LENGTH+1];
-    bzero(string, CANPROP_MAX_STRING_LENGTH+1);
+    memset(string, 0, CANPROP_MAX_STRING_LENGTH+1);
 
     fprintf(stderr, "\nPress ^C to abort.\n\n");
     while(running) {
-        if (ReadMessage(message) == CCanApi::NoError) {
+        if ((retVal = ReadMessage(message)) == CCanApi::NoError) {
             if ((((message.id < MAX_ID) && can_id[message.id]) || ((message.id >= MAX_ID) && can_id_xtd)) &&
                 !message.sts) {
-                (void) CCanMessage::Format(message, ++frames, string, CANPROP_MAX_STRING_LENGTH);
+                (void)CCanMessage::Format(message, ++frames, string, CANPROP_MAX_STRING_LENGTH);
                 fprintf(stdout, "%s\n", string);
             }
         }

@@ -19,7 +19,7 @@ Options:
  -b, --baudrate=<baudrate>     CAN 2.0 bit timing in kbps (default=250)
      --bitrate=<bit-rate>      CAN FD bit rate (as a string)
  -v, --verbose                 show detailed bit rate settings
-  -h, --help                    display this help screen and exit
+ -h, --help                    display this help screen and exit
      --version                 show version information and exit
 Hazard note:
   If you connect your CAN device to a real CAN network when using this program,
