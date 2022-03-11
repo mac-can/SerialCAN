@@ -194,10 +194,22 @@ static int init =  0;  // initialization flag
 EXPORT
 int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
 {
+    int rc = CANERR_NOERROR;            // return code
     int i;
 
-    //if ((board < 0) || (65535 < board)) // PCAN handle is of type WORD!
-    //    return slcan_error(PCAN_ERROR_ILLCLIENT);
+    if (result)                         // serial device not testtable
+        *result = CANBRD_NOT_TESTABLE;
+    
+    if (channel != CANDEV_SERIAL)       // must be serial port device!
+#ifndef OPTION_CANAPI_RETVALS
+        return CANERR_HANDLE;
+#else
+        // note: can_init shall return vendor-specific error code or
+        //       CANERR_NOTINIT in this case
+        return CANERR_NOTINIT;
+#endif
+    if (param == NULL)                  // must be serial port parameter
+        return CANERR_NULLPTR;
 
     if (!init) {                        // when not init before:
         for (i = 0; i < CAN_MAX_HANDLES; i++) {
@@ -217,9 +229,34 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
         }
         init = 1;                       //   set initialization flag
     }
-    // TODO: insert coin here
+    // (1) check if TTY name is given
+    char* name = ((can_sio_param_t*)param)->name;
+    if (name == NULL) {
+        rc = CANERR_ILLPARA;
+        goto err_test;
+    }
+    // (2) check requested protocol option (SLCAN)
+    if ((((can_sio_param_t*)param)->attr.options & CANSIO_SLCAN) != CANSIO_SLCAN) {
+        rc = CANERR_ILLPARA;
+        goto err_test;
+    }
+    // (3) check if requested operation mode is supported
+    if ((mode & (uint8_t)(~SUPPORTED_OP_MODE)) != 0) {
+        rc = CANERR_ILLPARA;
+        //goto err_test;
+    }
+    /* (4) check if the SLCAN device is occupied by own process */
+    for (i = 0; i < CAN_MAX_HANDLES; i++) {
+        if (can[i].port && !strcmp(can[i].name, name)) {
+            if (result)
+                *result = CANBRD_OCCUPIED;
+            break;
+        }
+    }
+    return rc;
 
-    return -1;
+err_test:
+    return rc;
 }
 
 EXPORT
@@ -273,12 +310,12 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     }
     // (2) check requested protocol option (SLCAN)
     if ((((can_sio_param_t*)param)->attr.options & CANSIO_SLCAN) != CANSIO_SLCAN) {
-        rc = CANERR_NOTSUPP;
+        rc = CANERR_ILLPARA;
         goto err_init;
     }
     // (3) check if requested operation mode is supported
     if ((mode & (uint8_t)(~SUPPORTED_OP_MODE)) != 0) {
-        rc = CANERR_NOTSUPP;
+        rc = CANERR_ILLPARA;
         goto err_init;
     }
     // (4) create an SLCAN port (w/ message queue)

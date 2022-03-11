@@ -135,7 +135,6 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t 
     char device[CANPROP_MAX_BUFFER_SIZE];
     SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
     (void)param;  // TODO: map comm attributes
-
     // delegate with device name instead of channel number
     return ProbeChannel(device, opMode, state);
 }
@@ -154,12 +153,19 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode
 
 EXPORT
 CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr, EChannelState &state) {
-    (void)device;
-    (void)opMode;
-    (void)sioAttr;
-    // note: serial devices are not testable (for now)
-    state = CSerialCAN::ChannelNotTestable;
-    return CSerialCAN::NoError;
+    int32_t channel = CANDEV_SERIAL;
+    can_sio_param_t param;
+    param.name = (char*)device;
+    param.attr.baudrate = sioAttr.baudrate;
+    param.attr.bytesize = sioAttr.bytesize;
+    param.attr.parity = sioAttr.parity;
+    param.attr.stopbits = sioAttr.stopbits;
+    param.attr.options = sioAttr.options;
+    // test the CAN interface (hardware and driver)
+    int result = CANBRD_NOT_TESTABLE;
+    CANAPI_Return_t rc = can_test(channel, opMode.byte, &param, &result);
+    state = (EChannelState)result;
+    return rc;
 }
 
 EXPORT
@@ -167,7 +173,6 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(int32_t channel, const CANAPI_OpMo
     char device[CANPROP_MAX_BUFFER_SIZE];
     SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
     (void)param;  // TODO: map comm attributes
-
     // delegate with device name instead of channel number
     return InitializeChannel(device, opMode);
 }
