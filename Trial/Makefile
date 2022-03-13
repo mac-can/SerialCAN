@@ -9,7 +9,7 @@ current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
 
-TARGET  = SerialCAN
+TARGET  = slcan_test
 
 INSTALL = ~/bin
 

@@ -1,7 +1,7 @@
 //
 //  main.cpp
 //  SerialCAN
-//  Bart Simpson didn´t do it
+//  Bart Simpson didnï¿½t do it
 //
 #ifdef _MSC_VER
 //no Microsoft extensions please!
@@ -109,6 +109,7 @@ int main(int argc, const char * argv[]) {
 
     for (int i = 1, opt = 0; i < argc; i++) {
         /* serial port number */
+#if (0)
         if(!strcmp(argv[i], "COM1") || !strcmp(argv[i], "CH:0")) channel = 0;
         if(!strcmp(argv[i], "COM2") || !strcmp(argv[i], "CH:1")) channel = 1;
         if(!strcmp(argv[i], "COM3") || !strcmp(argv[i], "CH:2")) channel = 2;
@@ -117,6 +118,7 @@ int main(int argc, const char * argv[]) {
         if(!strcmp(argv[i], "COM6") || !strcmp(argv[i], "CH:5")) channel = 5;
         if(!strcmp(argv[i], "COM7") || !strcmp(argv[i], "CH:6")) channel = 6;
         if(!strcmp(argv[i], "COM8") || !strcmp(argv[i], "CH:7")) channel = 7;
+#endif
         /* baud rate (CAN 2.0) */
         if (!strcmp(argv[i], "BD:0") || !strcmp(argv[i], "BD:1000")) bitrate.index = CANBTR_INDEX_1M;
         if (!strcmp(argv[i], "BD:1") || !strcmp(argv[i], "BD:800")) bitrate.index = CANBTR_INDEX_800K;
@@ -225,19 +227,12 @@ int main(int argc, const char * argv[]) {
             result = CSerialCAN::GetNextChannel(info);
         }
 #else
-        retVal = myDriver.SetProperty(CANPROP_SET_FIRST_CHANNEL, (void *)NULL, 0U);
-        while (retVal == CCanApi::NoError) {
-            retVal = myDriver.GetProperty(CANPROP_GET_CHANNEL_NO, (void *)&i32Val, sizeof(int32_t));
-            if (retVal == CCanApi::NoError) {
-                retVal = CSerialCAN::ProbeChannel(i32Val, opMode, state);
-                fprintf(stdout, ">>> CCanApi::ProbeChannel(%i): state = %s", i32Val,
-                                (state == CCanApi::ChannelOccupied) ? "occupied" :
-                                (state == CCanApi::ChannelAvailable) ? "available" :
-                                (state == CCanApi::ChannelNotAvailable) ? "not available" : "not testable");
-                fprintf(stdout, "%s", (retVal == CCanApi::IllegalParameter) ? " (warning: Op.-Mode not supported)\n" : "\n");
-            }
-            retVal = myDriver.SetProperty(CANPROP_SET_NEXT_CHANNEL, (void *)NULL, 0U);
-        }
+        retVal = myDriver.ProbeChannel(SERIAL_PORT, opMode, state);
+        fprintf(stdout, ">>> myDriver.ProbeChannel(%s): state = %s", SERIAL_PORT,
+                        (state == CCanApi::ChannelOccupied) ? "now occupied" :
+                        (state == CCanApi::ChannelAvailable) ? "available" :
+                        (state == CCanApi::ChannelNotAvailable) ? "not available" : "not testable");
+        fprintf(stdout, "%s", (retVal == CCanApi::IllegalParameter) ? " (warning: Op.-Mode not supported)\n" : "\n");
 #endif
         if (option_exit)
             return 0;

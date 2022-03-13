@@ -1,4 +1,4 @@
 .objects
-SerialCAN
+slcan_test
 *.exe
 *.log
