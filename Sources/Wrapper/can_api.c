@@ -208,7 +208,11 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
         //       CANERR_NOTINIT in this case
         return CANERR_NOTINIT;
 #endif
-    if (param == NULL)                  // must be serial port parameter
+    if (param == NULL)                  // must have serial port parameter
+        return CANERR_NULLPTR;
+
+    char* name = ((can_sio_param_t*)param)->name;
+    if (name == NULL)                   // must have at least a TTY name
         return CANERR_NULLPTR;
 
     if (!init) {                        // when not init before:
@@ -229,23 +233,17 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
         }
         init = 1;                       //   set initialization flag
     }
-    // (1) check if TTY name is given
-    char* name = ((can_sio_param_t*)param)->name;
-    if (name == NULL) {
-        rc = CANERR_ILLPARA;
-        goto err_test;
-    }
-    // (2) check requested protocol option (SLCAN)
+    // (1) check requested protocol option (SLCAN)
     if ((((can_sio_param_t*)param)->attr.options & CANSIO_SLCAN) != CANSIO_SLCAN) {
         rc = CANERR_ILLPARA;
         goto err_test;
     }
-    // (3) check if requested operation mode is supported
+    // (2) check if requested operation mode is supported
     if ((mode & (uint8_t)(~SUPPORTED_OP_MODE)) != 0) {
         rc = CANERR_ILLPARA;
         //goto err_test;
     }
-    /* (4) check if the SLCAN device is occupied by own process */
+    /* (3) check if the SLCAN device is occupied by own process */
     for (i = 0; i < CAN_MAX_HANDLES; i++) {
         if (can[i].port && !strcmp(can[i].name, name)) {
             if (result)
@@ -274,7 +272,11 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
         //       CANERR_NOTINIT in this case
         return CANERR_NOTINIT;
 #endif
-    if (param == NULL)                  // must be serial port parameter
+    if (param == NULL)                  // must have serial port parameter
+        return CANERR_NULLPTR;
+
+    char* name = ((can_sio_param_t*)param)->name;
+    if (name == NULL)                   // must have at least a TTY name
         return CANERR_NULLPTR;
 
     if (!init) {                        // when not init before:
@@ -296,42 +298,40 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
         init = 1;                       //   set initialization flag
     }
     for (i = 0; i < CAN_MAX_HANDLES; i++) {
+        if (can[i].port && !strcmp(can[i].name, name)) // channel already in use
+          return CANERR_YETINIT;
+    }
+    for (i = 0; i < CAN_MAX_HANDLES; i++) {
         if (can[i].port == NULL)        // get an unused handle, if any
             break;
     }
-    if (!IS_HANDLE_VALID(i))             // no free handle found
+    if (!IS_HANDLE_VALID(i))            // no free handle found
         return CANERR_HANDLE;
 
-    // (1) check if TTY name is given
-    char* name = ((can_sio_param_t*)param)->name;
-    if (name == NULL) {
-        rc = CANERR_ILLPARA;
-        goto err_init;
-    }
-    // (2) check requested protocol option (SLCAN)
+    // (1) check requested protocol option (SLCAN)
     if ((((can_sio_param_t*)param)->attr.options & CANSIO_SLCAN) != CANSIO_SLCAN) {
         rc = CANERR_ILLPARA;
         goto err_init;
     }
-    // (3) check if requested operation mode is supported
+    // (2) check if requested operation mode is supported
     if ((mode & (uint8_t)(~SUPPORTED_OP_MODE)) != 0) {
         rc = CANERR_ILLPARA;
         goto err_init;
     }
-    // (4) create an SLCAN port (w/ message queue)
+    // (3) create an SLCAN port (w/ message queue)
     can[i].port = slcan_create(SLCAN_QUEUE_SIZE);
     if (can[i].port == NULL) {
         rc = slcan_error(-1);
         goto err_init;
     }
-    // (5) connect serial interface (returns a file descriptor)
+    // (4) connect serial interface (returns a file descriptor)
     fd = slcan_connect(can[i].port, name);
     rc = slcan_error(fd);
     if (fd < 0) {                       // errno is set in this case
         (void)slcan_destroy(can[i].port);
         goto err_init;
     }
-    // (6) check for SLCAN protocol (dummy read)
+    // (5) check for SLCAN protocol (dummy read)
     uint8_t hw_version = 0x00U;
     uint8_t sw_version = 0x00U;
     rc = slcan_version_number(can[i].port, &hw_version, &sw_version);

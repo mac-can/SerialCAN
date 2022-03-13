@@ -107,7 +107,7 @@ static void _finalizer() {
 #else
 #define SERIAL_PORTNAME  "\\\\.\\COM%i"
 #endif
-#define SERIAL_BAUDRATE  115200U
+#define SERIAL_BAUDRATE  57600U
 #define SERIAL_BYTESIZE  CANSIO_8DATABITS
 #define SERIAL_PARITY    CANSIO_NOPARITY
 #define SERIAL_STOPBITS  CANSIO_1STOPBIT
@@ -122,21 +122,6 @@ EXPORT
 CSerialCAN::~CSerialCAN() {
     // set CAN contoller into INIT mode and close serial device
     (void)TeardownChannel();
-}
-
-EXPORT
-CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state) {
-    // delegate with value NULL for parameter 'param'
-    return ProbeChannel(channel, opMode, NULL, state);
-}
-
-EXPORT
-CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state) {
-    char device[CANPROP_MAX_BUFFER_SIZE];
-    SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
-    (void)param;  // TODO: map comm attributes
-    // delegate with device name instead of channel number
-    return ProbeChannel(device, opMode, state);
 }
 
 EXPORT
@@ -166,15 +151,6 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode
     CANAPI_Return_t rc = can_test(channel, opMode.byte, &param, &result);
     state = (EChannelState)result;
     return rc;
-}
-
-EXPORT
-CANAPI_Return_t CSerialCAN::InitializeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param) {
-    char device[CANPROP_MAX_BUFFER_SIZE];
-    SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
-    (void)param;  // TODO: map comm attributes
-    // delegate with device name instead of channel number
-    return InitializeChannel(device, opMode);
 }
 
 EXPORT
@@ -209,6 +185,30 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, const CANAPI_O
         rc = (CANAPI_Return_t)hnd;
     }
     return rc;
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state) {
+    // delegate with value NULL for parameter 'param'
+    return ProbeChannel(channel, opMode, NULL, state);
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state) {
+    char device[CANPROP_MAX_BUFFER_SIZE];
+    SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
+    (void)param;  // TODO: map comm attributes
+    // delegate with device name instead of channel number
+    return ProbeChannel(device, opMode, state);
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::InitializeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param) {
+    char device[CANPROP_MAX_BUFFER_SIZE];
+    SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
+    (void)param;  // TODO: map comm attributes
+    // delegate with device name instead of channel number
+    return InitializeChannel(device, opMode);
 }
 
 EXPORT
