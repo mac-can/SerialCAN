@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 715 $
+ *  @version     $Rev: 720 $
  *
  *  @addtogroup  logger
  *  @{
@@ -100,6 +100,7 @@ static HANDLE hThread = NULL;
 static HANDLE hMutex = NULL;
 static HANDLE hPipo, hPipi;
 static FILE *logger = NULL;
+static int running = 0;
 
 
 /*  -----------  functions  ----------------------------------------------
@@ -172,13 +173,9 @@ int log_exit(void)
         return -1;
     }
     /* kill the logging thread and release all resources */
-#if (0)
-    (void)TerminateThread(hThread, 0);
-    // warning C6258: using TerminateThread does not allow proper thread clean up.
-#else
+    running = 0;
     (void)SetEvent(hThread);
-#endif
-    (void)WaitForSingleObject(hThread, 0);
+    (void)WaitForSingleObject(hThread, 3000);
     (void)CloseHandle(hMutex);
     (void)CloseHandle(hPipi);
     (void)CloseHandle(hPipo);
@@ -282,7 +279,11 @@ static DWORD WINAPI logging(LPVOID lpParam)
     DWORD64 n = 1;
     (void)lpParam;
 
-    for (;;) {
+    if (running)
+        return 1;
+
+    running = 1;
+    while (running) {
         if (ReadFile(hPipo, buffer, LOG_BUF_SIZE, &nbytes, NULL)) {
             if (logger && (nbytes > 0)) {
                 if (WaitForSingleObject(hMutex, INFINITE) == WAIT_OBJECT_0) {
@@ -295,6 +296,7 @@ static DWORD WINAPI logging(LPVOID lpParam)
             }
         }
     }
+    return 0;
 }
 
 /*  ----------------------------------------------------------------------

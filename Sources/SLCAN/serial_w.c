@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 715 $
+ *  @version     $Rev: 720 $
  *
  *  @addtogroup  serial
  *  @{
@@ -109,6 +109,7 @@ typedef struct serial_t_ {
     HANDLE hThread;
     sio_recv_t callback;
     void *receiver;
+    int running;
 } serial_t;
 
 
@@ -136,6 +137,7 @@ sio_port_t sio_create(sio_recv_t callback, void *receiver) {
         serial->hThread = NULL;
         serial->callback = callback;
         serial->receiver = receiver;
+        serial->running = 0;
     }
     /* return a pointer to the instance */
     return (sio_port_t)serial;
@@ -309,13 +311,9 @@ int sio_disconnect(sio_port_t port) {
         return -1;
     }
     /* kill the reception thread */
-#if (0)
-    (void)TerminateThread(serial->hThread, 0);
-    // warning C6258: using TerminateThread does not allow proper thread clean up.
-#else
+    serial->running = 0;
     (void)SetEvent(serial->hThread);
-#endif
-    (void)WaitForSingleObject(serial->hThread, 0);
+    (void)WaitForSingleObject(serial->hThread, 3000);
     (void)CloseHandle(serial->hThread);
     serial->hThread = NULL;
     /* purge all pending transfers */
@@ -400,8 +398,14 @@ static DWORD WINAPI reception_loop(LPVOID lpParam) {
         perror("serial");
         abort();
     }
-    /* the torture never stops */
-    for (;;) {
+    if (serial->running) {
+        errno = EEXIST;
+        perror("serial");
+        abort();
+    }
+    /* Run, Forest, run! */
+    serial->running = 1;
+    while (serial->running) {
         DWORD nbytes = 0U;
         uint8_t buffer[1];
 
