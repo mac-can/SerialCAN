@@ -347,10 +347,7 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     // :-) CAN controller is in INIT state
     can[i].mode.byte = mode;            // store selected operation mode
     can[i].status.byte = CANSTAT_RESET; // CAN controller not started yet!
-    if (strncmp(name, "\\\\.\\", 4))
-        strncpy(can[i].name, &name[0], CANPROP_MAX_BUFFER_SIZE);
-    else
-        strncpy(can[i].name, &name[4], CANPROP_MAX_BUFFER_SIZE);
+    strncpy(can[i].name, &name[0], CANPROP_MAX_BUFFER_SIZE);
     can[i].name[CANPROP_MAX_BUFFER_SIZE - 1] = '\0';
 
     return i;                           // return the handle
