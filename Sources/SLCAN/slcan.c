@@ -49,7 +49,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 714 $
+ *  @version     $Rev: 721 $
  *
  *  @addtogroup  slcan
  *  @{
@@ -264,7 +264,7 @@ int slcan_signal(slcan_port_t port) {
 }
 
 EXPORT
-int slcan_connect(slcan_port_t port, const char *device) {
+int slcan_connect(slcan_port_t port, const char *device, const slcan_attr_t *attr) {
     slcan_t *slcan = (slcan_t*)port;
     int res = -1;
 
@@ -279,7 +279,7 @@ int slcan_connect(slcan_port_t port, const char *device) {
     /* reset reception buffer */
     slcan->index = 0U;
     /* connect to the serial port */
-    res = sio_connect(slcan->port, device, NULL);
+    res = sio_connect(slcan->port, device, attr);
     /* send three [CR] to purge the data terminal */
 #if (0)
 //    uint8_t cr = 0xAU;
@@ -306,6 +306,20 @@ int slcan_disconnect(slcan_port_t port) {
     /* disconnect from serial port */
     (void)slcan_close_channel(port);
     return sio_disconnect(slcan->port);
+}
+
+EXPORT
+int slcan_get_attr(slcan_port_t port, slcan_attr_t *attr) {
+    slcan_t* slcan = (slcan_t*)port;
+
+    /* sanity check */
+    errno = 0;
+    if (!slcan) {
+        errno = ENODEV;
+        return -1;
+    }
+    /* serial attributes */
+    return sio_get_attr(slcan->port, attr);
 }
 
 EXPORT

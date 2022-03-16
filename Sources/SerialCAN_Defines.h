@@ -73,41 +73,62 @@ extern "C" {
 /** @name  Protocol option flags
  *  @brief SerialCAN protocol options
  *  @{ */
-#define CANSIO_SLCAN            0x00U   /**< Lawicel SLCAN protocol */
-/** @} */
+#define CANSIO_SLCAN             0x00U  /**< Lawicel SLCAN protocol */
+ /** @} */
+
+ /** @name  Baud rate option
+  *  @brief Baud rate in bits per second
+  *  @note  CBAUDEX compatible (e.g. CygWin)
+  *  @{ */
+#define CANSIO_BD57600          57600U  /**< 57.6 kBd */
+#define CANSIO_BD115200        115200U  /**< 115.2 kBd */
+#define CANSIO_BD128000        128000U  /**< 128.0 kBd */
+#define CANSIO_BD230400        230400U  /**< 230.4 kBd */
+#define CANSIO_BD256000        256000U  /**< 256.0 kBd */
+#define CANSIO_BD460800        460800U  /**< 460.8 kBd */
+#define CANSIO_BD500000        500000U  /**< 500.0 kBd */
+#define CANSIO_BD576000        576000U  /**< 576.0 kBd */
+#define CANSIO_BD921600        921600U  /**< 921.6 kBd */
+#define CANSIO_BD1000000      1000000U  /**< 1.000 MBd */
+#define CANSIO_BD1152000      1152000U  /**< 1.152 MBd */
+#define CANSIO_BD1500000      1500000U  /**< 1.500 MBd */
+#define CANSIO_BD2000000      2000000U  /**< 2.000 MBd */
+#define CANSIO_BD2500000      2500000U  /**< 2.500 MBd */
+#define CANSIO_BD3000000      3000000U  /**< 3.000 MBd */
+/** @} */                   
 
 /** @name  Data size option
  *  @brief Number of data bits (5, 6, 7, 8)
  *  @{ */
-#define CANSIO_5DATABITS        5U      /**< 5 bits per data byte */
-#define CANSIO_6DATABITS        6U      /**< 6 bits per data byte */
-#define CANSIO_7DATABITS        7U      /**< 7 bits per data byte */
-#define CANSIO_8DATABITS        8U      /**< 8 bits per data byte */
+#define CANSIO_5DATABITS            5U  /**< 5 bits per data byte */
+#define CANSIO_6DATABITS            6U  /**< 6 bits per data byte */
+#define CANSIO_7DATABITS            7U  /**< 7 bits per data byte */
+#define CANSIO_8DATABITS            8U  /**< 8 bits per data byte */
 /** @} */
 
 /** @name  Parity option
  *  @brief Parity bit (None, Even, Odd)
  *  @{ */
-#define CANSIO_NOPARITY         0U      /**< no parity */
-#define CANSIO_ODDPARITY        1U      /**< odd parity */
-#define CANSIO_EVENPARITY       2U      /**< even parity */
+#define CANSIO_NOPARITY             0U  /**< no parity */
+#define CANSIO_ODDPARITY            1U  /**< odd parity */
+#define CANSIO_EVENPARITY           2U  /**< even parity */
 /** @} */
 
 /** @name  Stop bit option
  *  @brief Number of stop bits (1 or 2)
  *  @{ */
-#define CANSIO_1STOPBIT         1U      /**< 1 stop bit */
-#define CANSIO_2STOPBITS        2U      /**< 2 stop bits */
+#define CANSIO_1STOPBIT             1U  /**< 1 stop bit */
+#define CANSIO_2STOPBITS            2U  /**< 2 stop bits */
 /** @} */
 
 /** @name  CAN API Property Value
- *  @brief PCAN-Pasic parameter to be read or written
+ *  @brief SLCAN parameter to be read or written
  *  @{ */
-#define SLCAN_DEVICE_ID          0x00U  //!< device id number
-#define SLCAN_SERIAL_NUMBER      0x01U  //!< device serial number
-#define SLCAN_HARDWARE_VERSION   0x02U  //!< device hardware version
-#define SLCAN_FIRMWARE_VERSION   0x03U  //!< device firmware version
-#define SLCAN_CLOCK_FREQUENCY    0x05U  //!< CAN clock frequency (in [Hz]) 
+#define SLCAN_DEVICE_ID          0x00U  /**< device id number */
+#define SLCAN_SERIAL_NUMBER      0x01U  /**< device serial number */
+#define SLCAN_HARDWARE_VERSION   0x02U  /**< device hardware version */
+#define SLCAN_FIRMWARE_VERSION   0x03U  /**< device firmware version */
+#define SLCAN_CLOCK_FREQUENCY    0x05U  /**< CAN clock frequency (in [Hz]) */
 // TODO: define more or all parameters
 // ...
 /** @} */
@@ -115,7 +136,7 @@ extern "C" {
 /** @name  CAN API Library ID
  *  @brief Library ID and dynamic library names
  *  @{ */
-#define SLCAN_LIB_ID            900     /**< library ID (CAN/COP API V1 compatible) */
+#define SLCAN_LIB_ID             900    /**< library ID (CAN/COP API V1 compatible) */
 #if defined(_WIN32) || defined (_WIN64)
 #define SLCAN_LIB_DRIVER        "(none)"
 #define SLCAN_LIB_WRAPPER       "u3canslc.dll"
@@ -127,7 +148,7 @@ extern "C" {
 #define SLCAN_LIB_WRAPPER       "libUVCANSLC.dylib"
 #elif defined(__CYGWIN__)
 #define SLCAN_LIB_DRIVER        "(none)"
-#define SLCAN_LIB_WRAPPER       "u3canslc.dll"
+#define SLCAN_LIB_WRAPPER       "libuvcanslc.so"
 #else
 #error Platform not supported
 #endif

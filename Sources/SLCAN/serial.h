@@ -49,13 +49,15 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 714 $
+ *  @version     $Rev: 721 $
  *
  *  @defgroup    serial Serial Data Transmission
  *  @{
  */
 #ifndef SERIAL_H_INCLUDED
 #define SERIAL_H_INCLUDED
+
+#include "serial_attr.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -73,15 +75,6 @@
  */
 
 typedef void *sio_port_t;               /**< serial port (opaque data type) */
-
-/** @brief       SerialCAN port attributes
- */
-typedef struct sio_attr_t_ {            /* serial port attributes: */
-    uint32_t baudrate;                  /**<  baud rate (in [bps]) */
-    uint8_t  bytesize;                  /**<  number fo data bits (5, 6, 7, 8) */
-    uint8_t  parity;                    /**<  parity bit (None, Even, Odd) */
-    uint8_t  stopbits;                  /**<  number of stop bits (1 or 2) */
-} sio_attr_t;
 
 /** @brief       reception callback function
  *
@@ -136,7 +129,7 @@ extern int sio_destroy(sio_port_t port);
  *
  *  @param[in]   port    - pointer to a port instance
  *  @param[in]   device  - name of the serial device
- *  @param[in]   param   - serial port attributes
+ *  @param[in]   attr    - serial port attributes (optional)
  *
  *  @returns     a file descriptor if successful, or a negative value on error.
  * 
@@ -150,7 +143,7 @@ extern int sio_destroy(sio_port_t port);
  *  @retval      'errno'  - error code from called system functions:
  *                          'open', 'tcsetattr', 'pthread_create'
  */
-extern int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param);
+extern int sio_connect(sio_port_t port, const char *device, const sio_attr_t *attr);
 
 
 /** @brief       terminates the connection with the serial communication device.
@@ -167,6 +160,21 @@ extern int sio_connect(sio_port_t port, const char *device, const sio_attr_t *pa
  *                          'pthread_cancle', 'tcflush', 'close'
  */
 extern int sio_disconnect(sio_port_t port);
+
+
+/** @brief       returns the serial port attributes (baudrate, etc.).
+ *
+ *  @param[in]   port  - pointer to a port instance
+ *  @param[out]  attr  - serial port attributes
+ *
+ *  @returns     0 if successful, or a negative value on error.
+ *
+ *  @note        System variable 'errno' will be set in case of an error.
+ *
+ *  @retval      ENODEV   - no such device (invalid port instance)
+ *  @retval      EINVAL   - invalid argument (attr is NULL)
+ */
+extern int sio_get_attr(sio_port_t port, sio_attr_t* attr);
 
 
 /** @brief       transmits n data bytes via a serial communication device.

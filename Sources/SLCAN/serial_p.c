@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 713 $
+ *  @version     $Rev: 721 $
  *
  *  @addtogroup  serial
  *  @{
@@ -73,6 +73,10 @@
 
 /*  -----------  options  ------------------------------------------------
  */
+
+#if defined(CBAUD) && !defined(CBAUDEX)
+#error Baudrate limited to 38400 by system (unfeasible)
+#endif
 
 #if (OPTION_SERIAL_DEBUG_LEVEL > 0)
 #define SERIAL_DEBUG_ERROR(...)  log_printf(__VA_ARGS__)
@@ -99,11 +103,7 @@
 /*  -----------  defines  ------------------------------------------------
  */
 
-#ifndef CBAUDEX
-#define BAUDRATE        115200U
-#else
-#define BAUDRATE        B115200
-#endif
+#define BAUDRATE        57600U
 #define BYTESIZE        CS8
 #define STOPBITS        CSTOPB
 #define BUFFER_SIZE     1024
@@ -115,9 +115,11 @@
 typedef struct serial_t_ {
     int fildes;
     pthread_t pthread;
+    sio_attr_t attr;
     sio_recv_t callback;
     void *receiver;
 } serial_t;
+
 
 /*  -----------  prototypes  ---------------------------------------------
  */
@@ -132,6 +134,68 @@ static void *reception_loop(void *arg);
 /*  -----------  functions  ----------------------------------------------
  */
 
+#ifdef CBAUDEX
+static tcflag_t cbaudex(uint32_t baud) {
+    switch (baud) {
+        case 50: return B50;
+        case 75: return B75;
+        case 110: return B110;
+        case 134: return B134;
+        case 150: return B150;
+        case 200: return B200;
+        case 300: return B300;
+        case 600: return B600;
+        case 1200: return B1200;
+        case 1800: return B1800;
+        case 2400: return B2400;
+        case 4800: return B4800;
+        case 9600: return B9600;
+        case 19200: return B19200;
+        case 38400: return B38400;
+        case 57600: return B57600;
+        case 115200: return B115200;
+        case 128000: return B128000;
+        case 230400: return B230400;
+        case 256000: return B256000;
+        case 460800: return B460800;
+        case 500000: return B500000;
+        case 576000: return B576000;
+        case 921600: return B921600;
+        case 1000000: return B1000000;
+        case 1152000: return B1152000;
+        case 1500000: return B1500000;
+        case 2000000: return B2000000;
+        case 2500000: return B2500000;
+        case 3000000: return B3000000;
+        default: return B0;
+    }
+}
+#endif
+
+static tcflag_t cbytesize(uint8_t bytesize) {
+    switch (bytesize) {
+        case BYTESIZE5: return CS5;
+        case BYTESIZE6: return CS6;
+        case BYTESIZE7: return CS7;
+        default: return CS8;
+    }
+}
+
+static tcflag_t cparity(uint8_t parity) {
+    switch (parity) {
+        case PARITYODD: return PARENB | PARODD;
+        case PARITYEVEN: return PARENB;
+        default: return 0;
+    }
+}
+
+static tcflag_t cstopbits(uint8_t stopbits) {
+    switch (stopbits) {
+        case STOPBITS2: return CSTOPB;
+        default: return 0;
+    }
+}
+
 sio_port_t sio_create(sio_recv_t callback, void *receiver) {
     serial_t *serial = (serial_t*)NULL;
 
@@ -140,6 +204,10 @@ sio_port_t sio_create(sio_recv_t callback, void *receiver) {
     /* C language constructor */
     if ((serial = (serial_t*)malloc(sizeof(serial_t))) != NULL) {
         serial->fildes = -1;
+        serial->attr.baudrate = BAUDRATE;
+        serial->attr.bytesize = BYTESIZE8;
+        serial->attr.parity = PARITYNONE;
+        serial->attr.stopbits = STOPBITS1;
         serial->callback = callback;
         serial->receiver = receiver;
     }
@@ -157,9 +225,30 @@ int sio_destroy(sio_port_t port) {
         return -1;
     }
     /* close opened file (if any) */
-    (void) sio_disconnect(port);
+    (void)sio_disconnect(port);
     /* C language destructor */
     free(serial);
+    return 0;
+}
+
+int sio_get_attr(sio_port_t port, sio_attr_t* attr) {
+    serial_t* serial = (serial_t*)port;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        return -1;
+    }
+    if (!attr) {
+        errno = EINVAL;
+        return -1;
+    }
+    /* serial attributes */
+    attr->baudrate = serial->attr.baudrate;
+    attr->bytesize = serial->attr.bytesize;
+    attr->stopbits = serial->attr.stopbits;
+    attr->parity = serial->attr.parity;
     return 0;
 }
 
@@ -172,15 +261,13 @@ int sio_signal(sio_port_t port) {
         errno = ENODEV;
         return -1;
     }
-    /* there is nothong to signal right now */
+    /* there is nothing to signal right now */
     return 0;
 }
 
 int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
     serial_t *serial = (serial_t*)port;
     struct termios attr;
-    // TODO: set transmission attributes
-    (void) param;
 
     /* sanity check */
     errno = 0;
@@ -196,6 +283,14 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
         errno = EALREADY;
         return -1;
     }
+    /* set transmission attributes (optional) */
+    if (param) {
+        serial->attr.baudrate = param->baudrate;
+        serial->attr.bytesize = param->bytesize;
+        serial->attr.stopbits = param->stopbits;
+        serial->attr.parity = param->parity;
+        // TODO: range check required?
+    }
     /* connect to serial port */
     if ((serial->fildes = open(device, O_RDWR | O_NONBLOCK)) < 0) {
         /* errno set */
@@ -204,13 +299,14 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
     /* set connection attributes */
     tcgetattr(serial->fildes, &attr);
     attr.c_cflag = CREAD | CLOCAL;
-    attr.c_cflag |= BYTESIZE;
-    attr.c_cflag |= STOPBITS;
+    attr.c_cflag |= cbytesize(serial->attr.bytesize);
+    attr.c_cflag |= cstopbits(serial->attr.stopbits);
+    attr.c_cflag |= cparity(serial->attr.parity);
 #ifdef CBAUDEX
-    attr.c_cflag |= BAUDRATE;
+    attr.c_cflag |= cbaudex(serial->attr.baudrate);
 #else
-    cfsetispeed(&attr, BAUDRATE);
-    cfsetospeed(&attr, BAUDRATE);
+    cfsetispeed(&attr, serial->attr.baudrate);
+    cfsetospeed(&attr, serial->attr.baudrate);
 #endif
     attr.c_iflag = 0;
     attr.c_oflag = 0;

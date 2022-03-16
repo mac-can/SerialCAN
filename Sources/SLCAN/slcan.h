@@ -49,13 +49,15 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 714 $
+ *  @version     $Rev: 721 $
  *
  *  @defgroup    slcan Lawicel SLCAN Protocol
  *  @{
  */
 #ifndef SLCAN_H_INCLUDED
 #define SLCAN_H_INCLUDED
+
+#include "serial_attr.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -114,6 +116,8 @@
  */
 
 typedef void *slcan_port_t;             /**< SLCAN port (opaque data type) */
+
+typedef sio_attr_t slcan_attr_t;        /**< serial port attributes */
 
 /** @brief  CAN message (SocketCAN compatible)
  */
@@ -196,7 +200,7 @@ extern int slcan_destroy(slcan_port_t port);
  *
  *  @param[in]   port    - pointer to a SLCAN instance
  *  @param[in]   device  - name of the serial device
- *  !param[in]   param   - serial port attributes
+ *  @param[in]   attr    - serial port attributes (optional)
  *
  *  @returns     a file descriptor if successful, or a negative value on error.
  *
@@ -210,7 +214,7 @@ extern int slcan_destroy(slcan_port_t port);
  *  @retval      'errno'  - error code from called system functions:
  *                          'open', 'tcsetattr', 'pthread_create'
  */
-extern int slcan_connect(slcan_port_t port, const char *device);
+extern int slcan_connect(slcan_port_t port, const char *device, const sio_attr_t *attr);
 
 
 /** @brief       terminates the connection with the serial communication device.
@@ -230,6 +234,21 @@ extern int slcan_connect(slcan_port_t port, const char *device);
  *                          'pthread_cancel', 'tcflush', 'close'
  */
 extern int slcan_disconnect(slcan_port_t port);
+
+
+/** @brief       returns the serial communication attributes (baudrate, etc.).
+ *
+ *  @param[in]   port  - pointer to a SLCAN instance
+ *  @param[out]  attr  - serial communication attributes
+ *
+ *  @returns     0 if successful, or a negative value on error.
+ *
+ *  @note        System variable 'errno' will be set in case of an error.
+ *
+ *  @retval      ENODEV   - no such device (invalid port instance)
+ *  @retval      EINVAL   - invalid argument (attr is NULL)
+ */
+extern int slcan_get_attr(slcan_port_t port, slcan_attr_t *attr);
 
 
 /** @brief       setup with standard CAN bit-rates.

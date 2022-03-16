@@ -171,7 +171,10 @@ typedef struct {                        // SLCAN interface:
 /*  -----------  prototypes  ---------------------------------------------
  */
 
+static slcan_attr_t* slcan_attr(const can_sio_attr_t* attr);
 static int slcan_error(int code);       // SLCAN specific errors
+
+static int get_sio_attr(slcan_port_t port, can_sio_attr_t *attr);
 
 static int lib_parameter(uint16_t param, void *value, size_t nbyte);
 static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte);
@@ -325,7 +328,7 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
         goto err_init;
     }
     // (4) connect serial interface (returns a file descriptor)
-    fd = slcan_connect(can[i].port, name);
+    fd = slcan_connect(can[i].port, name, slcan_attr(&((can_sio_param_t*)param)->attr));
     rc = slcan_error(fd);
     if (fd < 0) {                       // errno is set in this case
         (void)slcan_destroy(can[i].port);
@@ -349,6 +352,8 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     can[i].status.byte = CANSTAT_RESET; // CAN controller not started yet!
     strncpy(can[i].name, &name[0], CANPROP_MAX_BUFFER_SIZE);
     can[i].name[CANPROP_MAX_BUFFER_SIZE - 1] = '\0';
+    can[i].attr.options = ((can_sio_param_t*)param)->attr.options;
+    (void)get_sio_attr(can[i].port, &can[i].attr);
 
     return i;                           // return the handle
 
@@ -752,6 +757,67 @@ static int slcan_error(int code)
         case EALREADY: rc = CANERR_YETINIT; break;
         default:       rc = CANERR_VENDOR - errno; break;
         }
+    }
+    return rc;
+}
+
+static slcan_attr_t* slcan_attr(const can_sio_attr_t *attr)
+{
+    static slcan_attr_t slcan;
+
+    assert(attr);
+
+    slcan.baudrate = attr->baudrate;    // in bits per second
+    switch (attr->bytesize) {
+    case CANSIO_5DATABITS: slcan.bytesize = BYTESIZE5; break;
+    case CANSIO_6DATABITS: slcan.bytesize = BYTESIZE6; break;
+    case CANSIO_7DATABITS: slcan.bytesize = BYTESIZE7; break;
+    default: slcan.bytesize = BYTESIZE8; break;
+    }
+    switch (attr->stopbits) {
+    case CANSIO_2STOPBITS: slcan.stopbits = STOPBITS2; break;
+    default: slcan.stopbits = STOPBITS1; break;
+    }
+    switch (attr->parity) {
+    case CANSIO_ODDPARITY: slcan.parity = PARITYODD; break;
+    case CANSIO_EVENPARITY: slcan.parity = PARITYEVEN; break;
+    default: slcan.parity = PARITYNONE; break;
+    }
+    return &slcan;
+}
+
+static int get_sio_attr(slcan_port_t port, can_sio_attr_t *attr)
+{
+    slcan_attr_t slcan;
+    int rc;
+
+    assert(attr);
+
+    if ((rc = slcan_get_attr(port, &slcan)) == 0) {
+        switch (slcan.parity) {
+        case PARITYNONE: attr->parity = CANSIO_NOPARITY; break;
+        case PARITYODD: attr->parity = CANSIO_ODDPARITY; break;
+        case PARITYEVEN: attr->parity = CANSIO_EVENPARITY; break;
+        default: attr->parity = 0; break;
+        }
+        switch (slcan.stopbits) {
+        case STOPBITS1: attr->stopbits = CANSIO_1STOPBIT; break;
+        case STOPBITS2: attr->stopbits = CANSIO_2STOPBITS; break;
+        default: attr->stopbits = 0; break;
+        }
+        switch (slcan.bytesize) {
+        case BYTESIZE5: attr->bytesize = CANSIO_5DATABITS; break;
+        case BYTESIZE6: attr->bytesize = CANSIO_6DATABITS; break;
+        case BYTESIZE7: attr->bytesize = CANSIO_7DATABITS; break;
+        case BYTESIZE8: attr->bytesize = CANSIO_8DATABITS; break;
+        default: attr->bytesize = 0; break;
+        }
+        attr->baudrate = slcan.baudrate;// in bits per second
+    } else {
+        attr->baudrate = 0;
+        attr->bytesize = 0;
+        attr->stopbits = 0;
+        attr->parity = 0;
     }
     return rc;
 }

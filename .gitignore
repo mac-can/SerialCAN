@@ -20,4 +20,5 @@ SerialCAN-cppcheck-build-dir
 Binaries
 Includes
 Testing
+.vscode
 *.log

@@ -158,6 +158,7 @@
     <ClInclude Include="..\..\Sources\SLCAN\logger.h" />
     <ClInclude Include="..\..\Sources\SLCAN\queue.h" />
     <ClInclude Include="..\..\Sources\SLCAN\serial.h" />
+    <ClInclude Include="..\..\Sources\SLCAN\serial_attr.h" />
     <ClInclude Include="..\..\Sources\SLCAN\slcan.h" />
     <ClInclude Include="..\..\Sources\Wrapper\can_defs.h" />
   </ItemGroup>

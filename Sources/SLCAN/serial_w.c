@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 720 $
+ *  @version     $Rev: 721 $
  *
  *  @addtogroup  serial
  *  @{
@@ -94,7 +94,7 @@
 /*  -----------  defines  ------------------------------------------------
  */
 
-#define BAUDRATE        115200U
+#define BAUDRATE        57600U
 #define BYTESIZE        8
 #define STOPBITS        TWOSTOPBITS
 #define IN_QUEUE        4096U
@@ -107,6 +107,7 @@
 typedef struct serial_t_ {
     HANDLE hPort;
     HANDLE hThread;
+    sio_attr_t attr;
     sio_recv_t callback;
     void *receiver;
     int running;
@@ -135,6 +136,10 @@ sio_port_t sio_create(sio_recv_t callback, void *receiver) {
     if ((serial = (serial_t*)malloc(sizeof(serial_t))) != NULL) {
         serial->hPort = INVALID_HANDLE_VALUE;
         serial->hThread = NULL;
+        serial->attr.baudrate = BAUDRATE;
+        serial->attr.bytesize = BYTESIZE8;
+        serial->attr.stopbits = STOPBITS1;
+        serial->attr.parity = PARITYNONE;
         serial->callback = callback;
         serial->receiver = receiver;
         serial->running = 0;
@@ -159,6 +164,27 @@ int sio_destroy(sio_port_t port) {
     return 0;
 }
 
+int sio_get_attr(sio_port_t port, sio_attr_t* attr) {
+    serial_t* serial = (serial_t*)port;
+
+    /* sanity check */
+    errno = 0;
+    if (!serial) {
+        errno = ENODEV;
+        return -1;
+    }
+    if (!attr) {
+        errno = EINVAL;
+        return -1;
+    }
+    /* serial attributes */
+    attr->baudrate = serial->attr.baudrate;
+    attr->bytesize = serial->attr.bytesize;
+    attr->stopbits = serial->attr.stopbits;
+    attr->parity = serial->attr.parity;
+    return 0;
+}
+
 int sio_signal(sio_port_t port) {
     serial_t *serial = (serial_t*)port;
 
@@ -172,16 +198,13 @@ int sio_signal(sio_port_t port) {
     return 0;
 }
 
-int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
+int sio_connect(sio_port_t port, const char *device, const sio_attr_t *attr) {
     serial_t *serial = (serial_t*)port;
     int comm, n;
-    DWORD speed;
     char path[42];
     DCB dcb;
     DWORD errors;
     COMMTIMEOUTS timeouts;
-    // TODO: set transmission attributes
-    (void)param;
 
     /* sanity check */
     errno = 0;
@@ -197,16 +220,19 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
         errno = EALREADY;
         return -1;
     }
-    // FIXME: rework this
-    if (((n = sscanf_s(device, "COM%i@%lu", &comm, &speed)) < 1) &&
-        ((n = sscanf_s(device, "com%i@%lu", &comm, &speed)) < 1) &&
-        ((n = sscanf_s(device, "\\\\.\\com%i@%lu", &comm, &speed)) < 1) &&
-        ((n = sscanf_s(device, "\\\\.\\COM%i@%lu", &comm, &speed)) < 1)) {
+    /* set transmission attributes (optional) */
+    if (attr) {
+        serial->attr.baudrate = attr->baudrate;
+        serial->attr.bytesize = attr->bytesize;
+        serial->attr.stopbits = attr->stopbits;
+        serial->attr.parity = attr->parity;
+    }
+    /* get comm port number from device name */
+    if (((n = sscanf_s(device, "COM%i", &comm)) < 1) &&
+        ((n = sscanf_s(device, "\\\\.\\COM%i", &comm)) < 1)) {
         errno = ENOENT;
         return -1;
     }
-    if (n < 2)
-        speed = BAUDRATE;
     /* create a file for the comm port */
     sprintf_s(path, 42, "\\\\.\\COM%i", comm); /* See Q115831 */
     if ((serial->hPort = CreateFile(path, (GENERIC_READ | GENERIC_WRITE),
@@ -250,9 +276,10 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
         errno = ENODEV;
         return -1;
     }
-    dcb.BaudRate = speed;                   // current baud rate
+    int parity = (serial->attr.parity != PARITYNONE) ? 1 : 0;
+    dcb.BaudRate = serial->attr.baudrate;   // current baud rate
     dcb.fBinary = TRUE;                     // binary mode, no EOF check
-    dcb.fParity = FALSE;                    // enable parity checking
+    dcb.fParity = parity;                   // enable parity checking
     dcb.fOutxCtsFlow = FALSE;               // CTS output flow control
     dcb.fOutxDsrFlow = FALSE;               // DSR output flow control
     dcb.fDtrControl = DTR_CONTROL_DISABLE;  // DTR flow control type
@@ -266,9 +293,9 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
     dcb.fAbortOnError = FALSE;              // abort reads/writes on error
     //dcb.XonLim = 0;                       // transmit XON threshold
     //dcb.XoffLim = 30108;                  // transmit XOFF threshold
-    dcb.ByteSize = BYTESIZE;                // number of bits/byte, 4-8
-    dcb.Parity = NOPARITY;                  // 0-4=no,odd,even,mark,space
-    dcb.StopBits = STOPBITS;                // 0,1,2 = 1, 1.5, 2
+    dcb.ByteSize = serial->attr.bytesize;   // number of bits/byte, 4-8
+    dcb.Parity = serial->attr.parity;       // 0-4=no,odd,even,mark,space
+    dcb.StopBits = serial->attr.stopbits;   // 0,1,2 = 1, 1.5, 2
     dcb.XonChar = 0x11;                     // Tx and Rx XON character
     dcb.XoffChar = 0x13;                    // Tx and Rx XOFF character
     dcb.ErrorChar = 0x00;                   // error replacement character
@@ -291,7 +318,7 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *param) {
         errno = ENODEV;
         return -1;
     }
-    /* return COM port number (zero based) */
+    /* return the comm port number (zero based) */
     (void)ClearCommError(serial->hPort, &errors, NULL);
     return (comm - 1);
 }

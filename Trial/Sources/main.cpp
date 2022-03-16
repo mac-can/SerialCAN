@@ -107,18 +107,22 @@ int main(int argc, const char * argv[]) {
     uint64_t received = 0ULL;
     uint64_t expected = 0ULL;
 
+    char* port = (char*)SERIAL_PORT;
+    CSerialCAN::SSerialAttributes attr;
+    attr.options = CANSIO_SLCAN;
+    attr.baudrate = CANSIO_BD57600;
+    attr.bytesize = CANSIO_8DATABITS;
+    attr.stopbits = CANSIO_1STOPBIT;
+    attr.parity = CANSIO_NOPARITY;
+
     for (int i = 1, opt = 0; i < argc; i++) {
         /* serial port number */
-#if (0)
-        if(!strcmp(argv[i], "COM1") || !strcmp(argv[i], "CH:0")) channel = 0;
-        if(!strcmp(argv[i], "COM2") || !strcmp(argv[i], "CH:1")) channel = 1;
-        if(!strcmp(argv[i], "COM3") || !strcmp(argv[i], "CH:2")) channel = 2;
-        if(!strcmp(argv[i], "COM4") || !strcmp(argv[i], "CH:3")) channel = 3;
-        if(!strcmp(argv[i], "COM5") || !strcmp(argv[i], "CH:4")) channel = 4;
-        if(!strcmp(argv[i], "COM6") || !strcmp(argv[i], "CH:5")) channel = 5;
-        if(!strcmp(argv[i], "COM7") || !strcmp(argv[i], "CH:6")) channel = 6;
-        if(!strcmp(argv[i], "COM8") || !strcmp(argv[i], "CH:7")) channel = 7;
+#if !defined(_WIN32) && !defined(_WIN64)
+        if (!strncmp(argv[i], "/dev/tty", 8)) port = (char*)argv[i];
+#else
+        if(!strncmp(argv[i], "COM", 3) || !strncmp(argv[i], "\\\\.\\COM", 7)) port = (char*)argv[i];
 #endif
+        if (!strncmp(argv[i], "BAUD:", 5) && sscanf(argv[i], "BAUD:%i", &opt) == 1) attr.baudrate = (uint32_t)opt;
         /* baud rate (CAN 2.0) */
         if (!strcmp(argv[i], "BD:0") || !strcmp(argv[i], "BD:1000")) bitrate.index = CANBTR_INDEX_1M;
         if (!strcmp(argv[i], "BD:1") || !strcmp(argv[i], "BD:800")) bitrate.index = CANBTR_INDEX_800K;
@@ -227,8 +231,8 @@ int main(int argc, const char * argv[]) {
             result = CSerialCAN::GetNextChannel(info);
         }
 #else
-        retVal = myDriver.ProbeChannel(SERIAL_PORT, opMode, state);
-        fprintf(stdout, ">>> myDriver.ProbeChannel(%s): state = %s", SERIAL_PORT,
+        retVal = myDriver.ProbeChannel(port, opMode, state);
+        fprintf(stdout, ">>> myDriver.ProbeChannel(%s): state = %s", port,
                         (state == CCanApi::ChannelOccupied) ? "now occupied" :
                         (state == CCanApi::ChannelAvailable) ? "available" :
                         (state == CCanApi::ChannelNotAvailable) ? "not available" : "not testable");
@@ -237,17 +241,17 @@ int main(int argc, const char * argv[]) {
         if (option_exit)
             return 0;
     }
-    retVal = myDriver.InitializeChannel(SERIAL_PORT, opMode);
+    retVal = myDriver.InitializeChannel(port, opMode, attr);
     if (retVal != CCanApi::NoError) {
-        fprintf(stderr, "+++ error: myDriver.InitializeChannel(%s) returned %i\n", SERIAL_PORT, retVal);
+        fprintf(stderr, "+++ error: myDriver.InitializeChannel(%s) returned %i\n", port, retVal);
         goto end;
     }
     else if (myDriver.GetStatus(status) == CCanApi::NoError) {
-        fprintf(stdout, ">>> myDriver.InitializeChannel(%s): status = 0x%02X\n", SERIAL_PORT, status.byte);
+        fprintf(stdout, ">>> myDriver.InitializeChannel(%s): status = 0x%02X\n", port, status.byte);
     }
     if (option_test) {
-        retVal = myDriver.ProbeChannel(SERIAL_PORT, opMode, state);
-        fprintf(stdout, ">>> myDriver.ProbeChannel(%s): state = %s", SERIAL_PORT,
+        retVal = myDriver.ProbeChannel(port, opMode, state);
+        fprintf(stdout, ">>> myDriver.ProbeChannel(%s): state = %s", port,
                         (state == CCanApi::ChannelOccupied) ? "now occupied" :
                         (state == CCanApi::ChannelAvailable) ? "available" :
                         (state == CCanApi::ChannelNotAvailable) ? "not available" : "not testable");
