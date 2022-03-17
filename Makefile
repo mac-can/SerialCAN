@@ -78,6 +78,12 @@ install:
 #	$(MAKE) -C Utilities/can_test $@
 #	$(MAKE) -C Utilities/can_moni $@
 
+test:
+	$(MAKE) -C Trial $@
+
+check:
+	$(MAKE) -C Trial $@ 2> checker.txt
+
 build_no:
 	@./build_no.sh
 	@cat Sources/build_no.h
