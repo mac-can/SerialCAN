@@ -63,6 +63,10 @@ can = CANAPI(lib)
 port = SerialPort()
 port.name = c_char_p(com.encode('utf-8'))
 port.attr.options = CANSIO_SLCAN
+port.attr.baudrate = CANSIO_BD57600
+port.attr.bytesize = CANSIO_8DATABITS
+port.attr.parity = CANSIO_NOPARITY
+port.attr.stopbits = CANSIO_1STOPBIT
 
 # initialize the CAN interface
 print('>>> can.init({}, 0x{:02X})'.format(port.name, opMode.byte))

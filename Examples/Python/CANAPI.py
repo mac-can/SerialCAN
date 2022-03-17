@@ -762,5 +762,5 @@ if __name__ == '__main__':
     # have a great time
     print('Bye, bye!')
 
-# * $Id: CANAPI.py 1018 2021-12-31 20:20:26Z haumea $ *** (c) UV Software, Berlin ***
+# * $Id: CANAPI.py 1046 2022-03-08 20:38:47Z haumea $ *** (c) UV Software, Berlin ***
 #

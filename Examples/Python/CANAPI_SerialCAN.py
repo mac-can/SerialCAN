@@ -52,9 +52,9 @@
     Interface API for various CAN interfaces from different
     vendors running under multiple operating systems.
 
-    $Author: haumea $
+    $Author: makemake $
 
-    $Rev: 1046 $
+    $Rev: 1048 $
 """
 from CANAPI import *
 from ctypes import *
