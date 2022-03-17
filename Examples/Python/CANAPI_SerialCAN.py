@@ -2,7 +2,7 @@
 #
 #	SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces
 #
-#	Copyright (C) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
 #
 #	This file is part of SerialCAN.
@@ -68,6 +68,24 @@ CANDEV_SERIAL = -1  # channel ID for serial port device
 #
 CANSIO_SLCAN = 0x00  # Lawicel SLCAN protocol
 
+# Baud rate (CBAUDEX compatible, e.g. CygWin)
+#
+CANSIO_BD57600 = 57600      # 57.6 kBd
+CANSIO_BD115200 = 115200    # 115.2 kBd
+CANSIO_BD128000 = 128000    # 128.0 kBd
+CANSIO_BD230400 = 230400    # 230.4 kBd
+CANSIO_BD256000 = 256000    # 256.0 kBd
+CANSIO_BD460800 = 460800    # 460.8 kBd
+CANSIO_BD500000 = 500000    # 500.0 kBd
+CANSIO_BD576000 = 576000    # 576.0 kBd
+CANSIO_BD921600 = 921600    # 921.6 kBd
+CANSIO_BD1000000 = 1000000  # 1.000 MBd
+CANSIO_BD1152000 = 1152000  # 1.152 MBd
+CANSIO_BD1500000 = 1500000  # 1.500 MBd
+CANSIO_BD2000000 = 2000000  # 2.000 MBd
+CANSIO_BD2500000 = 2500000  # 2.500 MBd
+CANSIO_BD3000000 = 3000000  # 3.000 MBd
+
 # Number of data bits (5, 6, 7, 8)
 #
 CANSIO_5DATABITS = 5  # 5 bits per data byte
@@ -100,7 +118,7 @@ class SerialAttr(LittleEndianStructure):
     ]
     def __init__(self):
         self.options = CANSIO_SLCAN
-        self.baudrate = 115200
+        self.baudrate = CANSIO_BD57600
         self.bytesize = CANSIO_8DATABITS
         self.parity = CANSIO_NOPARITY
         self.stopbits = CANSIO_1STOPBIT
