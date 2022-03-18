@@ -7,7 +7,7 @@ _All rights reserved._
 
 CAN API V3 is a wrapper specification to have a uniform CAN Interface API for various CAN interfaces from different vendors running under multiple operating systems.
 
-This repo contains the source code for a _CAN-over-Serial-Line_ interfaces based on
+This repo contains the source code for _CAN-over-Serial-Line_ interfaces based on
 [Lawicel SLCAN protocol](http://www.can232.com/docs/canusb_manual.pdf).
 It provides the build environments to build dynamic libraries with GNU C/C++&reg; compilers,
 either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
@@ -23,8 +23,6 @@ and some C/C++ example programs.
 /// \note   See CCanApi for a description of the overridden methods
 /// \{
 class CSerialCAN : public CCanApi {
-private:
-    CANAPI_Handle_t m_Handle;  ///< CAN interface handle
 public:
     // constructor / destructor
     CSerialCAN();
@@ -138,13 +136,13 @@ Windows&reg; (x64 operating system):
 
 #### macOS Monterey
 
-- macOS Monterey (12.1) on a Mac mini (M1, 2020)
-- Apple clang version 13.0.0 (clang-1300.0.29.30)
-- Xcode Version 13.2.1 (13C100)
+- macOS Monterey (12.3) on a Mac mini (M1, 2020)
+- Apple clang version 13.1.6 (clang-1316.0.21.2)
+- Xcode Version 13.3 (13C113)
 
 #### macOS Big Sur
 
-- macOS Big Sur (11.6.3) on a MacBook Pro (2019)
+- macOS Big Sur (11.6.4) on a MacBook Pro (2019)
 - Apple clang version 13.0.0 (clang-1300.0.29.30)
 - Xcode Version 13.2.1 (13C100)
 
@@ -174,17 +172,10 @@ Windows&reg; (x64 operating system):
 
 ## Known Bugs and Caveats
 
-1. To probe a CAN channel is not supported.
-
-2. Time-stamps are currently not supported.
-
-3. Serial line attributes (baud rate and mode) cannot be changed
-   (default: 57.6kBaud, 8-N-1).
-
-4. Transmitting messages over the TTY is extremely slow; approx. 16ms per frame.
+1. Transmitting messages over the TTY is extremely slow; approx. 16ms per frame.
    I guess this is because the transmission is acknowledged by the CAN device.
 
-5. The Phython examples didn't catch Ctrl-C.
+2. Time-stamps are currently not supported.
 
 ## This and That
 
