@@ -41,6 +41,8 @@ HEADERS = -I$(SOURCE_DIR) \
 	-I$(WRAPPER_DIR) \
 	-I$(MAIN_DIR)
 
+LIBRARIES = -lpthread
+
 CFLAGS += -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
 	$(DEFINES) \
@@ -50,9 +52,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LIBRARIES =
-
-LDFLAGS  += -lpthread
+LDFLAGS  += 
 
 ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
 ifeq ($(BINARY),UNIVERSAL)
