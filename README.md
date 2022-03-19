@@ -1,6 +1,6 @@
 ### Library for CAN-over-Serial-Line Interfaces (SLCAN Protocol)
 
-_Copyright &copy; 2016,2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
+_Copyright &copy; 2016, 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
 _All rights reserved._
 
 # CAN API V3 Library for CAN-over-Serial-Line Interfaces
