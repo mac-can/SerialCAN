@@ -9,7 +9,7 @@ call build_no.bat
 rem type .\Sources\build_no.h
 rem pause
 
-call msbuild.exe .\Trial\SerialCAN.vcxproj\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Debug";"Platform=x64"
+call msbuild.exe .\Trial\SerialCAN.vcxproj\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Debug";"Platform=x86"
 if errorlevel 1 goto end
 
 call msbuild.exe .\Libraries\CANAPI\uvcanslc.vcxproj\uvcanslc.vcxproj /t:Clean;Build /p:"Configuration=Release_dll";"Platform=Win32"
