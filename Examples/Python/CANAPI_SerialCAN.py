@@ -54,7 +54,7 @@
 
     $Author: makemake $
 
-    $Rev: 1048 $
+    $Rev: 1049 $
 """
 from CANAPI import *
 from ctypes import *
