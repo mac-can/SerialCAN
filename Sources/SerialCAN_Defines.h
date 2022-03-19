@@ -82,9 +82,7 @@ extern "C" {
   *  @{ */
 #define CANSIO_BD57600          57600U  /**< 57.6 kBd */
 #define CANSIO_BD115200        115200U  /**< 115.2 kBd */
-#define CANSIO_BD128000        128000U  /**< 128.0 kBd */
 #define CANSIO_BD230400        230400U  /**< 230.4 kBd */
-#define CANSIO_BD256000        256000U  /**< 256.0 kBd */
 #define CANSIO_BD460800        460800U  /**< 460.8 kBd */
 #define CANSIO_BD500000        500000U  /**< 500.0 kBd */
 #define CANSIO_BD576000        576000U  /**< 576.0 kBd */
