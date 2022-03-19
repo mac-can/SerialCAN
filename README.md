@@ -9,10 +9,10 @@ CAN API V3 is a wrapper specification to have a uniform CAN Interface API for va
 
 This repo contains the source code for _CAN-over-Serial-Line_ interfaces based on
 [Lawicel SLCAN protocol](http://www.can232.com/docs/canusb_manual.pdf).
-It provides the build environments to build dynamic libraries on macOS&reg;, Linux&reg; and Windows&reg;,
+It provides the build environments to build dynamic libraries on macOS&reg;, Linux&reg;, Cygwin&reg; and Windows&reg;,
 either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
 or as a _CAN API V3_ driver library ([_libUVCANSLC_](#libUVCANSLC)),
-as well as my beloved utilities [`can_moni`](#can_moni) and [`can_test`](#can_test)
+as well as my beloved utilities [`can_moni`](#can_moni) and [`can_test`](#can_test),
 and some C/C++ example programs.
 
 ## SerialCAN API
