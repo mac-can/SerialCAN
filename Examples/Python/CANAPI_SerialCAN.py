@@ -54,7 +54,7 @@
 
     $Author: makemake $
 
-    $Rev: 1048 $
+    $Rev: 1049 $
 """
 from CANAPI import *
 from ctypes import *
@@ -72,9 +72,7 @@ CANSIO_SLCAN = 0x00  # Lawicel SLCAN protocol
 #
 CANSIO_BD57600 = 57600      # 57.6 kBd
 CANSIO_BD115200 = 115200    # 115.2 kBd
-CANSIO_BD128000 = 128000    # 128.0 kBd
 CANSIO_BD230400 = 230400    # 230.4 kBd
-CANSIO_BD256000 = 256000    # 256.0 kBd
 CANSIO_BD460800 = 460800    # 460.8 kBd
 CANSIO_BD500000 = 500000    # 500.0 kBd
 CANSIO_BD576000 = 576000    # 576.0 kBd

@@ -154,9 +154,7 @@ static tcflag_t cbaudex(uint32_t baud) {
         case 38400: return B38400;
         case 57600: return B57600;
         case 115200: return B115200;
-        case 128000: return B128000;
         case 230400: return B230400;
-        case 256000: return B256000;
         case 460800: return B460800;
         case 500000: return B500000;
         case 576000: return B576000;

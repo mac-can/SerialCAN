@@ -21,6 +21,7 @@ current_OS := $(patsubst CYGWIN%,Cygwin,$(current_OS))
 current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
+
 HOME_DIR = ../..
 MAIN_DIR = ./Sources
 
@@ -29,14 +30,18 @@ SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN
 CANAPI_DIR = $(HOME_DIR)/Sources/CANAPI
 WRAPPER_DIR = $(HOME_DIR)/Sources/Wrapper
 
-OBJECTS = $(OUTDIR)/main.o $(OUTDIR)/Timer.o  $(BINDIR)/libSerialCAN.a
-
-
-VERSION = 0
 
 TARGET  = can_test
 
+VERSION = 0.1.0
+
 INSTALL = ~/bin
+
+ifeq ($(current_OS),Darwin)	# macOS - libSerialCAN.dylib
+OBJECTS = $(OUTDIR)/main.o $(OUTDIR)/Timer.o  $(BINDIR)/libSerialCAN.a
+else				# Linux - libserialcan.so.1
+OBJECTS = $(OUTDIR)/main.o $(OUTDIR)/Timer.o  $(BINDIR)/libserialcan.a 
+endif
 
 DEFINES = -DOPTION_CANAPI_DRIVER=1 \
 	-DOPTION_CANAPI_COMPANIONS=1
@@ -47,6 +52,8 @@ HEADERS = -I$(MAIN_DIR) \
 	-I$(CANAPI_DIR) \
 	-I$(WRAPPER_DIR)
 
+LIBRARIES = -lpthread
+
 CFLAGS += -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
 	$(DEFINES) \
@@ -56,9 +63,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LIBRARIES =
-
-LDFLAGS  += -lpthread
+LDFLAGS  +=
 
 
 CXX = g++

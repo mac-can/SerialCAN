@@ -50,15 +50,9 @@
  *  @{
  */
 #include "build_no.h"
-#ifdef _MSC_VER
 #define VERSION_MAJOR    0
 #define VERSION_MINOR    1
-#define VERSION_PATCH    99
-#else
-#define VERSION_MAJOR    0
-#define VERSION_MINOR    1
-#define VERSION_PATCH    99
-#endif
+#define VERSION_PATCH    0
 #define VERSION_BUILD    BUILD_NO
 #define VERSION_STRING   TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) "." TOSTRING(VERSION_PATCH) " (" TOSTRING(BUILD_NO) ")"
 #if defined(_WIN64)
@@ -202,7 +196,7 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
 
     if (result)                         // serial device not testtable
         *result = CANBRD_NOT_TESTABLE;
-    
+
     if (channel != CANDEV_SERIAL)       // must be serial port device!
 #ifndef OPTION_CANAPI_RETVALS
         return CANERR_HANDLE;
@@ -706,7 +700,7 @@ char *can_hardware(int handle)
 
     // note: TTY name has at worst 255 characters plus terminating zero
     snprintf(hardware, 2*CANPROP_MAX_BUFFER_SIZE, "Hardware %u.%u (%s:%u,%u-%c-%u)",
-        (uint8_t)(hw_version >> 4), (uint8_t)(hw_version & 0xFU), 
+        (uint8_t)(hw_version >> 4), (uint8_t)(hw_version & 0xFU),
         can[handle].name, can[handle].attr.baudrate, can[handle].attr.bytesize,
         can[handle].attr.parity == CANSIO_EVENPARITY ? 'E' : (can[handle].attr.parity == CANSIO_ODDPARITY ? 'O' : 'N'),
         can[handle].attr.stopbits);
@@ -1002,7 +996,7 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
     uint8_t load = 0U;
     uint8_t version_no = 0x00U;
     uint32_t serial_no = 0x00000000U;
- 
+
     assert(IS_HANDLE_VALID(handle));    // just to make sure
 
     if (value == NULL) {                // check for null-pointer

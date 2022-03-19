@@ -7,12 +7,12 @@ _All rights reserved._
 
 CAN API V3 is a wrapper specification to have a uniform CAN Interface API for various CAN interfaces from different vendors running under multiple operating systems.
 
-This repo contains the source code for a _CAN-over-Serial-Line_ interfaces based on
+This repo contains the source code for _CAN-over-Serial-Line_ interfaces based on
 [Lawicel SLCAN protocol](http://www.can232.com/docs/canusb_manual.pdf).
-It provides the build environments to build dynamic libraries with GNU C/C++&reg; compilers,
+It provides the build environments to build dynamic libraries on macOS&reg;, Linux&reg;, Cygwin&reg; and Windows&reg;,
 either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
 or as a _CAN API V3_ driver library ([_libUVCANSLC_](#libUVCANSLC)),
-as well as my beloved utilities [`can_moni`](#can_moni) and [`can_test`](#can_test)
+as well as my beloved utilities [`can_moni`](#can_moni) and [`can_test`](#can_test),
 and some C/C++ example programs.
 
 ## SerialCAN API
@@ -23,8 +23,6 @@ and some C/C++ example programs.
 /// \note   See CCanApi for a description of the overridden methods
 /// \{
 class CSerialCAN : public CCanApi {
-private:
-    CANAPI_Handle_t m_Handle;  ///< CAN interface handle
 public:
     // constructor / destructor
     CSerialCAN();
@@ -138,13 +136,13 @@ Windows&reg; (x64 operating system):
 
 #### macOS Monterey
 
-- macOS Monterey (12.1) on a Mac mini (M1, 2020)
-- Apple clang version 13.0.0 (clang-1300.0.29.30)
-- Xcode Version 13.2.1 (13C100)
+- macOS Monterey (12.3) on a Mac mini (M1, 2020)
+- Apple clang version 13.1.6 (clang-1316.0.21.2)
+- Xcode Version 13.3 (13C113)
 
 #### macOS Big Sur
 
-- macOS Big Sur (11.6.3) on a MacBook Pro (2019)
+- macOS Big Sur (11.6.4) on a MacBook Pro (2019)
 - Apple clang version 13.0.0 (clang-1300.0.29.30)
 - Xcode Version 13.2.1 (13C100)
 
@@ -154,10 +152,10 @@ Windows&reg; (x64 operating system):
 - Apple LLVM version 10.0.0 (clang-1000.11.45.5)
 - Xcode Version 10.1 (10B61)
 
-#### Debian Buster (10.11)
+#### Debian Bullseye (11.2)
 
 - Debian 4.19.160-2 (2020-11-18) x86_64 GNU/Linux
-- gcc (Debian 8.3.0-6) 8.3.0
+- gcc (Debian 10.2.1-6) 10.2.1 20210110
 
 #### Cygwin (64-bit)
 
@@ -174,17 +172,12 @@ Windows&reg; (x64 operating system):
 
 ## Known Bugs and Caveats
 
-1. To probe a CAN channel is not supported.
+1. Transmitting messages over the TTY is extremely slow; approx. 16ms per frame.
+   I guess this is because the transmission is acknowledged by the CAN device.
 
 2. Time-stamps are currently not supported.
 
-3. Serial line attributes (baud rate and mode) cannot be changed
-   (default: 57.6kBaud, 8-N-1).
-
-4. Transmitting messages over the TTY is extremely slow; approx. 16ms per frame.
-   I guess this is because the transmission is acknowledged by the CAN device.
-
-5. The Phython examples didn't catch Ctrl-C.
+3. Python Ctrl+C issue on Linux still unsolved.
 
 ## This and That
 

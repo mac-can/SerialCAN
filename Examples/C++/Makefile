@@ -4,7 +4,7 @@ current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
 BINARIES = ../../Binaries
-INCLUDES = -I../../INCLUDES
+INCLUDES = -I../../Includes
 
 TARGET1 = can_recv
 ifeq ($(current_OS),Darwin) # macOS - libSerial.dylib

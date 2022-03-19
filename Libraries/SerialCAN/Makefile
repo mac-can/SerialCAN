@@ -96,6 +96,8 @@ HEADERS = -I$(SOURCE_DIR) \
 	-I$(SERIAL_DIR) \
 	-I$(WRAPPER_DIR)
 
+LIBRARIES = -lpthread
+
 CFLAGS += -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
 	$(DEFINES) \
@@ -105,10 +107,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LIBRARIES =
-
-LDFLAGS  += -lpthread \
-	-nostartfiles -dynamiclib -fvisibility=hidden \
+LDFLAGS  += -nostartfiles -dynamiclib -fvisibility=hidden \
 	-install_name @rpath/$(INSTALL_NAME) \
 	-current_version $(CURRENT_VERSION) \
 	-compatibility_version $(COMPATIBILITY_VERSION)
@@ -162,14 +161,13 @@ CFLAGS += -fPIC -O2 -Wall -Wno-parentheses \
 	$(DEFINES) \
 	$(HEADERS)
 
+LIBRARIES = -lpthread
+
 CXXFLAGS += -fPIC -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LIBRARIES =
-
-LDFLAGS  += -lpthread \
-	--shared -Wl,-soname,$(SONAME) -lc
+LDFLAGS  += --shared -Wl,-soname,$(SONAME) -lc
 
 ARFLAGS = r
 
@@ -263,13 +261,13 @@ $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
 
 $(STATIC): $(OBJECTS)
 ifeq ($(current_OS),Darwin)
-	$(LT) $(LTFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
+	$(LT) $(LTFLAGS) -o $@ $(OBJECTS)
 	@lipo -archs $@
 	$(CP) $(STATIC) $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
 endif
 ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
-	$(AR) $(ARFLAGS) $@ $(OBJECTS) $(LIBRARIES)
+	$(AR) $(ARFLAGS) $@ $(OBJECTS)
 	$(CP) $(STATIC) $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
 endif
