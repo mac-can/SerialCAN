@@ -78,7 +78,7 @@ extern "C" {
 
  /** @name  Baud rate option
   *  @brief Baud rate in bits per second
-  *  @note  CBAUDEX compatible (e.g. CygWin)
+  *  @note  CBAUDEX compatible (e.g. Linux)
   *  @{ */
 #define CANSIO_BD57600          57600U  /**< 57.6 kBd */
 #define CANSIO_BD115200        115200U  /**< 115.2 kBd */
