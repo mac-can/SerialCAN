@@ -3,7 +3,7 @@
  *  CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)
  *
  *  Copyright (c) 2005-2010 Uwe Vogt, UV Software, Friedrichshafen
- *  Copyright (c) 2016-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2016-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This file is part of SerialCAN.
@@ -52,7 +52,7 @@
 #include "build_no.h"
 #define VERSION_MAJOR    0
 #define VERSION_MINOR    1
-#define VERSION_PATCH    0
+#define VERSION_PATCH    99
 #define VERSION_BUILD    BUILD_NO
 #define VERSION_STRING   TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) "." TOSTRING(VERSION_PATCH) " (" TOSTRING(BUILD_NO) ")"
 #if defined(_WIN64)

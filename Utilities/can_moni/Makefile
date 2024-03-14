@@ -1,7 +1,7 @@
 #
 #	CAN Monitor for CAN-over-Serial-Line Interfaces
 #
-#	Copyright (C) 2007,2016-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (C) 2007,2016-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ WRAPPER_DIR = $(HOME_DIR)/Sources/Wrapper
 
 TARGET  = can_moni
 
-VERSION = 0.1.1
+VERSION = 0.1.99
 
 INSTALL = ~/bin
 
