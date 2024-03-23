@@ -89,5 +89,8 @@
     <ClInclude Include="..\..\Sources\SLCAN\serial_attr.h">
       <Filter>Sources\SLCAN</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Sources\CANAPI\CANBTR_Defaults.h">
+      <Filter>Sources\CANAPI</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

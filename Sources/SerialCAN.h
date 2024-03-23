@@ -48,8 +48,9 @@
 #ifndef SERIALCAN_H_INCLUDED
 #define SERIALCAN_H_INCLUDED
 
-#include "CANAPI.h"
 #include "SerialCAN_Defines.h"
+#include "CANBTR_Defaults.h"
+#include "CANAPI.h"
 
 /// \name   SerialCAN
 /// \brief  SerialCAN dynamic library

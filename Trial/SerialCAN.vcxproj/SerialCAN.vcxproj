@@ -150,6 +150,7 @@
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Defines.h" />
     <ClInclude Include="..\..\Sources\CANAPI\CANAPI_Types.h" />
+    <ClInclude Include="..\..\Sources\CANAPI\CANBTR_Defaults.h" />
     <ClInclude Include="..\..\Sources\CANAPI\can_api.h" />
     <ClInclude Include="..\..\Sources\CANAPI\can_btr.h" />
     <ClInclude Include="..\..\Sources\SerialCAN.h" />
