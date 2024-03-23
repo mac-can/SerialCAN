@@ -43,15 +43,15 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @file        CANBTR_Defines.h
  *
  *  @brief       CAN API V3 for generic CAN Interfaces - Definitions and Options
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 1256 $
+ *  @version     $Rev: 1259 $
  *
  *  @addtogroup  can_btr
  *  @{

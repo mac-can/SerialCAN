@@ -2,7 +2,7 @@
 /*
  *  CAN Interface API, Version 3 (generic)
  *
- *  Copyright (c) 2004-2023 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2004-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This file is part of CAN API V3.
@@ -43,15 +43,15 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @file        can_api.h
  *
  *  @brief       CAN API V3 for generic CAN Interfaces
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 1090 $
+ *  @version     $Rev: 1259 $
  *
  *  @defgroup    can_api CAN Interface API, Version 3
  *  @{
@@ -91,7 +91,11 @@ extern "C" {
 #define OPTION_DISABLED  0  /**< if a define is not defined, it is automatically set to 0 */
 #endif
 #if (CAN_API_SPEC != 0x300)
+#ifdef _MSC_VER
+#pragma message ( "Requires version 3.0 of CANAPI_Types.h" )
+#else
 #error Requires version 3.0 of CANAPI_Types.h
+#endif
 #endif
 #if (OPTION_CANAPI_LIBRARY == 0)
 #if  (OPTION_CANAPI_DRIVER == 0)
@@ -136,7 +140,11 @@ typedef int                             can_handle_t;
 #elif (OPTION_CANAPI_DRIVER != 0)
 #define CAN_BOARD(lib, brd)             brd
 #else
-#error Remove the unneeded definition(s)!
+#ifdef _MSC_VER
+#pragma message ( "Remove the unneeded definition(s)" )
+#else
+#error Remove the unneeded definition(s)
+#endif
 #endif
 
 /*  -----------  types  --------------------------------------------------

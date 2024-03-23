@@ -15,7 +15,7 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 #include "SerialCAN.h"
 #include "Timer.h"
@@ -49,14 +49,18 @@
 #elif defined(__CYGWIN__)
 #define PLATFORM        "Cygwin"
 #else
-#error Unsupported architecture
+#ifdef _MSC_VER
+#pragma message ( "Platform not supported!" )
+#else
+#error Platform not supported!
+#endif
 #endif
 #ifdef _DEBUG
 static const char APPLICATION[] = "CAN Tester for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING " _DEBUG";
 #else
 static const char APPLICATION[] = "CAN Tester for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 #endif
-static const char COPYRIGHT[]   = "Copyright (C) 2007,2016-2022 by Uwe Vogt, UV Software, Berlin";
+static const char COPYRIGHT[]   = "Copyright (C) 2007,2016-2024 by Uwe Vogt, UV Software, Berlin";
 static const char WARRANTY[]    = "This program comes with ABSOLUTELY NO WARRANTY!\n\n" \
                                   "This is free software, and you are welcome to redistribute it\n" \
                                   "under certain conditions; type `--version' for details.";

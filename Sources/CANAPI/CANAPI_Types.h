@@ -43,7 +43,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @file        CANAPI_Types.h
  *
@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 1249 $
+ *  @version     $Rev: 1259 $
  *
  *  @addtogroup  can_api
  *  @{

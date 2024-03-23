@@ -2,8 +2,7 @@
 /*
  *  CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)
  *
- *  Copyright (c) 2005-2010 Uwe Vogt, UV Software, Friedrichshafen
- *  Copyright (c) 2016-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2004-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This file is part of SerialCAN.
@@ -44,7 +43,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @addtogroup  can_api
  *  @{
@@ -148,7 +147,11 @@ extern "C" {
 #define SLCAN_LIB_DRIVER        "(none)"
 #define SLCAN_LIB_WRAPPER       "libuvcanslc.so"
 #else
-#error Platform not supported
+#ifdef _MSC_VER
+#pragma message ( "Platform not supported!" )
+#else
+#error Platform not supported!
+#endif
 #endif
  /** @} */
 

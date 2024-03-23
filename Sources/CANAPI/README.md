@@ -1,9 +1,9 @@
 ### CAN Interface API, Version 3
 
-_Copyright &copy; 2004-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
+_Copyright &copy; 2004-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
 _All rights reserved._
 
-Version $Rev: 1256 $
+Version $Rev: 1259 $
 
 # A CAN Interface Wrapper Specification
 

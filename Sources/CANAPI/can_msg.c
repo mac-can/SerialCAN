@@ -2,7 +2,7 @@
 /*
  *  CAN Interface API, Version 3 (Message Formatter)
  *
- *  Copyright (c) 2019-2023 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2019-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This file is part of CAN API V3.
@@ -43,15 +43,15 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @file        can_msg.c
  *
  *  @brief       CAN Message Formatter
  *
- *  @author      $Author: makemake $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 1187 $
+ *  @version     $Rev: 1259 $
  *
  *  @addtogroup  can_msg
  *  @{

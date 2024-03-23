@@ -2,7 +2,7 @@
 /*
  *  CAN Interface API, Version 3 (Bit-rate Conversion)
  *
- *  Copyright (c) 2017-2023 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2017-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This file is part of CAN API V3.
@@ -43,7 +43,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @file        can_btr.c
  *
@@ -55,9 +55,9 @@
  *               |  SJW  |          BRP          |SAM|   TSEG2   |     TSEG1     |<br>
  *               +-7-+-6-+-5-+---+---+---+---+-0-+-7-+-6-+---+-4-+-3-+---+---+-0-+<br>
  *
- *  @author      $Author: makemake $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 1186 $
+ *  @version     $Rev: 1259 $
  *
  *  @addtogroup  can_btr
  *  @{

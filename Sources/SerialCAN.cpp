@@ -62,7 +62,11 @@
 #elif defined(__CYGWIN__)
 #define PLATFORM        "Cygwin"
 #else
-#error Unsupported architecture
+#ifdef _MSC_VER
+#pragma message ( "Platform not supported!" )
+#else
+#error Platform not supported!
+#endif
 #endif
 static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 

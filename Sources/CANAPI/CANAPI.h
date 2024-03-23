@@ -2,7 +2,7 @@
 //
 //  CAN Interface API, Version 3 (Interface Definition)
 //
-//  Copyright (c) 2004-2023 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (c) 2004-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //  All rights reserved.
 //
 //  This file is part of CAN API V3.
@@ -43,7 +43,7 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+//  along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
 //
 /// \file        CANAPI.h
 //
@@ -75,7 +75,7 @@
 ///
 /// \author      $Author: haumea $
 //
-/// \version     $Rev: 1225 $
+/// \version     $Rev: 1259 $
 //
 /// \defgroup    can_api CAN Interface API, Version 3
 /// \{
@@ -87,7 +87,11 @@
 #include "CANAPI_Types.h"
 
 #if (CAN_API_SPEC != 0x300)
+#ifdef _MSC_VER
+#pragma message ( "Requires version 3.0 of CANAPI_Types.h" )
+#else
 #error Requires version 3.0 of CANAPI_Types.h
+#endif
 #endif
 #if (OPTION_CANAPI_LIBRARY == 0)
 #if  (OPTION_CANAPI_DRIVER == 0)
@@ -520,4 +524,4 @@ public:
 /// \}
 #endif // CANAPI_H_INCLUDED
 /// \}
-// $Id: CANAPI.h 1225 2023-11-21 18:26:20Z haumea $  Copyright (c) UV Software //
+// $Id: CANAPI.h 1259 2024-03-23 18:28:13Z haumea $  Copyright (c) UV Software //

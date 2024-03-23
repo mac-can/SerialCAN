@@ -44,7 +44,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @addtogroup  can_api
  *  @{
@@ -66,7 +66,11 @@
 #elif defined(__CYGWIN__)
 #define PLATFORM        "Cygwin"
 #else
-#error Unsupported architecture
+#ifdef _MSC_VER
+#pragma message ( "Platform not supported!" )
+#else
+#error Platform not supported!
+#endif
 #endif
 static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 
@@ -98,9 +102,9 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 
 /*  -----------  options  ------------------------------------------------
  */
-//#if (OPTION_CAN_2_0_ONLY != 0)
-//#error Compilation with legacy CAN 2.0 frame format!
-//#endif
+#if (OPTION_CAN_2_0_ONLY != 0)
+/* Compilation with legacy CAN 2.0 frame format! */
+#endif
 
 #if (OPTION_CANAPI_SERIALCAN_DYLIB != 0)
 __attribute__((constructor))
@@ -145,7 +149,7 @@ static void _finalizer() {
 /*  -----------  types  --------------------------------------------------
  */
 
-typedef struct {                        // frame conters:
+typedef struct {                        // frame counters:
     uint64_t tx;                        //   number of transmitted CAN frames
     uint64_t rx;                        //   number of received CAN frames
     uint64_t err;                       //   number of receiced error frames
@@ -172,6 +176,8 @@ static int get_sio_attr(slcan_port_t port, can_sio_attr_t *attr);
 
 static int lib_parameter(uint16_t param, void *value, size_t nbyte);
 static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte);
+
+static void var_init(void);             // initialize variables
 
 
 /*  -----------  variables  ----------------------------------------------
@@ -213,21 +219,7 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
         return CANERR_NULLPTR;
 
     if (!init) {                        // when not init before:
-        for (i = 0; i < CAN_MAX_HANDLES; i++) {
-            can[i].port = NULL;
-            can[i].name[0] = '\0';
-            can[i].attr.baudrate = SERIAL_BAUDRATE;
-            can[i].attr.bytesize = SERIAL_BYTESIZE;
-            can[i].attr.parity = SERIAL_PARITY;
-            can[i].attr.stopbits = SERIAL_STOPBITS;
-            can[i].attr.options = SERIAL_OPTIONS;
-            can[i].btr0btr1 = CAN_BTR_DEFAULT;
-            can[i].mode.byte = CANMODE_DEFAULT;
-            can[i].status.byte = CANSTAT_RESET;
-            can[i].counters.tx = 0ull;
-            can[i].counters.rx = 0ull;
-            can[i].counters.err = 0ull;
-        }
+        var_init();                     //   initialize the variables
         init = 1;                       //   set initialization flag
     }
     // (1) check requested protocol option (SLCAN)
@@ -277,21 +269,7 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
         return CANERR_NULLPTR;
 
     if (!init) {                        // when not init before:
-        for (i = 0; i < CAN_MAX_HANDLES; i++) {
-            can[i].port = NULL;
-            can[i].name[0] = '\0';
-            can[i].attr.baudrate = SERIAL_BAUDRATE;
-            can[i].attr.bytesize = SERIAL_BYTESIZE;
-            can[i].attr.parity = SERIAL_PARITY;
-            can[i].attr.stopbits = SERIAL_STOPBITS;
-            can[i].attr.options = SERIAL_OPTIONS;
-            can[i].btr0btr1 = CAN_BTR_DEFAULT;
-            can[i].mode.byte = CANMODE_DEFAULT;
-            can[i].status.byte = CANSTAT_RESET;
-            can[i].counters.tx = 0ull;
-            can[i].counters.rx = 0ull;
-            can[i].counters.err = 0ull;
-        }
+        var_init();                     //   initialize the variables
         init = 1;                       //   set initialization flag
     }
     for (i = 0; i < CAN_MAX_HANDLES; i++) {
@@ -826,7 +804,8 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
 
     if (value == NULL) {                // check for null-pointer
         if ((param != CANPROP_SET_FIRST_CHANNEL) &&
-           (param != CANPROP_SET_NEXT_CHANNEL))
+            (param != CANPROP_SET_NEXT_CHANNEL) &&
+            (param != CANPROP_SET_FILTER_RESET))
             return CANERR_NULLPTR;
     }
     /* CAN library properties */
@@ -968,12 +947,20 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
     case CANPROP_GET_BUSLOAD:           // current bus load of the CAN controller (uint16_t)
     case CANPROP_GET_NUM_CHANNELS:      // numbers of CAN channels on the CAN interface (uint8_t)
     case CANPROP_GET_CAN_CHANNEL:       // active CAN channel on the CAN interface (uint8_t)
+    case CANPROP_GET_CAN_CLOCK:         // frequency of the CAN controller clock in [Hz] (int32_t)
     case CANPROP_GET_TX_COUNTER:        // total number of sent messages (uint64_t)
     case CANPROP_GET_RX_COUNTER:        // total number of reveiced messages (uint64_t)
     case CANPROP_GET_ERR_COUNTER:       // total number of reveiced error frames (uint64_t)
     case CANPROP_GET_RCV_QUEUE_SIZE:    // maximum number of message the receive queue can hold (uint32_t)
     case CANPROP_GET_RCV_QUEUE_HIGH:    // maximum number of message the receive queue has hold (uint32_t)
     case CANPROP_GET_RCV_QUEUE_OVFL:    // overflow counter of the receive queue (uint64_t)
+#if (0)
+    case CANPROP_GET_FILTER_11BIT:      // acceptance filter code and mask for 11-bit identifier (uint64_t)
+    case CANPROP_GET_FILTER_29BIT:      // acceptance filter code and mask for 29-bit identifier (uint64_t)
+    case CANPROP_SET_FILTER_11BIT:      // set value for acceptance filter code and mask for 11-bit identifier (uint64_t)
+    case CANPROP_SET_FILTER_29BIT:      // set value for acceptance filter code and mask for 29-bit identifier (uint64_t)
+    case CANPROP_SET_FILTER_RESET:      // reset acceptance filter code and mask to default values (NULL)
+#endif
         // note: a device parameter requires a valid handle.
         if (!init)
             rc = CANERR_NOTINIT;
@@ -1001,8 +988,9 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
 
     if (value == NULL) {                // check for null-pointer
         if ((param != CANPROP_SET_FIRST_CHANNEL) &&
-           (param != CANPROP_SET_NEXT_CHANNEL))
-        return CANERR_NULLPTR;
+            (param != CANPROP_SET_NEXT_CHANNEL) &&
+            (param != CANPROP_SET_FILTER_RESET))
+            return CANERR_NULLPTR;
     }
     /* CAN interface properties */
     switch (param) {
@@ -1081,18 +1069,16 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         if (nbyte >= sizeof(uint8_t)) {
             if ((rc = can_busload(handle, &load, NULL)) == CANERR_NOERROR) {
                 if (nbyte > sizeof(uint8_t))
-                    *(uint16_t*)value = (uint16_t)load * 100U;  // 0 - 10000 ==> 0.00% - 100.00%
+                    *(uint16_t*)value = (uint16_t)load * 100U;  // 0..10000 ==> 0.00%..100.00%
                 else
-                    *(uint8_t*)value = (uint8_t)load;           // 0  -  100 ==> 0.00% - 100.00%
+                    *(uint8_t*)value = (uint8_t)load;           // 0..100% (note: legacy resolution)
                 rc = CANERR_NOERROR;
             }
         }
         break;
     case CANPROP_GET_NUM_CHANNELS:      // numbers of CAN channels on the CAN interface (uint8_t)
-        // TODO: insert coin here
-        rc = CANERR_NOTSUPP;
-        break;
     case CANPROP_GET_CAN_CHANNEL:       // active CAN channel on the CAN interface (uint8_t)
+    case CANPROP_GET_CAN_CLOCK:         // frequency of the CAN controller clock in [Hz] (int32_t)
         // TODO: insert coin here
         rc = CANERR_NOTSUPP;
         break;
@@ -1118,6 +1104,14 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
     case CANPROP_GET_RCV_QUEUE_HIGH:    // maximum number of message the receive queue has hold (uint32_t)
     case CANPROP_GET_RCV_QUEUE_OVFL:    // overflow counter of the receive queue (uint64_t)
         // note: cannot be determined
+        rc = CANERR_NOTSUPP;
+        break;
+    case CANPROP_GET_FILTER_11BIT:      // acceptance filter code and mask for 11-bit identifier (uint64_t)
+    case CANPROP_GET_FILTER_29BIT:      // acceptance filter code and mask for 29-bit identifier (uint64_t)
+    case CANPROP_SET_FILTER_11BIT:      // set value for acceptance filter code and mask for 11-bit identifier (uint64_t)
+    case CANPROP_SET_FILTER_29BIT:      // set value for acceptance filter code and mask for 29-bit identifier (uint64_t)
+    case CANPROP_SET_FILTER_RESET:      // reset acceptance filter code and mask to default values (NULL)
+        // TODO: insert coin here
         rc = CANERR_NOTSUPP;
         break;
     /* vendor-specific properties */
@@ -1167,6 +1161,27 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         break;
     }
     return rc;
+}
+
+static void var_init(void)
+{
+    int i;
+
+    for (i = 0; i < CAN_MAX_HANDLES; i++) {
+        can[i].port = NULL;
+        can[i].name[0] = '\0';
+        can[i].attr.baudrate = SERIAL_BAUDRATE;
+        can[i].attr.bytesize = SERIAL_BYTESIZE;
+        can[i].attr.parity = SERIAL_PARITY;
+        can[i].attr.stopbits = SERIAL_STOPBITS;
+        can[i].attr.options = SERIAL_OPTIONS;
+        can[i].btr0btr1 = CAN_BTR_DEFAULT;
+        can[i].mode.byte = CANMODE_DEFAULT;
+        can[i].status.byte = CANSTAT_RESET;
+        can[i].counters.tx = 0ull;
+        can[i].counters.rx = 0ull;
+        can[i].counters.err = 0ull;
+    }
 }
 
 /*  -----------  revision control  ---------------------------------------
