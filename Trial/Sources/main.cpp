@@ -41,18 +41,6 @@
 //#define SECOND_CHANNEL
 #define ISSUE_198   (0)
 
-#if (0)
-#define BITRATE_1M(x)    KVASER_CAN_BR_1M(x)
-#define BITRATE_800K(x)  KVASER_CAN_BR_800K(x)
-#define BITRATE_500K(x)  KVASER_CAN_BR_500K(x)
-#define BITRATE_250K(x)  KVASER_CAN_BR_250K(x)
-#define BITRATE_125K(x)  KVASER_CAN_BR_125K(x)
-#define BITRATE_100K(x)  KVASER_CAN_BR_100K(x)
-#define BITRATE_50K(x)   KVASER_CAN_BR_50K(x)
-#define BITRATE_20K(x)   KVASER_CAN_BR_20K(x)
-#define BITRATE_10K(x)   KVASER_CAN_BR_10K(x)
-#define BITRATE_5K(x)    KVASER_CAN_BR_5K(x)
-#else
 #define BITRATE_1M(x)    DEFAULT_CAN_BR_1M(x)  
 #define BITRATE_800K(x)  DEFAULT_CAN_BR_800K(x)
 #define BITRATE_500K(x)  DEFAULT_CAN_BR_500K(x)
@@ -63,7 +51,6 @@
 #define BITRATE_20K(x)   DEFAULT_CAN_BR_20K(x) 
 #define BITRATE_10K(x)   DEFAULT_CAN_BR_10K(x) 
 #define BITRATE_5K(x)    DEFAULT_CAN_BR_5K(x)  
-#endif
 
 #define OPTION_NO   (0)
 #define OPTION_YES  (1)
@@ -177,6 +164,16 @@ int main(int argc, const char * argv[]) {
         if (!strcmp(argv[i], "BD:6") || !strcmp(argv[i], "BD:50")) bitrate.index = CANBTR_INDEX_50K;
         if (!strcmp(argv[i], "BD:7") || !strcmp(argv[i], "BD:20")) bitrate.index = CANBTR_INDEX_20K;
         if (!strcmp(argv[i], "BD:8") || !strcmp(argv[i], "BD:10")) bitrate.index = CANBTR_INDEX_10K;
+        if (!strcmp(argv[i], "BD:1M")) BITRATE_1M(bitrate);
+        if (!strcmp(argv[i], "BD:800K")) BITRATE_800K(bitrate);
+        if (!strcmp(argv[i], "BD:500K")) BITRATE_500K(bitrate);
+        if (!strcmp(argv[i], "BD:250K")) BITRATE_250K(bitrate);
+        if (!strcmp(argv[i], "BD:125K")) BITRATE_125K(bitrate);
+        if (!strcmp(argv[i], "BD:100K")) BITRATE_100K(bitrate);
+        if (!strcmp(argv[i], "BD:50K")) BITRATE_50K(bitrate);
+        if (!strcmp(argv[i], "BD:20K")) BITRATE_20K(bitrate);
+        if (!strcmp(argv[i], "BD:10K")) BITRATE_10K(bitrate);
+        if (!strcmp(argv[i], "BD:5K")) BITRATE_5K(bitrate);
         /* asynchronous IO */
         if (!strcmp(argv[i], "POLLING")) rxTimeout = 0U;
         if (!strcmp(argv[i], "BLOCKING")) rxTimeout = CANWAIT_INFINITE;
