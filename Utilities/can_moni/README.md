@@ -1,5 +1,5 @@
-__CAN Monitor for CAN-over-Serial-Line Interfaces, Version 0.1.0__ \
-Copyright &copy; 2007,2016-2022 by Uwe Vogt, UV Software, Berlin
+__CAN Monitor for CAN-over-Serial-Line Interfaces, Version 0.1.1__ \
+Copyright &copy; 2007,2016-2024 by Uwe Vogt, UV Software, Berlin
 
 ```
 Usage: can_moni <interface> [<option>...]
@@ -10,15 +10,15 @@ Options:
  -a, --ascii=(ON|OFF)          display data bytes in ASCII (default=ON)
  -w, --wrap=(NO|8|10|16|32|64) wraparound after n data bytes (default=NO)
  -x, --exclude=[~]<id-list>    exclude CAN-IDs: <id>[-<id>]{,<id>[-<id>]}
- -m, --mode=(2.0|FDF[+BSR])    CAN operation mode: CAN 2.0 or CAN FD format
-     --shared                  shared CAN controller access (when supported)
+ -m, --mode=(2.0|FDF[+BRS])    CAN operation mode: CAN 2.0 or CAN FD mode
+     --shared                  shared CAN controller access (if supported)
      --listen-only             monitor mode (listen-only, transmitter is off)
      --error-frames            allow reception of error frames
      --no-remote-frames        suppress remote frames (RTR frames)
      --no-extended-frames      suppress extended frames (29-bit identifier)
- -b, --baudrate=<baudrate>     CAN 2.0 bit timing in kbps (default=250)
-     --bitrate=<bit-rate>      CAN FD bit rate (as a string)
- -v, --verbose                 show detailed bit rate settings
+ -b, --baudrate=<baudrate>     CAN bit-timing in kbps (default=250), or
+     --bitrate=<bit-rate>      CAN bit-rate settings (as a string)
+ -v, --verbose                 show detailed bit-rate settings
  -h, --help                    display this help screen and exit
      --version                 show version information and exit
 Hazard note:
@@ -37,4 +37,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
