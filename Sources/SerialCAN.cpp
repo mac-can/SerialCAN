@@ -66,6 +66,12 @@
 #endif
 static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 
+#ifdef _MSC_VER
+//no Microsoft extensions please!
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif
+#endif
 #include "SerialCAN.h"
 #include "can_defs.h"
 #include "can_api.h"
@@ -75,6 +81,7 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 #include <stdlib.h>
 #include <errno.h>
 #include <assert.h>
+#include <limits.h>
 
 #if (OPTION_SERIALCAN_DYLIB != 0)
 __attribute__((constructor))
@@ -307,6 +314,50 @@ CANAPI_Return_t CSerialCAN::SetProperty(uint16_t param, const void *value, uint3
 }
 
 EXPORT
+CANAPI_Return_t CSerialCAN::SetFilter11Bit(uint32_t code, uint32_t mask) {
+    uint64_t filter = ((uint64_t)code << 32) | (uint64_t)mask;
+    // set the 11-bit acceptance filter of the CAN interface
+    return can_property(m_Handle, CANPROP_SET_FILTER_11BIT, (void*)&filter, sizeof(uint64_t));
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::SetFilter29Bit(uint32_t code, uint32_t mask) {
+    uint64_t filter = ((uint64_t)code << 32) | (uint64_t)mask;
+    // set the 29-bit acceptance filter of the CAN interface
+    return can_property(m_Handle, CANPROP_SET_FILTER_29BIT, (void*)&filter, sizeof(uint64_t));
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::GetFilter11Bit(uint32_t &code, uint32_t &mask) {
+    uint64_t filter = 0U;
+    // retrieve the 11-bit acceptance filter of the CAN interface
+    CANAPI_Return_t rc = can_property(m_Handle, CANPROP_GET_FILTER_11BIT, (void*)&filter, sizeof(uint64_t));
+    if (CANERR_NOERROR == rc) {
+        code = (uint32_t)(filter >> 32);
+        mask = (uint32_t)(filter >> 0);
+    }
+    return rc;
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::GetFilter29Bit(uint32_t &code, uint32_t &mask) {
+    uint64_t filter = 0U;
+    // retrieve the 29-bit acceptance filter of the CAN interface
+    CANAPI_Return_t rc = can_property(m_Handle, CANPROP_GET_FILTER_29BIT, (void*)&filter, sizeof(uint64_t));
+    if (CANERR_NOERROR == rc) {
+        code = (uint32_t)(filter >> 32);
+        mask = (uint32_t)(filter >> 0);
+    }
+    return rc;
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::ResetFilters() {
+    // reset all acceptance filters of the CAN interface
+    return can_property(m_Handle, CANPROP_SET_FILTER_RESET, NULL, 0U);
+}
+
+EXPORT
 char *CSerialCAN::GetHardwareVersion() {
     // retrieve the hardware version of the CAN controller
     return can_hardware(m_Handle);
@@ -332,23 +383,18 @@ CANAPI_Return_t CSerialCAN::MapIndex2Bitrate(int32_t index, CANAPI_Bitrate_t &bi
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::MapString2Bitrate(const char *string, CANAPI_Bitrate_t &bitrate) {
-    bool brse = false;
-    // TODO: rework function 'btr_string2bitrate'
-    return (CANAPI_Return_t)btr_string2bitrate((btr_string_t)string, &bitrate, &brse);
+CANAPI_Return_t CSerialCAN::MapString2Bitrate(const char *string, CANAPI_Bitrate_t &bitrate, bool &data, bool &sam) {
+    return (CANAPI_Return_t)btr_string2bitrate((btr_string_t)string, &bitrate, &data, &sam);
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::MapBitrate2String(CANAPI_Bitrate_t bitrate, char *string, size_t length) {
-    (void)length;
-    // TODO: rework function 'btr_bitrate2string'
-    return (CANAPI_Return_t)btr_bitrate2string(&bitrate, false, (btr_string_t)string);
+CANAPI_Return_t CSerialCAN::MapBitrate2String(CANAPI_Bitrate_t bitrate, char *string, size_t length, bool data, bool sam) {
+    return (CANAPI_Return_t)btr_bitrate2string(&bitrate, data, sam, (btr_string_t)string, length);
 }
 
 EXPORT
 CANAPI_Return_t CSerialCAN::MapBitrate2Speed(CANAPI_Bitrate_t bitrate, CANAPI_BusSpeed_t &speed) {
-    // TODO: rework function 'btr_bitrate2speed'
-    return (CANAPI_Return_t)btr_bitrate2speed(&bitrate, false, false, &speed);
+    return (CANAPI_Return_t)btr_bitrate2speed(&bitrate, &speed);
 }
 
 //  Private methodes

@@ -2,7 +2,7 @@
 /*
  *  CAN Interface API, Version 3 (Message Formatter)
  *
- *  Copyright (c) 2019-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2019-2023 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This file is part of CAN API V3.
@@ -49,9 +49,9 @@
  *
  *  @brief       CAN Message Formatter
  *
- *  @author      $Author: eris $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 993 $
+ *  @version     $Rev: 1187 $
  *
  *  @addtogroup  can_msg
  *  @{
@@ -89,16 +89,16 @@
  */
 
 #ifndef DLC2LEN
-#define DLC2LEN(x)  dlc_table[x & 0xF]
+#define DLC2LEN(x)  dlc_table[((x) < 16U) ? (x) : 15U]
 #endif
 #ifndef LEN2DLC
-#define LEN2DLC(x)  ((x) > 48) ? 0xF : \
-                    ((x) > 32) ? 0xE : \
-                    ((x) > 24) ? 0xD : \
-                    ((x) > 20) ? 0xC : \
-                    ((x) > 16) ? 0xB : \
-                    ((x) > 12) ? 0xA : \
-                    ((x) > 8) ?  0x9 : (x)
+#define LEN2DLC(x)  ((x) > 48U) ? 0xFU : \
+                    ((x) > 32U) ? 0xEU : \
+                    ((x) > 24U) ? 0xDU : \
+                    ((x) > 20U) ? 0xCU : \
+                    ((x) > 16U) ? 0xBU : \
+                    ((x) > 12U) ? 0xAU : \
+                    ((x) > 8U) ?  0x9U : (x)
 #endif
 
 
@@ -166,7 +166,7 @@ static struct {                         /* format option: */
 static msg_format_t msg_format = MSG_FORMAT_DEFAULT;
 static char msg_string[MSG_STRING_LENGTH] = "";
 static const unsigned char dlc_table[16] = {
-    0,1,2,3,4,5,6,7,8,12,16,20,24,32,48,64
+    0U,1U,2U,3U,4U,5U,6U,7U,8U,12U,16U,20U,24U,32U,48U,64U
 };
 
 
@@ -220,16 +220,26 @@ char *msg_format_message(const msg_message_t *message, msg_direction_t direction
 
         /* flags (optional) */
         if (msg_option.flags != MSG_FMT_OPTION_OFF) {
-            strcat(msg_string, message->xtd ? "X" : "S");
 #if (OPTION_CAN_2_0_ONLY == 0)
-            if (message->fdf) {
-                strcat(msg_string, message->fdf ? "F" : " ");
-                strcat(msg_string, message->brs ? "B" : " ");
-                strcat(msg_string, message->esi ? "E" : " ");
+            if (!message->sts) {
+                strcat(msg_string, message->xtd ? "X" : "S");
+                strcat(msg_string, message->fdf ? "F" : "-");
+                strcat(msg_string, message->brs ? "B" : "-");
+                strcat(msg_string, message->esi ? "E" : "-");
+                strcat(msg_string, message->rtr ? "R" : "-");
             }
-            else
+            else {
+                strcat(msg_string, "Error");
+            }
+#else
+            if (!message->sts) {
+                strcat(msg_string, message->xtd ? "X" : "S");
+                strcat(msg_string, message->rtr ? "R" : "-");
+            }
+            else {
+                strcat(msg_string, "E!");
+            }
 #endif
-                strcat(msg_string, message->rtr ? "R" : " ");
             strcat(msg_string, (msg_option.separator == MSG_FMT_SEPARATOR_TABS) ? "\t" : " ");  /* only one space! */
         }
         /* dlc/length (hex/dec/oct) */
@@ -277,17 +287,26 @@ char *msg_format_flags(const msg_message_t *message)
     memset(msg_string, 0, sizeof(msg_string));
 
     if (message) {
-        /* flags (optional) */
-        strcat(msg_string, message->xtd ? "X" : "S");
 #if (OPTION_CAN_2_0_ONLY == 0)
-        if (message->fdf) {
-            strcat(msg_string, message->fdf ? "F" : " ");
-            strcat(msg_string, message->brs ? "B" : " ");
-            strcat(msg_string, message->esi ? "E" : " ");
+        if (!message->sts) {
+            strcat(msg_string, message->xtd ? "X" : "S");
+            strcat(msg_string, message->fdf ? "F" : "-");
+            strcat(msg_string, message->brs ? "B" : "-");
+            strcat(msg_string, message->esi ? "E" : "-");
+            strcat(msg_string, message->rtr ? "R" : "-");
         }
-        else
+        else {
+            strcat(msg_string, "Error");
+        }
+#else
+        if (!message->sts) {
+            strcat(msg_string, message->xtd ? "X" : "S");
+            strcat(msg_string, message->rtr ? "R" : "-");
+        }
+        else {
+            strcat(msg_string, "E!");
+        }
 #endif
-            strcat(msg_string, message->rtr ? "R" : " ");
     }
     return msg_string;
 }

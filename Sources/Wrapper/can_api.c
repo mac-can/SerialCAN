@@ -656,7 +656,7 @@ int can_bitrate(int handle, can_bitrate_t *bitrate, can_speed_t *speed)
         return rc;
     if (bitrate)
         memcpy(bitrate, &temporary, sizeof(temporary));
-    if (speed && ((rc = btr_bitrate2speed(&temporary, false, false, speed)) < 0))
+    if (speed && ((rc = btr_bitrate2speed(&temporary, speed)) < 0))
         return rc;
     if (!can[handle].status.can_stopped)
         rc = CANERR_NOERROR;

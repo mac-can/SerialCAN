@@ -2,7 +2,7 @@
 /*
  *  CAN Interface API, Version 3 (Data Types and Defines)
  *
- *  Copyright (c) 2004-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2004-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This file is part of CAN API V3.
@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 1044 $
+ *  @version     $Rev: 1249 $
  *
  *  @addtogroup  can_api
  *  @{
@@ -75,6 +75,9 @@ extern "C" {
 /*  -----------  options  ------------------------------------------------
  */
 
+/** @name  Compiler Switches
+ *  @brief Options for conditional compilation.
+ *  @{ */
 /** @note  Set define OPTION_CANAPI_LIBRARY to a non-zero value to compile
  *         the master loader library (e.g. in the build environment). Or
  *         optionally set define OPTION_CANAPI_DRIVER to a non-zero value
@@ -83,13 +86,17 @@ extern "C" {
 /** @note  Set define OPTION_CAN_2_0_ONLY to a non-zero value to compile
  *         with CAN 2.0 frame format only (e.g. in the build environment).
  */
-#if (OPTION_CAN_2_0_ONLY != 0)
+#ifndef OPTION_DISABLED
+#define OPTION_DISABLED  0  /**< if a define is not defined, it is automatically set to 0 */
+#endif
+#if (OPTION_CAN_2_0_ONLY != OPTION_DISABLED)
 #ifdef _MSC_VER
-#pragma message ( "Compilation with with legacy CAN 2.0 frame format!" )
+#pragma message ( "Compilation with legacy CAN 2.0 frame format!" )
 #else
-#warning Compilation with with legacy CAN 2.0 frame format!
+#warning Compilation with legacy CAN 2.0 frame format!
 #endif
 #endif
+/** @} */
 
 /*  -----------  defines  ------------------------------------------------
  */
@@ -105,6 +112,7 @@ extern "C" {
 
 /** @name  CAN Identifier
  *  @brief CAN Identifier range
+ *  @todo  Make it unsigned!
  *  @{ */
 #define CAN_MAX_STD_ID           0x7FF  /**< highest 11-bit identifier */
 #define CAN_MAX_XTD_ID      0x1FFFFFFF  /**< highest 29-bit identifier */
@@ -112,6 +120,7 @@ extern "C" {
 
 /** @name  CAN Data Length
  *  @brief CAN payload length and DLC definition
+ *  @todo  Make it unsigned?
  *  @{ */
 #define CAN_MAX_DLC                  8  /**< max. data length code (CAN 2.0) */
 #define CAN_MAX_LEN                  8  /**< max. payload length (CAN 2.0) */
@@ -122,6 +131,16 @@ extern "C" {
  *  @{ */
 #define CANFD_MAX_DLC               15  /**< max. data length code (CAN FD) */
 #define CANFD_MAX_LEN               64  /**< max. payload length (CAN FD) */
+/** @} */
+
+/** @name  CAN Acceptance Filter
+ *  @brief CAN acceptance filter defaults to let all messages pass
+ *  @note  Acceptance condition: (code ^ id) & mask == 0
+ *  @{ */
+#define CANACC_CODE_11BIT       0x000U  /**< mask for 11-bit acceptance code */
+#define CANACC_MASK_11BIT       0x000U  /**< mask for 11-bit acceptance mask */
+#define CANACC_CODE_29BIT  0x00000000U  /**< mask for 29-bit acceptance code */
+#define CANACC_MASK_29BIT  0x00000000U  /**< mask for 29-bit acceptance mask */
 /** @} */
 
 /** @name  CAN Baud Rate Indexes (for compatibility)
@@ -177,6 +196,8 @@ extern "C" {
 #define CANBTR_NOMINAL_TSEG2_MAX  128U  /**< max. time segment 2 (after SP) */
 #define CANBTR_NOMINAL_SJW_MIN      1U  /**< min. syncronization jump width */
 #define CANBTR_NOMINAL_SJW_MAX    128U  /**< max. syncronization jump width */
+#define CANBTR_NOMINAL_SAM_SINGLE   0U  /**< single: the bus is sampled once */
+#define CANBTR_NOMINAL_SAM_TRIPLE   1U  /**< triple: the bus is sampled three times */
 /** @} */
 
 /** @name  CAN FD Data Bit-rate Settings
@@ -190,6 +211,7 @@ extern "C" {
 #define CANBTR_DATA_TSEG2_MAX      16U  /**< max. time segment 2 (after SP) */
 #define CANBTR_DATA_SJW_MIN         1U  /**< min. syncronization jump width */
 #define CANBTR_DATA_SJW_MAX        16U  /**< max. syncronization jump width */
+#define CANBTR_DATA_SAM_UNDEFINED   0U  /**< number of samples not defined for CAN FD */
 /** @} */
 
 /** @name  SJA1000 Bit-rate Settings (CAN 2.0 only)
@@ -203,8 +225,8 @@ extern "C" {
 #define CANBTR_SJA1000_TSEG2_MAX    8U  /**< max. time segment 2 (after SP) */
 #define CANBTR_SJA1000_SJW_MIN      1U  /**< min. syncronization jump width */
 #define CANBTR_SJA1000_SJW_MAX      4U  /**< max. syncronization jump width */
-#define CANBTR_SJA1000_SAM_MIN      0U  /**< single: the bus is sampled once */
-#define CANBTR_SJA1000_SAM_MAX      1U  /**< triple: the bus is sampled three times */
+#define CANBTR_SJA1000_SAM_SINGLE   0U  /**< single: the bus is sampled once */
+#define CANBTR_SJA1000_SAM_TRIPLE   1U  /**< triple: the bus is sampled three times */
 /** @} */
 
 /** @name  CAN Mode Flags
@@ -240,9 +262,10 @@ extern "C" {
 #define CANERR_LEC_BIT1           (-14) /**< LEC - recessive bit error */
 #define CANERR_LEC_BIT0           (-15) /**< LEC - dominant bit error */
 #define CANERR_LEC_CRC            (-16) /**< LEC - checksum error */
+#define CANERR_RESERVED1          (-19) /**< RIP - error frame */
 #define CANERR_TX_BUSY            (-20) /**< USR - transmitter busy */
 #define CANERR_RX_EMPTY           (-30) /**< USR - receiver empty */
-#define CANERR_ERR_FRAME          (-40) /**< USR - error frame */
+#define CANERR_QUE_OVR            (-40) /**< USR - queue overrun */
 #define CANERR_TIMEOUT            (-50) /**< USR - time-out */
 #define CANERR_RESOURCE           (-90) /**< USR - resource allocation */
 #define CANERR_BAUDRATE           (-91) /**< USR - illegal baudrate */
@@ -279,11 +302,14 @@ extern "C" {
 #define CANBRD_NOT_TESTABLE        (-2) /**< CAN board not testable (e.g. legacy API) */
 /** @} */
 
-/** @name  Blocking Read
- *  @brief Control of blocking read
+/** @name  Blocking Operations
+ *  @brief Control of blocking operations
  *  @{ */
-#define CANREAD_INFINITE         65535U /**< infinite time-out (blocking read) */
+#define CANWAIT_INFINITE         65535U /**< infinite time-out (blocking operation) */
 #define CANKILL_ALL                (-1) /**< to signal all waiting event objects */
+/*  aliases (legacy names) */
+#define CANREAD_INFINITE   CANWAIT_INFINITE  /**< blocking read */
+#define CANWRITE_INFINITE  CANWAIT_INFINITE  /**< blocking write */
 /** @} */
 
 /** @name  Property IDs
@@ -309,20 +335,21 @@ extern "C" {
 #define CANPROP_GET_BUSLOAD         20U /**< current bus load of the CAN controller (uint16_t) */
 #define CANPROP_GET_NUM_CHANNELS    21U /**< numbers of CAN channels on the CAN interface (uint8_t) */
 #define CANPROP_GET_CAN_CHANNEL     22U /**< active CAN channel on the CAN interface (uint8_t) */
+#define CANPROP_GET_CAN_CLOCK       23U /**< frequency of the CAN controller clock in [Hz] (int32_t) */
 #define CANPROP_GET_TX_COUNTER      24U /**< total number of sent messages (uint64_t) */
 #define CANPROP_GET_RX_COUNTER      25U /**< total number of received messages (uint64_t) */
 #define CANPROP_GET_ERR_COUNTER     26U /**< total number of received error frames (uint64_t) */
 #define CANPROP_GET_RCV_QUEUE_SIZE  27U /**< maximum number of message the receive queue can hold (uint32_t) */
 #define CANPROP_GET_RCV_QUEUE_HIGH  28U /**< maximum number of message the receive queue has hold (uint32_t) */
 #define CANPROP_GET_RCV_QUEUE_OVFL  29U /**< overflow counter of the receive queue (uint64_t) */
-#define CANPROP_GET_FLT_11BIT_CODE  32U /**< acceptance filter code of 11-bit identifier (int32_t) */
-#define CANPROP_GET_FLT_11BIT_MASK  33U /**< acceptance filter mask of 11-bit identifier (int32_t) */
-#define CANPROP_GET_FLT_29BIT_CODE  34U /**< acceptance filter code of 29-bit identifier (int32_t) */
-#define CANPROP_GET_FLT_29BIT_MASK  35U /**< acceptance filter mask of 29-bit identifier (int32_t) */
-#define CANPROP_SET_FLT_11BIT_CODE  36U /**< set value for acceptance filter code of 11-bit identifier (int32_t) */
-#define CANPROP_SET_FLT_11BIT_MASK  37U /**< set value for acceptance filter mask of 11-bit identifier (int32_t) */
-#define CANPROP_SET_FLT_29BIT_CODE  38U /**< set value for acceptance filter code of 29-bit identifier (int32_t) */
-#define CANPROP_SET_FLT_29BIT_MASK  39U /**< set value for acceptance filter mask of 29-bit identifier (int32_t) */
+#define CANPROP_GET_TRM_QUEUE_SIZE  30U /**< maximum number of message the transmit queue can hold (uint32_t) */
+#define CANPROP_GET_TRM_QUEUE_HIGH  31U /**< maximum number of message the transmit queue has hold (uint32_t) */
+#define CANPROP_GET_TRM_QUEUE_OVFL  32U /**< overflow counter of the transmit queue (uint64_t) */
+#define CANPROP_GET_FILTER_11BIT    40U /**< acceptance filter code and mask for 11-bit identifier (uint64_t) */
+#define CANPROP_GET_FILTER_29BIT    41U /**< acceptance filter code and mask for 29-bit identifier (uint64_t) */
+#define CANPROP_SET_FILTER_11BIT    42U /**< set value for acceptance filter code and mask for 11-bit identifier (uint64_t) */
+#define CANPROP_SET_FILTER_29BIT    43U /**< set value for acceptance filter code and mask for 29-bit identifier (uint64_t) */
+#define CANPROP_SET_FILTER_RESET    44U /**< reset acceptance filter code and mask to default values (NULL) */
 #if (OPTION_CANAPI_LIBRARY != 0)
 /* - -  build-in bit-rate conversion  - - - - - - - - - - - - - - - - - */
 #define CANPROP_GET_BTR_INDEX       64U /**< bit-rate as CiA index (int32_t) */
@@ -389,6 +416,7 @@ extern "C" {
 #define CANPROP_GET_VENDOR_PROP    256U /**< offset to get a vendor-specific property value (void*) */
 #define CANPROP_SET_VENDOR_PROP    512U /**< offset to set a vendor-specific property value (void*) */
 #define CANPROP_VENDOR_PROP_RANGE  256U /**< range for vendor-specific property values */
+#define CANPROP_DRIVER_SPECIFIC 0x8000U /**< offset for driver-specific property values */
 #define CANPROP_MAX_BUFFER_SIZE    256U /**< max. buffer size for property values */
 #define CANPROP_MAX_STRING_LENGTH 1024U /**< max. length of a formatted message */
 /* - -  aliases (legacy names)  - - - - - - - - - - - - - - - - - - - - */
@@ -498,14 +526,14 @@ typedef union can_bitrate_t_ {
 typedef struct can_speed_t_ {
     struct {                            /*   nominal bus speed: */
 #if (OPTION_CAN_2_0_ONLY == 0)
-        bool  fdoe;                     /**<   CAN FD operation enabled */
+        bool  reserved;                 /**<   CAN FD operation enabled */
 #endif
         float speed;                    /**<   bus speed in [Bit/s] */
         float samplepoint;              /**<   sample point in [percent] */
     } nominal;                          /**< nominal bus speed */
 #if (OPTION_CAN_2_0_ONLY == 0)
     struct {                            /*   data bus speed: */
-        bool  brse;                     /**<   bit-rate switch enabled */
+        bool  reserved;                 /**<   bit-rate switch enabled */
         float speed;                    /**<   bus speed in [Bit/s] */
         float samplepoint;              /**<   sample point in [percent] */
     } data;                             /**< data bus speed */
