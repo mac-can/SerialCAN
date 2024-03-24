@@ -102,7 +102,7 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 /* Compilation with legacy CAN 2.0 frame format! */
 #endif
 
-#if (OPTION_CANAPI_SERIALCAN_DYLIB != 0)
+#if ((OPTION_CANAPI_SERIALCAN_DYLIB != 0) || (OPTION_CANAPI_SERIALCAN_SO != 0))
 __attribute__((constructor))
 static void _initializer() {
     // default initializer

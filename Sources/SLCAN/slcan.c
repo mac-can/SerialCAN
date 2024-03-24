@@ -2,7 +2,7 @@
 /*
  *  Controler Area Network - Lawicel SLCAN Protocol (Serial-Line CAN)
  *
- *  Copyright (c) 2016-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2016-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -41,7 +41,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this module.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this module.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @file        slcan.c
  *
@@ -49,7 +49,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 721 $
+ *  @version     $Rev: 802 $
  *
  *  @addtogroup  slcan
  *  @{
@@ -92,18 +92,14 @@
 #define SLCAN_DEBUG_SYNC(...)  while (0)
 #endif
 
-#if (OPTION_SLCAN_DYLIB != 0)
+#if ((OPTION_SLCAN_DYLIB != 0) || (OPTION_SLCAN_SO != 0))
 __attribute__((constructor))
 static void _initializer() {
-#if (OPTION_SLCAN_DEBUG_LEVEL != 0)
-    fprintf(stdout, "[%s] [%s]\n", __FILE__, __FUNCTION__);
-#endif
+    // default initializer
 }
 __attribute__((destructor))
 static void _finalizer() {
-#if (OPTION_SLCAN_DEBUG_LEVEL != 0)
-    fprintf(stdout, "[%s] [%s]\n", __FILE__, __FUNCTION__);
-#endif
+    // default finalizer
 }
 #define EXPORT  __attribute__((visibility("default")))
 #else

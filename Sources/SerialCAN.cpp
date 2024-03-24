@@ -83,7 +83,7 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 #include <assert.h>
 #include <limits.h>
 
-#if (OPTION_SERIALCAN_DYLIB != 0)
+#if ((OPTION_SERIALCAN_DYLIB != 0) || (OPTION_SERIALCAN_SO != 0))
 __attribute__((constructor))
 static void _initializer() {
     // default initializer
