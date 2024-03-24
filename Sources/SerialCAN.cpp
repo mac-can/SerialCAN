@@ -105,7 +105,7 @@ static void _finalizer() {
 #define STRCPY_S(dest,size,src)         strcpy(dest,src)
 #define STRNCPY_S(dest,size,src,len)    strncpy(dest,src,len)
 #define SSCANF_S(buf,format,...)        sscanf(buf,format,__VA_ARGS__)
-#define SPRINTF_S(buf,size,format,...)  sprintf(buf,format,__VA_ARGS__)
+#define SPRINTF_S(buf,size,format,...)  snprintf(buf,size,format,__VA_ARGS__)
 #else
 #define STRCPY_S(dest,size,src)         strcpy_s(dest,size,src)
 #define STRNCPY_S(dest,size,src,len)    strncpy_s(dest,size,src,len)
