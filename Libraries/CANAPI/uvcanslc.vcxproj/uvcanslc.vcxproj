@@ -323,6 +323,7 @@
     <ClInclude Include="..\..\..\Sources\SLCAN_Driver\slcan.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Sources\CANAPI\can_btr.c">
@@ -406,6 +407,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_dll|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_lib|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="uvcanslc.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

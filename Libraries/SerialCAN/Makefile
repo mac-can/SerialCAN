@@ -68,7 +68,7 @@ LIBRARY = libSerialCAN
 
 MAJOR = 0
 MINOR = 1
-PATCH = 99
+PATCH = 1
 
 VERSION = $(MAJOR).$(MINOR).$(PATCH)
 TARGET  = $(LIBRARY).$(VERSION).dylib
@@ -132,7 +132,7 @@ LIBRARY = libserialcan
 
 MAJOR = 0
 MINOR = 1
-PATCH = 99
+PATCH = 1
 
 VERSION = $(MAJOR).$(MINOR).$(PATCH)
 SONAME  = $(LIBRARY).so.1

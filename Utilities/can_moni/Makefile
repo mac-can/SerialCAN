@@ -33,7 +33,7 @@ OBJECTS = $(OUTDIR)/main.o $(OUTDIR)/Timer.o $(OUTDIR)/Message.o $(OUTDIR)/can_m
 
 ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
 
-VERSION = 0.1.99
+VERSION = 0.1.1
 
 TARGET  = can_moni
 
