@@ -203,9 +203,11 @@ bindir:
 incdir:
 	@mkdir -p $(INCDIR)
 	$(CP) $(SOURCE_DIR)/SerialCAN_Defines.h $(INCDIR)
-	$(CP) $(CANAPI_DIR)/can_api.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Types.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/CANBTR_Defaults.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/can_api.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/can_btr.h $(INCDIR)
 
 clean:
 	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d

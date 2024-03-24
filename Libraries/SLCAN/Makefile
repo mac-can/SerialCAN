@@ -182,6 +182,7 @@ bindir:
 incdir:
 	@mkdir -p $(INCDIR)
 	$(CP) $(SERIAL_DIR)/slcan.h $(INCDIR)
+	$(CP) $(SERIAL_DIR)/serial_attr.h $(INCDIR)
 
 clean:
 	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d

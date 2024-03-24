@@ -208,6 +208,7 @@ incdir:
 	$(CP) $(CANAPI_DIR)/CANAPI.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Types.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/CANBTR_Defaults.h $(INCDIR)
 
 clean:
 	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d
