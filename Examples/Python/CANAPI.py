@@ -2,7 +2,7 @@
 #
 #   CAN Interface API, Version 3 (Python Wrapper)
 #
-#   Copyright (c) 2005-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#   Copyright (c) 2005-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
 #
 #   This file is part of CAN API V3.
@@ -43,7 +43,7 @@
 #	GNU General Public License for more details.
 #
 #	You should have received a copy of the GNU General Public License
-#	along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+#	along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
 #
 """
     CAN API V3 Python Wrapper for generic CAN Interfaces.
@@ -54,7 +54,7 @@
 
     $Author: haumea $
 
-    $Rev: 1046 $
+    $Rev: 1258 $
 """
 from ctypes import *
 import platform
@@ -69,7 +69,7 @@ if platform.system() == "Darwin":
 
 # CAN API V3 - Python Wrapper
 #
-CAN_API_V3_PYTHON = {'major': 0, 'minor': 1, 'patch': 1}
+CAN_API_V3_PYTHON = {'major': 0, 'minor': 2, 'patch': 0}
 
 # CAN Identifier Ranges
 #
@@ -158,8 +158,8 @@ CANMODE_DEFAULT = c_uint8(0x00)  # CAN 2.0 operation mode
 
 # General CAN error codes (negative)
 # Note: Codes less or equal than -100 are for vendor-specific error codes
-#        and codes less or equal than -10000 are for OS-specific error codes
-#        (add 10000 to get the reported OS error code, e.g. errno).
+#       and codes less or equal than -10000 are for OS-specific error codes
+#       (add 10000 to get the reported OS error code, e.g. errno).
 #
 CANERR_NOERROR = 0        # no error!
 CANERR_BOFF = (-1)        # CAN - busoff status
@@ -176,7 +176,7 @@ CANERR_LEC_BIT0 = (-15)   # LEC - dominant bit error
 CANERR_LEC_CRC = (-16)    # LEC - checksum error
 CANERR_TX_BUSY = (-20)    # USR - transmitter busy
 CANERR_RX_EMPTY = (-30)   # USR - receiver empty
-CANERR_ERR_FRAME = (-40)  # USR - error frame
+CANERR_QUE_OVR = (-40)    # USR - queue overrun
 CANERR_TIMEOUT = (-50)    # USR - time-out
 CANERR_RESOURCE = (-90)   # USR - resource allocation
 CANERR_BAUDRATE = (-91)   # USR - illegal baudrate
@@ -210,8 +210,9 @@ CANBRD_NOT_TESTABLE = (-2)  # CAN board not testable (e.g. legacy API)
 
 # Control of blocking read
 #
-CANREAD_INFINITE = c_uint16(65535)  # infinite time-out (blocking read)
-
+CANWAIT_INFINITE = 65535  # infinite time-out (blocking operation)
+CANREAD_INFINITE = CANWAIT_INFINITE
+CANWRITE_INFINITE = CANWAIT_INFINITE
 
 # CAN Status-register
 #
@@ -324,7 +325,7 @@ class SpeedNominal(LittleEndianStructure):
       CAN Nominal Transmission Rate
     """
     _fields_ = [
-        ('fdoe', c_bool),
+        ('_reserved', c_bool),
         ('speed', c_float),
         ('samplepoint', c_float),
     ]
@@ -335,7 +336,7 @@ class SpeedData(LittleEndianStructure):
       CAN Data Transmission Rate
     """
     _fields_ = [
-        ('brse', c_bool),
+        ('_reserved', c_bool),
         ('speed', c_float),
         ('samplepoint', c_float),
     ]
@@ -762,5 +763,5 @@ if __name__ == '__main__':
     # have a great time
     print('Bye, bye!')
 
-# * $Id: CANAPI.py 1046 2022-03-08 20:38:47Z haumea $ *** (c) UV Software, Berlin ***
+# * $Id: CANAPI.py 1258 2024-03-19 21:35:15Z haumea $ *** (c) UV Software, Berlin ***
 #
