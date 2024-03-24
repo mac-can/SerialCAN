@@ -2,7 +2,7 @@
 /*
  *  CAN Interface API, Version 3 (generic)
  *
- *  Copyright (c) 2004-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2004-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This file is part of CAN API V3.
@@ -43,15 +43,15 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with CAN API V3.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @file        can_api.h
  *
  *  @brief       CAN API V3 for generic CAN Interfaces
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 1020 $
+ *  @version     $Rev: 1260 $
  *
  *  @defgroup    can_api CAN Interface API, Version 3
  *  @{
@@ -72,6 +72,9 @@ extern "C" {
 /*  -----------  options  ------------------------------------------------
  */
 
+/** @name  Compiler Switches
+ *  @brief Options for conditional compilation.
+ *  @{ */
 /** @note  Set define OPTION_CANAPI_LIBRARY to a non-zero value to compile
  *         the master loader library (e.g. in the build environment). Or
  *         optionally set define OPTION_CANAPI_DRIVER to a non-zero value
@@ -84,6 +87,9 @@ extern "C" {
  *         zero to compile your program with the CAN API source files or to
  *         link your program with the static library at compile-time.
  */
+#ifndef OPTION_DISABLED
+#define OPTION_DISABLED  0  /**< if a define is not defined, it is automatically set to 0 */
+#endif
 #if (CAN_API_SPEC != 0x300)
 #error Requires version 3.0 of CANAPI_Types.h
 #endif
@@ -99,6 +105,7 @@ extern "C" {
 #else
 #define CANAPI  extern
 #endif
+/** @} */
 
 /*  -----------  defines  ------------------------------------------------
  */
@@ -129,7 +136,7 @@ typedef int                             can_handle_t;
 #elif (OPTION_CANAPI_DRIVER != 0)
 #define CAN_BOARD(lib, brd)             brd
 #else
-#error Remove the unneeded definition(s)!
+#error Remove the unneeded definition(s)
 #endif
 
 /*  -----------  types  --------------------------------------------------
@@ -324,7 +331,8 @@ CANAPI int can_reset(int handle);
  *  @retval      CANERR_ILLPARA   - illegal data length code
  *  @retval      CANERR_OFFLINE   - interface not started
  *  @retval      CANERR_TX_BUSY   - transmitter busy
- *  @retval      others           - vendor-specific
+ *  @retval      CANERR_QUE_OVR - transmit queue overrun
+  *  @retval      others           - vendor-specific
  */
 CANAPI int can_write(int handle, const can_message_t *message, uint16_t timeout);
 
@@ -347,6 +355,7 @@ CANAPI int can_write(int handle, const can_message_t *message, uint16_t timeout)
  *  @retval      CANERR_NULLPTR   - null-pointer assignment
  *  @retval      CANERR_OFFLINE   - interface not started
  *  @retval      CANERR_RX_EMPTY  - message queue empty
+ *  @retval      CANERR_QUE_OVR - reveive queue overrun
  *  @retval      CANERR_ERR_FRAME - error frame received
  *  @retval      others           - vendor-specific
  */
@@ -412,8 +421,7 @@ CANAPI int can_bitrate(int handle, can_bitrate_t *bitrate, can_speed_t *speed);
  *
  *  @param[in]   handle   - handle or library id of the CAN interface, or (-1)
  *  @param[in]   param    - property id to be read or to be written
- *  @param[out]  value    - pointer to a buffer for the value to be read
- *  @param[in]   value    - pointer to a buffer with the value to be written
+ *  @param[in,out]  value    - pointer to a buffer for the value to be read or  with the value to be written
  *  @param[in]   nbyte   -  size of the given buffer in byte
  *
  *  @returns     0 if successful, or a negative value on error.

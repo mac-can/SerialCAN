@@ -27,15 +27,15 @@ def sigterm(signo, frame):
 if platform.system() == 'Darwin':
     # macOS dynamic library
     lib = 'libUVCANSLC.dylib'
-    com = '/dev/tty.usbserial-LW4KOZQW'
+    com = '/dev/tty.usbserial-LW917KWK'
 elif platform.system() != 'Windows':
     # shared object library
     lib = 'libuvcanslc.so'
-    com = '/dev/ttyUSB0'
+    com = '/dev/ttyUSB1'
 else:
     # Windows DLL
     lib = 'u3canslc.dll'
-    com = '\\\\.\\COM4'
+    com = '\\\\.\\COM6'
 num = 1 + CAN_MAX_STD_ID
 
 # parse the command line

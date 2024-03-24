@@ -1,36 +1,36 @@
-__CAN Tester for CAN-over-Serial-Line Interfaces, Version 0.1.0__ \
-Copyright &copy; 2007,2016-2022 by Uwe Vogt, UV Software, Berlin
+__CAN Tester for CAN-over-Serial-Line Interfaces, Version 0.1.1__ \
+Copyright &copy; 2007,2016-2024 by Uwe Vogt, UV Software, Berlin
 
 ```
 Usage: can_test <interface> [<option>...]
-Options for receiver test (default):
+Options for receiver test (default test mode):
  -r, --receive                 count received messages until ^C is pressed
  -n, --number=<number>         check up-counting numbers starting with <number>
  -s, --stop                    stop on error (with option --number)
- -m, --mode=(2.0|FDF[+BSR])    CAN operation mode: CAN 2.0 or CAN FD format
-     --shared                  shared CAN controller access (when supported)
+ -m, --mode=(2.0|FDF[+BRS])    CAN operation mode: CAN 2.0 or CAN FD mode
+     --shared                  shared CAN controller access (if supported)
      --listen-only             monitor mode (listen-only, transmitter is off)
      --error-frames            allow reception of error frames
      --no-remote-frames        suppress remote frames (RTR frames)
      --no-extended-frames      suppress extended frames (29-bit identifier)
- -b, --baudrate=<baudrate>     CAN 2.0 bit timing in kbps (default=250)
-     --bitrate=<bit-rate>      CAN FD bit rate (as a string)
- -v, --verbose                 show detailed bit rate settings
+ -b, --baudrate=<baudrate>     CAN bit-timing in kbps (default=250), or
+     --bitrate=<bit-rate>      CAN bit-rate settings (as a string)
+ -v, --verbose                 show detailed bit-rate settings
 Options for transmitter test:
  -t, --transmit=<time>         send messages for the given time in seconds, or
- -f, --frames=<number>,        alternatively send the given number of messages,
+ -f, --frames=<number>,        alternatively send the given number of messages, or
      --random=<number>         optionally with random cycle time and data length
  -c, --cycle=<cycle>           cycle time in milliseconds (default=0) or
  -u, --usec=<cycle>            cycle time in microseconds (default=0)
  -d, --dlc=<length>            send messages of given length (default=8)
  -i, --id=<can-id>             use given identifier (default=100h)
  -n, --number=<number>         set first up-counting number (default=0)
- -m, --mode=(2.0|FDF[+BSR])    CAN operation mode: CAN 2.0 or CAN FD format
-     --shared                  shared CAN controller access (when supported)
- -b, --baudrate=<baudrate>     CAN 2.0 bit timing in kbps (default=250)
-     --bitrate=<bit-rate>      CAN FD bit rate (as a string)
- -v, --verbose                 show detailed bit rate settings
-Options:
+ -m, --mode=(2.0|FDF[+BRS])    CAN operation mode: CAN 2.0 or CAN FD mode
+     --shared                  shared CAN controller access (if supported)
+ -b, --baudrate=<baudrate>     CAN bit-timing in kbps (default=250), or
+     --bitrate=<bit-rate>      CAN bit-rate settings (as a string)
+ -v, --verbose                 show detailed bit-rate settings
+Other options:
  -h, --help                    display this help screen and exit
      --version                 show version information and exit
 Hazard note:
@@ -49,4 +49,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

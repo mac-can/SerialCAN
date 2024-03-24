@@ -1,7 +1,7 @@
 #
 #	SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces
 #
-#	Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
 #
 #	This file is part of SerialCAN.
@@ -68,9 +68,9 @@ LIBRARY = libSerialCAN
 
 MAJOR = 0
 MINOR = 1
-PATCH = 0
+PATCH = 1
 
-VERSION = $(MAJOR).$(MINOR)
+VERSION = $(MAJOR).$(MINOR).$(PATCH)
 TARGET  = $(LIBRARY).$(VERSION).dylib
 STATIC  = $(LIBRARY).a
 
@@ -132,9 +132,9 @@ LIBRARY = libserialcan
 
 MAJOR = 0
 MINOR = 1
-PATCH = 0
+PATCH = 1
 
-VERSION = $(MAJOR).$(MINOR)
+VERSION = $(MAJOR).$(MINOR).$(PATCH)
 SONAME  = $(LIBRARY).so.1
 TARGET  = $(SONAME).$(VERSION)
 STATIC  = $(LIBRARY).a
@@ -144,6 +144,7 @@ INSTALL = /usr/local/lib
 INCLUDE = /usr/local/include
 
 DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
+	-DOPTION_SERIALCAN_SO=1 \
 	-DOPTION_CANAPI_DRIVER=1 \
 	-DOPTION_CANAPI_RETVALS=0 \
 	-DOPTION_CANAPI_COMPANIONS=1 \
@@ -208,6 +209,7 @@ incdir:
 	$(CP) $(CANAPI_DIR)/CANAPI.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Types.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/CANBTR_Defaults.h $(INCDIR)
 
 clean:
 	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d

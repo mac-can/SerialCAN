@@ -1,6 +1,6 @@
 ### Library for CAN-over-Serial-Line Interfaces (SLCAN Protocol)
 
-_Copyright &copy; 2016, 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
+_Copyright &copy; 2016, 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
 _All rights reserved._
 
 # CAN API V3 Library for CAN-over-Serial-Line Interfaces
@@ -125,24 +125,25 @@ Type `can_test --help` to display all program options.
 POSIX&reg; compatible operating systems:
 
 1. macOS&reg;
-2. Linux&reg;
-3. Cygwin&reg;
+1. Linux&reg;
+1. Cygwin&reg;
 
 Windows&reg; (x64 operating system):
 
 1. Windows 10 Pro
+1. Windows 11 Pro
 
 ### Development Environments
 
+#### macOS Sonoma
+
+- macOS Sonoma (14.4) on a Mac mini (M1, 2020)
+- Apple clang version 15.0.0 (clang-1500.3.9.4)
+- Xcode Version 15.3 (15E204a)
+
 #### macOS Monterey
 
-- macOS Monterey (12.3) on a Mac mini (M1, 2020)
-- Apple clang version 13.1.6 (clang-1316.0.21.2)
-- Xcode Version 13.3 (13C113)
-
-#### macOS Big Sur
-
-- macOS Big Sur (11.6.4) on a MacBook Pro (2019)
+- macOS Monterey (12.7.4) on a MacBook Pro (2019)
 - Apple clang version 13.0.0 (clang-1300.0.29.30)
 - Xcode Version 13.2.1 (13C100)
 
@@ -159,12 +160,12 @@ Windows&reg; (x64 operating system):
 
 #### Cygwin (64-bit)
 
-- Cygwin 3.3.4(0.341/5/3) under Windows 10 Pro
-- GNU C/C++ Compiler (GCC) 11.2.0
+- Cygwin  3.5.1-1.x86_64 under Windows 10 Pro
+- GNU C/C++ Compiler (GCC) 11.4.0
 
-#### Windows 10 Pro
+#### Windows 10 & 11
 
-- Microsoft Visual Studio Community 2019 (Version 16.11.10)
+- Microsoft Visual Studio Community 2022 (Version 17.9.4)
 
 ### CAN Hardware
 
@@ -177,9 +178,13 @@ Windows&reg; (x64 operating system):
 
 2. Time-stamps are currently not supported.
 
-3. Python Ctrl+C issue on Linux still unsolved.
+3. Python Ctrl+C issue still unsolved.
 
 ## This and That
+
+### CAN API V3 Reference
+
+A generic documentation of the CAN API V3 application programming interface can be found [here](https://uv-software.github.io/CANAPI-Docs/#/).
 
 ### Dual-License
 
@@ -196,7 +201,8 @@ POSIX is a registered trademark of the Institute of Electrical and Electronic En
 Windows is a registered trademark of Microsoft Corporation in the United States and/or other countries. \
 GNU C/C++ is a registered trademark of Free Software Foundation, Inc. \
 Linux is a registered trademark of Linus Torvalds. \
-Cygwin is a registered trademark of Red Hat, Inc.
+Cygwin is a registered trademark of Red Hat, Inc. \
+All other company, product and service names mentioned herein may be trademarks, registered trademarks, or service marks of their respective owners.
 
 ### Hazard Note
 

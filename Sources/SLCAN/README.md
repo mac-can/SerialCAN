@@ -1,6 +1,6 @@
 ### CAN-over-Serial-Line (Lawicel SLCAN Protocol)
 
-_Copyright &copy; 2016,2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
+_Copyright &copy; 2016,2020-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
 _All rights reserved._
 
 # SLCAN
@@ -363,7 +363,7 @@ Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other cou
 Windows is a registered trademarks of Microsoft Corporation in the United States and/or other countries. \
 POSIX is a registered of the Institute of Electrical and Electronic Engineers, Inc. \
 Linux is a registered trademark of Linus Torvalds. \
-All other company, product and service names mentioned herein are trademarks, registered trademarks or service marks of their respective owners.
+All other company, product and service names mentioned herein may be trademarks, registered trademarks, or service marks of their respective owners.
 
 ### Contact
 

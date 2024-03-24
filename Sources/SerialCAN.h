@@ -2,7 +2,7 @@
 //
 //  CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)
 //
-//  Copyright (c) 2016-2022 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (c) 2016-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //  All rights reserved.
 //
 //  This file is part of SerialCAN.
@@ -48,8 +48,9 @@
 #ifndef SERIALCAN_H_INCLUDED
 #define SERIALCAN_H_INCLUDED
 
-#include "CANAPI.h"
 #include "SerialCAN_Defines.h"
+#include "CANBTR_Defaults.h"
+#include "CANAPI.h"
 
 /// \name   SerialCAN
 /// \brief  SerialCAN dynamic library
@@ -58,7 +59,7 @@
 #define SERIALCAN_LIBRARY_NAME  CANDLL_SERIALCAN
 #define SERIALCAN_LIBRARY_VENDOR  "UV Software, Berlin"
 #define SERIALCAN_LIBRARY_LICENSE  "BSD-2-Clause OR GPL-3.0-or-later"
-#define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (c) 2016-2022  Uwe Vogt, UV Software, Berlin"
+#define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (c) 2016-2024  Uwe Vogt, UV Software, Berlin"
 #define SERIALCAN_LIBRARY_HAZARD_NOTE  "If you connect your CAN device to a real CAN network when using this library,\n" \
                                        "you might damage your application."
 /// \}
@@ -108,7 +109,7 @@ public:
     CANAPI_Return_t ResetController();
 
     CANAPI_Return_t WriteMessage(CANAPI_Message_t message, uint16_t timeout = 0U);
-    CANAPI_Return_t ReadMessage(CANAPI_Message_t &message, uint16_t timeout = CANREAD_INFINITE);
+    CANAPI_Return_t ReadMessage(CANAPI_Message_t &message, uint16_t timeout = CANWAIT_INFINITE);
 
     CANAPI_Return_t GetStatus(CANAPI_Status_t &status);
     CANAPI_Return_t GetBusLoad(uint8_t &load);
@@ -119,13 +120,19 @@ public:
     CANAPI_Return_t GetProperty(uint16_t param, void *value, uint32_t nbyte);
     CANAPI_Return_t SetProperty(uint16_t param, const void *value, uint32_t nbyte);
 
+    CANAPI_Return_t SetFilter11Bit(uint32_t code, uint32_t mask);
+    CANAPI_Return_t SetFilter29Bit(uint32_t code, uint32_t mask);
+    CANAPI_Return_t GetFilter11Bit(uint32_t &code, uint32_t &mask);
+    CANAPI_Return_t GetFilter29Bit(uint32_t &code, uint32_t &mask);
+    CANAPI_Return_t ResetFilters();
+
     char *GetHardwareVersion();  // (for compatibility reasons)
     char *GetFirmwareVersion();  // (for compatibility reasons)
     static char *GetVersion();  // (for compatibility reasons)
 
     static CANAPI_Return_t MapIndex2Bitrate(int32_t index, CANAPI_Bitrate_t &bitrate);
-    static CANAPI_Return_t MapString2Bitrate(const char *string, CANAPI_Bitrate_t &bitrate);
-    static CANAPI_Return_t MapBitrate2String(CANAPI_Bitrate_t bitrate, char *string, size_t length);
+    static CANAPI_Return_t MapString2Bitrate(const char *string, CANAPI_Bitrate_t &bitrate, bool &data, bool &sam);
+    static CANAPI_Return_t MapBitrate2String(CANAPI_Bitrate_t bitrate, char *string, size_t length, bool data = false, bool sam = false);
     static CANAPI_Return_t MapBitrate2Speed(CANAPI_Bitrate_t bitrate, CANAPI_BusSpeed_t &speed);
 private:
     CANAPI_Return_t MapBitrate2Sja1000(CANAPI_Bitrate_t bitrate, uint16_t &btr0btr1);

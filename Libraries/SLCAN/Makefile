@@ -1,7 +1,7 @@
 #
 #	SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces
 #
-#	Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
 #
 #	This file is part of SerialCAN.
@@ -63,9 +63,9 @@ LIBRARY = libSLCAN
 
 MAJOR = 0
 MINOR = 1
-PATCH = 0
+PATCH = 1
 
-VERSION = $(MAJOR).$(MINOR)
+VERSION = $(MAJOR).$(MINOR).$(PATCH)
 TARGET  = $(LIBRARY).$(VERSION).dylib
 STATIC  = $(LIBRARY).a
 
@@ -119,9 +119,9 @@ LIBRARY = libslcan
 
 MAJOR = 0
 MINOR = 1
-PATCH = 0
+PATCH = 1
 
-VERSION = $(MAJOR).$(MINOR)
+VERSION = $(MAJOR).$(MINOR).$(PATCH)
 SONAME  = $(LIBRARY).so.1
 TARGET  = $(SONAME).$(VERSION)
 STATIC  = $(LIBRARY).a
@@ -130,7 +130,9 @@ INSTALL = /usr/local/lib
 
 INCLUDE = /usr/local/include
 
-DEFINES =
+DEFINES = -DOPTION_SLCAN_SO=1 \
+	-DOPTION_SERIAL_DEBUG_LEVEL=0 \
+	-DOPTION_SLCAN_DEBUG_LEVEL=0
 
 HEADERS = -I$(SERIAL_DIR)
 
@@ -182,6 +184,7 @@ bindir:
 incdir:
 	@mkdir -p $(INCDIR)
 	$(CP) $(SERIAL_DIR)/slcan.h $(INCDIR)
+	$(CP) $(SERIAL_DIR)/serial_attr.h $(INCDIR)
 
 clean:
 	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d
