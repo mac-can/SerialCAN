@@ -125,12 +125,13 @@ Type `can_test --help` to display all program options.
 POSIX&reg; compatible operating systems:
 
 1. macOS&reg;
-2. Linux&reg;
-3. Cygwin&reg;
+1. Linux&reg;
+1. Cygwin&reg;
 
 Windows&reg; (x64 operating system):
 
 1. Windows 10 Pro
+1. Windows 11 Pro
 
 ### Development Environments
 
@@ -159,12 +160,12 @@ Windows&reg; (x64 operating system):
 
 #### Cygwin (64-bit)
 
-- Cygwin 3.3.4(0.341/5/3) under Windows 10 Pro
-- GNU C/C++ Compiler (GCC) 11.2.0
+- Cygwin  3.5.1-1.x86_64 under Windows 10 Pro
+- GNU C/C++ Compiler (GCC) 11.4.0
 
-#### Windows 10 Pro
+#### Windows 10 & 11
 
-- Microsoft Visual Studio Community 2019 (Version 16.11.10)
+- Microsoft Visual Studio Community 2022 (Version 17.9.4)
 
 ### CAN Hardware
 
@@ -177,7 +178,7 @@ Windows&reg; (x64 operating system):
 
 2. Time-stamps are currently not supported.
 
-3. Python Ctrl+C issue on Linux still unsolved.
+3. Python Ctrl+C issue still unsolved.
 
 ## This and That
 
@@ -200,7 +201,8 @@ POSIX is a registered trademark of the Institute of Electrical and Electronic En
 Windows is a registered trademark of Microsoft Corporation in the United States and/or other countries. \
 GNU C/C++ is a registered trademark of Free Software Foundation, Inc. \
 Linux is a registered trademark of Linus Torvalds. \
-Cygwin is a registered trademark of Red Hat, Inc.
+Cygwin is a registered trademark of Red Hat, Inc. \
+All other company, product and service names mentioned herein may be trademarks, registered trademarks, or service marks of their respective owners.
 
 ### Hazard Note
 
