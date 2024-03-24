@@ -1,4 +1,0 @@
-language: c++
-os: osx
-compiler: clang
-osx_image: xcode12.5
