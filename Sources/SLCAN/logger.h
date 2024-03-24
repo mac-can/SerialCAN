@@ -2,7 +2,7 @@
 /*
  *  Software for Industrial Communication, Motion Control and Automation
  *
- *  Copyright (c) 2016-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2016-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -41,15 +41,15 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this module.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this module.  If not, see <https://www.gnu.org/licenses/>.
  */
 /** @file        logger.h
  *
  *  @brief       Writing log messages into an ASCII file.
  *
- *  @author      $Author: eris $
+ *  @author      $Author: haumea $
  *
- *  @version     $Rev: 710 $
+ *  @version     $Rev: 802 $
  *
  *  @defgroup    logger Logging into a file
  *  @{

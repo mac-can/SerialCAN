@@ -2,7 +2,7 @@
 /*
  *  Software for Industrial Communication, Motion Control and Automation
  *
- *  Copyright (c) 2002-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2002-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
  *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -41,7 +41,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with this module.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with this module.  If not, see <https://www.gnu.org/licenses/>.
  */
 #if defined(_WIN32) || defined(_WIN64)
 #include "serial_w.c"
@@ -49,4 +49,4 @@
 #include "serial_p.c"
 #endif
 
-/* $Id: serial.c 710 2021-05-25 15:35:30Z eris $  Copyright (c) UV Software */
+/* $Id: serial.c 802 2024-03-24 17:11:20Z haumea $  Copyright (c) UV Software */
