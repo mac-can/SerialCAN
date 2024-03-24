@@ -36,17 +36,13 @@
 #elif defined(__CYGWIN__)
 #define PLATFORM          "Cygwin"
 #else
-#ifdef _MSC_VER
-#pragma message ( "Platform not supported!" )
-#else
-#error Platform not supported!
-#endif
+#error Platform not supported
 #endif
 #if (OPTION_CAN_2_0_ONLY != 0)
 #ifdef _MSC_VER
 #pragma message ( "Compilation with legacy CAN 2.0 frame format!" )
 #else
-#error Compilation with legacy CAN 2.0 frame format!
+#warning Compilation with legacy CAN 2.0 frame format!
 #endif
 #else
 #define CAN_FD_SUPPORTED   1  // don't touch that dial!

@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 1259 $
+ *  @version     $Rev: 1260 $
  *
  *  @defgroup    can_api CAN Interface API, Version 3
  *  @{
@@ -91,11 +91,7 @@ extern "C" {
 #define OPTION_DISABLED  0  /**< if a define is not defined, it is automatically set to 0 */
 #endif
 #if (CAN_API_SPEC != 0x300)
-#ifdef _MSC_VER
-#pragma message ( "Requires version 3.0 of CANAPI_Types.h" )
-#else
 #error Requires version 3.0 of CANAPI_Types.h
-#endif
 #endif
 #if (OPTION_CANAPI_LIBRARY == 0)
 #if  (OPTION_CANAPI_DRIVER == 0)
@@ -140,11 +136,7 @@ typedef int                             can_handle_t;
 #elif (OPTION_CANAPI_DRIVER != 0)
 #define CAN_BOARD(lib, brd)             brd
 #else
-#ifdef _MSC_VER
-#pragma message ( "Remove the unneeded definition(s)" )
-#else
 #error Remove the unneeded definition(s)
-#endif
 #endif
 
 /*  -----------  types  --------------------------------------------------

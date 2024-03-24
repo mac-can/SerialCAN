@@ -75,7 +75,7 @@
 ///
 /// \author      $Author: haumea $
 //
-/// \version     $Rev: 1259 $
+/// \version     $Rev: 1260 $
 //
 /// \defgroup    can_api CAN Interface API, Version 3
 /// \{
@@ -87,11 +87,7 @@
 #include "CANAPI_Types.h"
 
 #if (CAN_API_SPEC != 0x300)
-#ifdef _MSC_VER
-#pragma message ( "Requires version 3.0 of CANAPI_Types.h" )
-#else
 #error Requires version 3.0 of CANAPI_Types.h
-#endif
 #endif
 #if (OPTION_CANAPI_LIBRARY == 0)
 #if  (OPTION_CANAPI_DRIVER == 0)
@@ -524,4 +520,4 @@ public:
 /// \}
 #endif // CANAPI_H_INCLUDED
 /// \}
-// $Id: CANAPI.h 1259 2024-03-23 18:28:13Z haumea $  Copyright (c) UV Software //
+// $Id: CANAPI.h 1260 2024-03-24 15:16:47Z haumea $  Copyright (c) UV Software //

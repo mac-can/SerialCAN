@@ -147,11 +147,7 @@ extern "C" {
 #define SLCAN_LIB_DRIVER        "(none)"
 #define SLCAN_LIB_WRAPPER       "libuvcanslc.so"
 #else
-#ifdef _MSC_VER
-#pragma message ( "Platform not supported!" )
-#else
-#error Platform not supported!
-#endif
+#error Platform not supported
 #endif
  /** @} */
 
