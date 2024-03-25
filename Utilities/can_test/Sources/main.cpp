@@ -96,7 +96,7 @@ int main(int argc, const char * argv[]) {
     long delay = 0; int t = 0;
     long number = 0; int n = 0;
     int stop_on_error = 0;
-//    int num_boards = 0;
+    int num_boards = 0;
     int show_version = 0;
     char *device, *firmware, *software;
     char property[CANPROP_MAX_BUFFER_SIZE] = "";
@@ -121,10 +121,8 @@ int main(int argc, const char * argv[]) {
         {"dlc", required_argument, 0, 'd'},
         {"data", required_argument, 0, 'd'},
         {"id", required_argument, 0, 'i'},
-#if (SERIAL_CAN_SUPPORTED == 0)
         {"list-boards", no_argument, 0, 'L'},
         {"test-boards", no_argument, 0, 'T'},
-#endif
         {"help", no_argument, 0, 'h'},
         {"version", no_argument, &show_version, 1},
         {0, 0, 0, 0}
@@ -153,11 +151,7 @@ int main(int argc, const char * argv[]) {
         return errno;
     }
     /* scan command-line */
-#if (SERIAL_CAN_SUPPORTED == 0)
     while ((opt = getopt_long(argc, (char * const *)argv, "b:vm:rn:st:f:R:c:u:d:i:aLTh", long_options, NULL)) != -1) {
-#else
-    while ((opt = getopt_long(argc, (char * const *)argv, "b:vm:rn:st:f:R:c:u:d:i:h", long_options, NULL)) != -1) {
-#endif
         switch (opt) {
         case 'b':  /* option `--baudrate=<baudrate>' (-b) */
             if (bd++) {
@@ -400,7 +394,6 @@ int main(int argc, const char * argv[]) {
                 return 1;
             }
             break;
-#if (SERIAL_CAN_SUPPORTED == 0)
         case 'a':  /* option `--list-boards[=<vendor>]' (-a, deprecated) */
         case 'L':  /* option `--list-boards[=<vendor>]' (-L) */
             fprintf(stdout, "%s\n%s\n\n%s\n\n", APPLICATION, COPYRIGHT, WARRANTY);
@@ -414,7 +407,6 @@ int main(int argc, const char * argv[]) {
             num_boards = CCanDevice::TestCanDevices(opMode/*, optarg*/);
             fprintf(stdout, "Number of present CAN interfaces: %i\n", num_boards);
             return (num_boards >= 0) ? 0 : 1;
-#endif
         case 'h':  /* option `--help' (-h) */
             usage(stdout, basename(argv[0]));
             return 0;
@@ -606,9 +598,8 @@ finalize:
 }
 
 int CCanDevice::ListCanDevices(void) {
-    int n = 0;
-#if (SERIAL_CAN_SUPPORTED == 0)
     CCanDevice::SChannelInfo info;
+    int n = 0;
 
     fprintf(stdout, "Suppored hardware:\n");
     bool result = CCanDevice::GetFirstChannel(info);
@@ -618,14 +609,17 @@ int CCanDevice::ListCanDevices(void) {
         n++;
         result = CCanDevice::GetNextChannel(info);
     }
+#if (SERIAL_CAN_SUPPORTED != 0)
+    if (n == 0) {
+        fprintf(stdout, "Check the Device Manager for compatible serial communication devices!\n");
+    }
 #endif
     return n;
 }
 
 int CCanDevice::TestCanDevices(CANAPI_OpMode_t opMode) {
-    int n = 0;
-#if (SERIAL_CAN_SUPPORTED == 0)
     CCanDevice::SChannelInfo info;
+    int n = 0;
 
     bool result = CCanDevice::GetFirstChannel(info);
     while (result) {
@@ -647,8 +641,10 @@ int CCanDevice::TestCanDevices(CANAPI_OpMode_t opMode) {
             fprintf(stdout, "FAILED!\n");
         result = CCanDevice::GetNextChannel(info);
     }
-#else
-    (void)opMode;
+#if (SERIAL_CAN_SUPPORTED != 0)
+    if (n == 0) {
+        fprintf(stdout, "Check the Device Manager for compatible serial communication devices!\n");
+    }
 #endif
     return n;
 }

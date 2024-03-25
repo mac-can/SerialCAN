@@ -65,9 +65,28 @@ extern "C" {
 /*  -----------  options  ------------------------------------------------
  */
 
+/** @name  Compiler Switches
+ *  @brief Options for conditional compilation.
+ *  @{ */
+/** @note  Set define OPTION_CAN_2_0_ONLY to a non-zero value to compile
+ *         with CAN 2.0 frame format only (e.g. in the build environment).
+ */
+/** @note  Set define OPTION_PCAN_BIT_TIMING to a non-zero value to compile
+ *         with non CiA bit-timing (e.g. in the build environment).
+ */
+#ifndef OPTION_DISABLED
+#define OPTION_DISABLED  0  /**< if a define is not defined, it is automatically set to 0 */
+#endif
+/** @} */
 
 /*  -----------  defines  ------------------------------------------------
  */
+
+/** @name  CAN API Interfaces
+ *  @brief Serial line interfaces
+ *  @{ */
+#define CANSIO_BOARDS               0  /**< number of serial line interfaces */
+/** @} */
 
 /** @name  Protocol option flags
  *  @brief SerialCAN protocol options

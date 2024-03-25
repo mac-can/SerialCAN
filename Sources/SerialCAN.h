@@ -95,8 +95,8 @@ public:
     CANAPI_Return_t InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr);
 
     // CCanApi overrides
-    //static bool GetFirstChannel(SChannelInfo &info, void *param = NULL);
-    //static bool GetNextChannel(SChannelInfo &info, void *param = NULL);
+    static bool GetFirstChannel(SChannelInfo &info, void *param = NULL);
+    static bool GetNextChannel(SChannelInfo &info, void *param = NULL);
 
     static CANAPI_Return_t ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state);
     static CANAPI_Return_t ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state);
@@ -164,14 +164,18 @@ public:
 #define SERIALCAN_PROPERTY_SPEED                (CANPROP_GET_SPEED)
 #define SERIALCAN_PROPERTY_STATUS               (CANPROP_GET_STATUS)
 #define SERIALCAN_PROPERTY_BUSLOAD              (CANPROP_GET_BUSLOAD)
+#define SERIALCAN_PROPERTY_NUM_CHANNELS         (CANPROP_GET_NUM_CHANNELS)
+#define SERIALCAN_PROPERTY_CAN_CHANNEL          (CANPROP_GET_CAN_CHANNEL)
+#define SERIALCAN_PROPERTY_CAN_CLOCK            (CANPROP_GET_CAN_CLOCK)
 #define SERIALCAN_PROPERTY_TX_COUNTER           (CANPROP_GET_TX_COUNTER)
 #define SERIALCAN_PROPERTY_RX_COUNTER           (CANPROP_GET_RX_COUNTER)
 #define SERIALCAN_PROPERTY_ERR_COUNTER          (CANPROP_GET_ERR_COUNTER)
+//#define SERIALCAN_PROPERTY_RCV_QUEUE_SIZE       (CANPROP_GET_RCV_QUEUE_SIZE)
+//#define SERIALCAN_PROPERTY_RCV_QUEUE_HIGH       (CANPROP_GET_RCV_QUEUE_HIGH)
+//#define SERIALCAN_PROPERTY_RCV_QUEUE_OVFL       (CANPROP_GET_RCV_QUEUE_OVFL)
 #define SERIALCAN_PROPERTY_SERIAL_NUMBER        (CANPROP_GET_VENDOR_PROP + SLCAN_SERIAL_NUMBER)
 #define SERIALCAN_PROPERTY_HARDWARE_VERSION     (CANPROP_GET_VENDOR_PROP + SLCAN_HARDWARE_VERSION)
 #define SERIALCAN_PROPERTY_FIRMWARE_VERSION     (CANPROP_GET_VENDOR_PROP + SLCAN_FIRMWARE_VERSION)
-#define SERIALCAN_PROPERTY_CAN_CLOCK_FREQUENCY  (CANPROP_GET_VENDOR_PROP + SLCAN_CLOCK_FREQUENCY)
-// aliases:
-#define SERIALCAN_PROPERTY_CLOCK_DOMAIN         (SLCAN_CLOCK_FREQUENCY)
+#define SERIALCAN_PROPERTY_CLOCK_DOMAIN         (CANPROP_GET_CAN_CLOCK)
 /// \}
 #endif // SERIALCAN_H_INCLUDED

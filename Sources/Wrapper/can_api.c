@@ -180,8 +180,8 @@ static void var_init(void);             // initialize variables
  */
 
 EXPORT
-can_board_t can_boards[1] = {  // list of supported CAN Interfaces
-    // TODO: rework this (either by an own can_defs.h or by a json file)
+can_board_t can_boards[CANSIO_BOARDS+1] = {  // list of supported CAN Interfaces
+    // note: check the device manager of '/dev/tty*' to find compatibe interfaces
     {EOF, NULL}
 };
 static can_interface_t can[CAN_MAX_HANDLES]; // interface handles
@@ -866,7 +866,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         rc = (can_boards[idx_board].type != EOF) ? CANERR_NOERROR : CANERR_RESOURCE;
         break;
     case CANPROP_SET_NEXT_CHANNEL:      // set index to the next entry in the interface list (NULL)
-        if ((0 <= idx_board) && (idx_board < 1)) {  // FIXME: ?
+        if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1)) {  // warning: statement with no effect
             if (can_boards[idx_board].type != EOF)
                 idx_board++;
             rc = (can_boards[idx_board].type != EOF) ? CANERR_NOERROR : CANERR_RESOURCE;
@@ -876,7 +876,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_GET_CHANNEL_NO:        // get channel no. at actual index in the interface list (int32_t)
         if (nbyte >= sizeof(int32_t)) {
-            if ((0 <= idx_board) && (idx_board < 1) &&  // FIXME: ?
+            if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
                 *(int32_t*)value = (int32_t)can_boards[idx_board].type;
                 rc = CANERR_NOERROR;
@@ -887,7 +887,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_GET_CHANNEL_NAME:      // get channel name at actual index in the interface list (char[256])
         if ((0U < nbyte) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            if ((0 <= idx_board) && (idx_board < 1) &&  // FIXME: ?
+            if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
                 strncpy((char*)value, can_boards[idx_board].name, nbyte);
                 ((char*)value)[(nbyte - 1)] = '\0';
@@ -899,7 +899,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_GET_CHANNEL_DLLNAME:   // get file name of the DLL at actual index in the interface list (char[256])
         if ((0U < nbyte) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            if ((0 <= idx_board) && (idx_board < 1) &&  // FIXME: ?
+            if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
                 strncpy((char*)value, SLCAN_LIB_DRIVER, nbyte);
                 ((char*)value)[(nbyte - 1)] = '\0';
@@ -911,7 +911,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_GET_CHANNEL_VENDOR_ID: // get library id at actual index in the interface list (int32_t)
         if (nbyte >= sizeof(int32_t)) {
-            if ((0 <= idx_board) && (idx_board < 1) &&  // FIXME: ?
+            if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
                 *(int32_t*)value = (int32_t)SLCAN_LIB_ID;
                 rc = CANERR_NOERROR;
@@ -922,7 +922,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_GET_CHANNEL_VENDOR_NAME: // get vendor name at actual index in the interface list (char[256])
         if ((0U < nbyte) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            if ((0 <= idx_board) && (idx_board < 1) &&  // FIXME: ?
+            if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
                 strncpy((char*)value, SLCAN_LIB_VENDOR, nbyte);
                 ((char*)value)[(nbyte - 1)] = '\0';
@@ -992,7 +992,7 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
     switch (param) {
     case CANPROP_GET_DEVICE_TYPE:       // device type of the CAN interface (int32_t)
         if ((size_t)nbyte >= sizeof(int32_t)) {
-            *(int32_t*)value = (int32_t)SERIAL_OPTIONS;  // FIXME: what?
+            *(int32_t*)value = (int32_t)SERIAL_OPTIONS;
             rc = CANERR_NOERROR;
         }
         break;
@@ -1073,10 +1073,21 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         }
         break;
     case CANPROP_GET_NUM_CHANNELS:      // numbers of CAN channels on the CAN interface (uint8_t)
+        if (nbyte >= sizeof(uint8_t)) {
+		    *(uint8_t*)value = (uint8_t)1;
+            rc = CANERR_NOERROR;
+        }
+        break;
     case CANPROP_GET_CAN_CHANNEL:       // active CAN channel on the CAN interface (uint8_t)
+        if (nbyte >= sizeof(uint8_t)) {
+		    *(uint8_t*)value = (uint8_t)0;
+            rc = CANERR_NOERROR;
+        }
     case CANPROP_GET_CAN_CLOCK:         // frequency of the CAN controller clock in [Hz] (int32_t)
-        // TODO: insert coin here
-        rc = CANERR_NOTSUPP;
+        if (nbyte >= sizeof(int32_t)) {
+            *(int32_t*)value = (int32_t)CAN_CLOCK_FREQUENCY;
+            rc = CANERR_NOERROR;
+        }
         break;
     case CANPROP_GET_TX_COUNTER:        // total number of sent messages (uint64_t)
         if (nbyte >= sizeof(uint64_t)) {
@@ -1144,12 +1155,6 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
             else {
                 rc = slcan_error(rc);
             }
-        }
-        break;
-    case (CANPROP_GET_VENDOR_PROP + SLCAN_CLOCK_FREQUENCY):     // CAN clock frequency (int32_t)
-        if (nbyte >= sizeof(int32_t)) {
-            *(int32_t*)value = (int32_t)CAN_CLOCK_FREQUENCY;
-            rc = CANERR_NOERROR;
         }
         break;
     default:

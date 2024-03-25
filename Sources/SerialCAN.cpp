@@ -132,6 +132,50 @@ CSerialCAN::~CSerialCAN() {
 }
 
 EXPORT
+bool CSerialCAN::GetFirstChannel(SChannelInfo &info, void *param) {
+    bool result = false;
+    memset(&info, 0, sizeof(SChannelInfo));
+    info.m_nChannelNo = (-1);
+    // set index to the first entry in the interface list (if any)
+    CANAPI_Return_t rc = can_property((-1), CANPROP_SET_FIRST_CHANNEL, NULL, 0U);
+    if (CANERR_NOERROR == rc) {
+        // get channel no, device name, etc. at actual index in the interface list
+        if (((can_property((-1), CANPROP_GET_CHANNEL_NO, (void*)&info.m_nChannelNo, sizeof(int32_t))) == 0) &&
+            ((can_property((-1), CANPROP_GET_CHANNEL_NAME, (void*)&info.m_szDeviceName, CANPROP_MAX_BUFFER_SIZE)) == 0) &&
+            ((can_property((-1), CANPROP_GET_CHANNEL_DLLNAME, (void*)&info.m_szDeviceDllName, CANPROP_MAX_BUFFER_SIZE)) == 0)) {
+            // we know the library id and its vendor already
+            info.m_nLibraryId = SLCAN_LIB_ID;
+            strncpy(info.m_szVendorName, SLCAN_LIB_VENDOR, CANPROP_MAX_BUFFER_SIZE-1);
+            result = true;
+        }
+    }
+    (void)param;
+    return result;
+}
+
+EXPORT
+bool CSerialCAN::GetNextChannel(SChannelInfo &info, void *param) {
+    bool result = false;
+    memset(&info, 0, sizeof(SChannelInfo));
+    info.m_nChannelNo = (-1);
+    // set index to the next entry in the interface list (if any)
+    CANAPI_Return_t rc = can_property((-1), CANPROP_SET_NEXT_CHANNEL, NULL, 0U);
+    if (CANERR_NOERROR == rc) {
+        // get channel no, device name, etc. at actual index in the interface list
+        if (((can_property((-1), CANPROP_GET_CHANNEL_NO, (void*)&info.m_nChannelNo, sizeof(int32_t))) == 0) &&
+            ((can_property((-1), CANPROP_GET_CHANNEL_NAME, (void*)&info.m_szDeviceName, CANPROP_MAX_BUFFER_SIZE)) == 0) &&
+            ((can_property((-1), CANPROP_GET_CHANNEL_DLLNAME, (void*)&info.m_szDeviceDllName, CANPROP_MAX_BUFFER_SIZE)) == 0)) {
+            // we know the library id and its vendor already
+            info.m_nLibraryId = SLCAN_LIB_ID;
+            strncpy(info.m_szVendorName, SLCAN_LIB_VENDOR, CANPROP_MAX_BUFFER_SIZE-1);
+            result = true;
+        }
+    }
+    (void)param;
+    return result;
+}
+
+EXPORT
 CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, EChannelState &state) {
     SSerialAttributes sioAttr = {};
     sioAttr.baudrate = SERIAL_BAUDRATE;
