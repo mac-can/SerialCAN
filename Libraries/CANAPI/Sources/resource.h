@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by uvcanslc.rc
+// Used by u3canslc.rc
 
 // Next default values for new objects
 // 
