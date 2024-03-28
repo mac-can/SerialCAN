@@ -1,7 +1,7 @@
 //
 //  main.cpp
 //  SerialCAN
-//  Bart Simpson didn�t do it
+//  Bart Simpson didn't do it
 //
 #ifdef _MSC_VER
 //no Microsoft extensions please!
