@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\CANAPI">
+      <UniqueIdentifier>{7c3efe7d-f1b0-4acb-bc3f-31a291f4d0a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\SLCAN">
+      <UniqueIdentifier>{4357ffe9-613c-4500-af3e-34e33b44788d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CANAPI">
+      <UniqueIdentifier>{f578053c-79fd-4497-8b38-3bdb74236732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SLCAN">
+      <UniqueIdentifier>{f3f7440a-c957-4e1a-8636-5cabc1ce461d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SerialCAN.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\CANAPI\can_btr.c">
+      <Filter>Source Files\CANAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\Wrapper\can_api.c">
+      <Filter>Source Files\CANAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SLCAN\buffer_w.c">
+      <Filter>Source Files\SLCAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SLCAN\logger_w.c">
+      <Filter>Source Files\SLCAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SLCAN\queue_w.c">
+      <Filter>Source Files\SLCAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SLCAN\serial_w.c">
+      <Filter>Source Files\SLCAN</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\SLCAN\slcan.c">
+      <Filter>Source Files\SLCAN</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\SLCAN\buffer.h">
+      <Filter>Header Files\SLCAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SLCAN\logger.h">
+      <Filter>Header Files\SLCAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SLCAN\queue.h">
+      <Filter>Header Files\SLCAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SLCAN\serial.h">
+      <Filter>Header Files\SLCAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SLCAN\serial_attr.h">
+      <Filter>Header Files\SLCAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SLCAN\slcan.h">
+      <Filter>Header Files\SLCAN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\CANAPI\can_api.h">
+      <Filter>Header Files\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\CANAPI\can_btr.h">
+      <Filter>Header Files\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\CANAPI\CANAPI.h">
+      <Filter>Header Files\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\CANAPI\CANAPI_Defines.h">
+      <Filter>Header Files\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\CANAPI\CANAPI_Types.h">
+      <Filter>Header Files\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\CANAPI\CANBTR_Defaults.h">
+      <Filter>Header Files\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\Wrapper\can_defs.h">
+      <Filter>Header Files\CANAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\build_no.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SerialCAN.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SerialCAN_Defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
