@@ -1,5 +1,5 @@
 #
-#	SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces
+#	SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 #
 #	Copyright (c) 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
@@ -42,14 +42,25 @@
 #	GNU General Public License for more details.
 #
 #	You should have received a copy of the GNU General Public License
-#	along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
+#	along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
 #
 current_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown OS')
 current_OS := $(patsubst CYGWIN%,Cygwin,$(current_OS))
 current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
+MAJOR = 0
+MINOR = 1
+PATCH = 1
+
+ifeq ($(PATCH),0)
+VERSION = $(MAJOR).$(MINOR)
+else
+VERSION = $(MAJOR).$(MINOR).$(PATCH)
+endif
+
 HOME_DIR = ../..
+MAIN_DIR = .
 
 SOURCE_DIR = $(HOME_DIR)/Sources
 SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN
@@ -66,16 +77,11 @@ ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
 
 LIBRARY = libSerialCAN
 
-MAJOR = 0
-MINOR = 1
-PATCH = 1
-
-VERSION = $(MAJOR).$(MINOR).$(PATCH)
 TARGET  = $(LIBRARY).$(VERSION).dylib
 STATIC  = $(LIBRARY).a
 
 INSTALL_NAME = $(TARGET)
-CURRENT_VERSION = $(MAJOR).$(MINOR).0
+CURRENT_VERSION = $(MAJOR).$(MINOR).$(PATCH)
 COMPATIBILITY_VERSION = $(MAJOR).$(MINOR).0
 
 INSTALL = /usr/local/lib
@@ -130,11 +136,6 @@ ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin)) # linux - libserial.so
 
 LIBRARY = libserialcan
 
-MAJOR = 0
-MINOR = 1
-PATCH = 1
-
-VERSION = $(MAJOR).$(MINOR).$(PATCH)
 SONAME  = $(LIBRARY).so.1
 TARGET  = $(SONAME).$(VERSION)
 STATIC  = $(LIBRARY).a

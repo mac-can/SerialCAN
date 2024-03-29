@@ -1,6 +1,6 @@
 /*  SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later */
 /*
- *  Controler Area Network - Lawicel SLCAN Protocol (Serial-Line CAN)
+ *  Controller Area Network - Lawicel SLCAN Protocol (Serial-Line CAN)
  *
  *  Copyright (c) 2016-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
@@ -47,12 +47,42 @@
  *
  *  @brief       Lawicel SLCAN protocol.
  *
- *  @author      $Author: haumea $
+ *  @author      $Author: quaoar $
  *
- *  @version     $Rev: 802 $
+ *  @version     $Rev: 808 $
  *
  *  @addtogroup  slcan
  *  @{
+ */
+#define VERSION_MAJOR    1
+#define VERSION_MINOR    0
+#define VERSION_PATCH    0
+#if defined(_WIN64)
+#define PLATFORM        "x64"
+#elif defined(_WIN32)
+#define PLATFORM        "x86"
+#elif defined(__linux__)
+#define PLATFORM        "Linux"
+#elif defined(__APPLE__)
+#define PLATFORM        "macOS"
+#elif defined(__CYGWIN__)
+#define PLATFORM        "Cygwin"
+#else
+#error Platform not supported
+#endif
+#if (VERSION_PATCH == 0)
+static const char version[] = "Lawicel SLCAN Protocol (Serial-Line CAN), Version %i.%i (%u)";
+#else
+static const char version[] = "Lawicel SLCAN Protocol (Serial-Line CAN), Version %i.%i.%i (%u)";
+#endif
+#ifdef _MSC_VER
+//no Microsoft extensions please!
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif
+#endif
+
+/*  -----------  includes  -----------------------------------------------
  */
 #include "slcan.h"
 #include "serial.h"
@@ -752,6 +782,35 @@ int slcan_serial_number(slcan_port_t port, uint32_t *number) {
     }
     SLCAN_DEBUG_INFO("slcan_serial_number (%i)\n", res);
     return res;
+}
+
+EXPORT
+char *slcan_api_version(uint16_t *version_no, uint8_t *patch_no, uint32_t *build_no) {
+    static char str[100 + 1] = "Try to relaxe and enjoy the crisis.";
+    const char svn[17 + 1] = "$Rev: 808 $";
+    unsigned rev = 0u;
+
+    /* determine pseudo build no. from SVN revision */
+    if (sscanf(svn, "$Rev: %u", &rev) != 1)
+        rev = 99u;
+
+    /* numerical version information are optional */
+    if (version_no)
+        *version_no = ((uint16_t)VERSION_MAJOR << 8) | (uint16_t)VERSION_MINOR;
+    if (patch_no)
+        *patch_no = (uint8_t)VERSION_PATCH;
+    if (build_no)
+        *build_no = (uint32_t)rev;
+
+    /* return the version as zero-terminated string */
+#if (VERSION_PATCH != 0)
+    snprintf(str, 100, version, VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, rev);
+#else
+    snprintf(str, 100, version, VERSION_MAJOR, VERSION_MINOR, rev);
+#endif
+    str[100] = '\0';
+    SLCAN_DEBUG_INFO("slcan_api_version (%s)\n", str);
+    return (char*)str;
 }
 
 static int send_command(slcan_t *slcan, const uint8_t *request, size_t nbytes,

@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 802 $
+ *  @version     $Rev: 803 $
  *
  *  @addtogroup  serial
  *  @{
@@ -386,29 +386,6 @@ int sio_transmit(sio_port_t port, const uint8_t *buffer, size_t nbytes) {
     // TODO: 'blocking write' required?
     return (int)sent;
 }
-
-#if (0)
-int sio_receive(sio_port_t port, uint8_t *buffer, size_t nbytes, uint16_t timeout) {
-    serial_t *serial = (serial_t*)port;
-
-    /* sanity check */
-    errno = 0;
-    if (!serial) {
-        errno = ENODEV;
-        return -1;
-    }
-    if (!buffer) {
-        errno = EINVAL;
-        return -1;
-    }
-    if (serial->fildes == -1) {
-        errno = EBADF;
-        return -1;
-    }
-    // TODO: insert coin here
-    return -1;
-}
-#endif
 
 static void *reception_loop(void *arg) {
     serial_t *serial = (serial_t*)arg;

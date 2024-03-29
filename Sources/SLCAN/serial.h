@@ -49,7 +49,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 802 $
+ *  @version     $Rev: 803 $
  *
  *  @defgroup    serial Serial Data Transmission
  *  @{
@@ -66,6 +66,13 @@
 /*  -----------  options  ------------------------------------------------
  */
 
+/** @name  Compiler Switches
+ *  @brief Options for conditional compilation.
+ *  @{ */
+/** @note  Set define OPTION_SERIAL_DEBUG_LEVEL to a non-zero value to compile
+ *         with logging of serial commumication (e.g. in the build environment).
+ */
+/** @} */
 
 /*  -----------  defines  ------------------------------------------------
  */

@@ -3,12 +3,13 @@
 rem parse arguments: [[NOVARS] NOTRIAL]
 if "%1" == "NOVARS" (
    set VCVARS="False"
+   SHIFT
 ) else (
    set VCVARS="True"
 )
-SHIFT
 if "%1" == "NOTRIAL" (
   set TRIAL="False"
+   SHIFT
 ) else (
   set TRIAL="True"
 )
@@ -26,21 +27,21 @@ call build_no.bat
 
 rem build the trial program
 if %TRIAL% == "True" ( 
-call msbuild.exe .\Trial\SerialCAN.vcxproj\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Debug";"Platform=x64"
-if errorlevel 1 goto end
+   call msbuild.exe .\Trial\slc_test.vcxproj /t:Clean;Build /p:"Configuration=Debug";"Platform=x64"
+   if errorlevel 1 goto end
 )
 rem build the CAN API V3 C library (dynamic and static)
-call msbuild.exe .\Libraries\CANAPI\uvcanslc.vcxproj\uvcanslc.vcxproj /t:Clean;Build /p:"Configuration=Release_dll";"Platform=x64"
+call msbuild.exe .\Libraries\CANAPI\uvcanslc.vcxproj /t:Clean;Build /p:"Configuration=Release_dll";"Platform=x64"
 if errorlevel 1 goto end
 
-call msbuild.exe .\Libraries\CANAPI\uvcanslc.vcxproj\uvcanslc.vcxproj /t:Clean;Build /p:"Configuration=Debug_lib";"Platform=x64"
+call msbuild.exe .\Libraries\CANAPI\uvcanslc.vcxproj /t:Clean;Build /p:"Configuration=Debug_lib";"Platform=x64"
 if errorlevel 1 goto end
 
 rem build the CAN API V3 C++ library (dynamic and static)
-call msbuild.exe .\Libraries\SerialCAN\SerialCAN.vcxproj\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Release_dll";"Platform=x64"
+call msbuild.exe .\Libraries\SerialCAN\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Release_dll";"Platform=x64"
 if errorlevel 1 goto end
 
-call msbuild.exe .\Libraries\SerialCAN\SerialCAN.vcxproj\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Debug_lib";"Platform=x64"
+call msbuild.exe .\Libraries\SerialCAN\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Debug_lib";"Platform=x64"
 if errorlevel 1 goto end
 
 rem copy the arifacts into the Binaries folder
@@ -49,16 +50,20 @@ set BIN=".\Binaries"
 if not exist %BIN% mkdir %BIN%
 set BIN="%BIN%\x64"
 if not exist %BIN% mkdir %BIN%
-copy /Y .\Libraries\CANAPI\uvcanslc.vcxproj\x64\Release_dll\u3canslc.dll %BIN%
-copy /Y .\Libraries\CANAPI\uvcanslc.vcxproj\x64\Release_dll\u3canslc.lib %BIN%
-copy /Y .\Libraries\SerialCAN\SerialCAN.vcxproj\x64\Release_dll\uvSerialCAN.dll %BIN%
-copy /Y .\Libraries\SerialCAN\SerialCAN.vcxproj\x64\Release_dll\uvSerialCAN.lib %BIN%
+copy /Y .\Libraries\CANAPI\x64\Release_dll\u3canslc.dll %BIN%
+copy /Y .\Libraries\CANAPI\x64\Release_dll\u3canslc.exp %BIN%
+copy /Y .\Libraries\CANAPI\x64\Release_dll\u3canslc.lib %BIN%
+copy /Y .\Libraries\CANAPI\x64\Release_dll\u3canslc.pdb %BIN%
+copy /Y .\Libraries\SerialCAN\x64\Release_dll\uvSerialCAN.dll %BIN%
+copy /Y .\Libraries\SerialCAN\x64\Release_dll\uvSerialCAN.exp %BIN%
+copy /Y .\Libraries\SerialCAN\x64\Release_dll\uvSerialCAN.lib %BIN%
+copy /Y .\Libraries\SerialCAN\x64\Release_dll\uvSerialCAN.pdb %BIN%
 set BIN="%BIN%\lib"
 if not exist %BIN% mkdir %BIN%
-copy /Y .\Libraries\CANAPI\uvcanslc.vcxproj\x64\Debug_lib\u3canslc.lib %BIN%
-copy /Y .\Libraries\CANAPI\uvcanslc.vcxproj\x64\Debug_lib\u3canslc.pdb %BIN%
-copy /Y .\Libraries\SerialCAN\SerialCAN.vcxproj\x64\Debug_lib\uvSerialCAN.lib %BIN%
-copy /Y .\Libraries\SerialCAN\SerialCAN.vcxproj\x64\Debug_lib\uvSerialCAN.pdb %BIN%
+copy /Y .\Libraries\CANAPI\x64\Debug_lib\u3canslc.lib %BIN%
+copy /Y .\Libraries\CANAPI\x64\Debug_lib\u3canslc.pdb %BIN%
+copy /Y .\Libraries\SerialCAN\x64\Debug_lib\uvSerialCAN.lib %BIN%
+copy /Y .\Libraries\SerialCAN\x64\Debug_lib\uvSerialCAN.pdb %BIN%
 echo Static libraries (x64) > %BIN%\readme.txt
 
 echo Copying header files...

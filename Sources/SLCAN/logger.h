@@ -49,7 +49,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 802 $
+ *  @version     $Rev: 804 $
  *
  *  @defgroup    logger Logging into a file
  *  @{
@@ -83,37 +83,58 @@
 extern "C" {
 #endif
 
-/** @brief TBD
- *  @param[in]   pathname - ...
+/** @brief       opens a file for logging.
+ * 
+ *  @param[in]   pathname - a pathname naming a file, or NULL
+ *                          to write to stadard output stream
+ * 
  *  @returns     0 if successful, or a negative value on error
  */
 extern int log_init(const char *pathname/* = NULL, flags = 0*/);
 
 
-/** @brief TBD
+/** @brief       closes a open log file.
+ * 
  *  @returns     0 if successful, or a negative value on error
  */
 extern int log_exit(void);
 
 
-/** @brief TBD
- *  @param[in]   buffer - pointer to a buffer ...
+/** @brief       writes binary data as ASCII into the log file.
+ *
+ *  @remarks     This function can only be used by the log file
+ *               owner (e.g. the thread that opened the file).
+ * 
+ *  @param[in]   buffer - pointer to a buffer containing binary
+ *                        data to be written into the log file
  *  @param[in]   nbytes - number of bytes to be logged
+ * 
  *  @returns     0 if successful, or a negative value on error
  */
 extern int log_sync(const uint8_t *buffer, size_t nbytes);
 
 
-/** @brief TBD
- *  @param[in]   buffer - pointer to a buffer ...
+/** @brief       writes binary data as ASCII into the log file.
+ * 
+ *  @remarks     This function can be used by threads that do
+ *               not own the log file (e.g. callbak handler).
+ * 
+ *  @param[in]   buffer - pointer to a buffer containing binary
+ *                        data to be written into the log file
  *  @param[in]   nbytes - number of bytes to be logged
+ * 
  *  @returns     0 if successful, or a negative value on error
  */
 extern int log_async(const uint8_t *buffer, size_t nbytes);
 
 
-/** @brief TBD
+/** @brief       writes a formatted string into the log file.
+ * 
+ *  @remarks     This function can only be used by the log file
+ *               owner (e.g. the thread that opened the file).
+ * 
  *  @param[in]   format - format string (see printf)
+ * 
  *  @returns     0 if successful, or a negative value on error
  */
 extern int log_printf(const char *format, ...);

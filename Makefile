@@ -1,7 +1,7 @@
 #
-#	SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces
+#	SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 #
-#	Copyright (C) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
 #
 #	This file is part of SerialCAN.
@@ -42,7 +42,7 @@
 #	GNU General Public License for more details.
 #
 #	You should have received a copy of the GNU General Public License
-#	along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>.
+#	along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
 #
 all:
 	@./build_no.sh
@@ -50,7 +50,6 @@ all:
 	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
-	$(MAKE) -C Libraries/SLCAN $@
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
 
@@ -58,7 +57,6 @@ clean:
 	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
-	$(MAKE) -C Libraries/SLCAN $@
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
 
@@ -66,7 +64,6 @@ pristine:
 	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
-	$(MAKE) -C Libraries/SLCAN $@
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
 
@@ -74,7 +71,6 @@ install:
 #	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
-	$(MAKE) -C Libraries/SLCAN $@
 #	$(MAKE) -C Utilities/can_test $@
 #	$(MAKE) -C Utilities/can_moni $@
 

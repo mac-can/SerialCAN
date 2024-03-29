@@ -1,9 +1,9 @@
 #!/bin/sh
 echo "/*  -- Do not commit this file --" > ./Sources/build_no.h
 echo " *" >> ./Sources/build_no.h
-echo " *  SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces" >> ./Sources/build_no.h
+echo " *  SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces" >> ./Sources/build_no.h
 echo " *" >> ./Sources/build_no.h
-echo " *  Copyright (C) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)" >> ./Sources/build_no.h
+echo " *  Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)" >> ./Sources/build_no.h
 echo " *  All rights reserved." >> ./Sources/build_no.h
 echo " *" >> ./Sources/build_no.h
 echo " *  This file is part of SerialCAN." >> ./Sources/build_no.h

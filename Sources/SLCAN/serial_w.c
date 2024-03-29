@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 802 $
+ *  @version     $Rev: 807 $
  *
  *  @addtogroup  serial
  *  @{
@@ -235,7 +235,11 @@ int sio_connect(sio_port_t port, const char *device, const sio_attr_t *attr) {
     }
     /* create a file for the comm port */
     sprintf_s(path, 42, "\\\\.\\COM%i", comm); /* See Q115831 */
+#if defined(_UNICODE)
+    if ((serial->hPort = CreateFileA(path, (GENERIC_READ | GENERIC_WRITE),
+#else
     if ((serial->hPort = CreateFile(path, (GENERIC_READ | GENERIC_WRITE),
+#endif
         0,                              // exclusive access
         NULL,                           // no security attrs
         OPEN_EXISTING,                  // default for devices other than files
@@ -385,29 +389,6 @@ int sio_transmit(sio_port_t port, const uint8_t *buffer, size_t nbytes) {
     // TODO: 'blocking write' required?
     return (int)sent;
 }
-
-#if (0)
-int sio_receive(sio_port_t port, uint8_t *buffer, size_t nbytes, uint16_t timeout) {
-    serial_t *serial = (serial_t*)port;
-
-    /* sanity check */
-    errno = 0;
-    if (!serial) {
-        errno = ENODEV;
-        return -1;
-    }
-    if (!buffer) {
-        errno = EINVAL;
-        return -1;
-    }
-    if (serial->hPort == INVALID_HANDLE_VALUE) {
-        errno = EBADF;
-        return -1;
-    }
-    // TODO: insert coin here
-    return -1;
-}
-#endif
 
 static DWORD WINAPI reception_loop(LPVOID lpParam) {
     serial_t *serial = (serial_t*)lpParam;
