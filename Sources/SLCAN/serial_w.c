@@ -51,7 +51,7 @@
  *
  *  @author      $Author: haumea $
  *
- *  @version     $Rev: 803 $
+ *  @version     $Rev: 807 $
  *
  *  @addtogroup  serial
  *  @{

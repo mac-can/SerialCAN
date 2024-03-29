@@ -1,4 +1,4 @@
-### CAN-over-Serial-Line (Lawicel SLCAN Protocol)
+### Lawicel SLCAN Protocol (Serial-Line CAN)
 
 _Copyright &copy; 2016,2020-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
 _All rights reserved._
@@ -21,7 +21,7 @@ Implementation of Lawicel SLCAN protocol.
  *
  *  @retval      ENOMEM  - out of memory (insufficient storage space)
  */
-extern slcan_port_t slcan_create(size_t queueSize);
+SLCANAPI slcan_port_t slcan_create(size_t queueSize);
 
 
 /** @brief       destroys the port instance (destructor).
@@ -40,7 +40,7 @@ extern slcan_port_t slcan_create(size_t queueSize);
  *  @retval      ENODEV  - no such device (invalid port instance)
  *  @retval      EFAULT  - bad address (release of resources)
  */
-extern int slcan_destroy(slcan_port_t port);
+SLCANAPI slcan_destroy(slcan_port_t port);
 
 
 /** @brief       establishes a connection with the serial communication device.
@@ -53,9 +53,11 @@ extern int slcan_destroy(slcan_port_t port);
  *
  *  @param[in]   port    - pointer to a SLCAN instance
  *  @param[in]   device  - name of the serial device
- *  !param[in]   param   - serial port attributes
+ *  @param[in]   attr    - serial port attributes (optional)
  *
- *  @returns     0 if successful, or a negative value on error.
+ *  @returns     a file descriptor if successful, or a negative value on error.
+ *
+ *  @remarks     On Windows, the communication port number (zero based) is returned.
  *
  *  @note        System variable 'errno' will be set in case of an error.
  *
@@ -65,7 +67,7 @@ extern int slcan_destroy(slcan_port_t port);
  *  @retval      'errno'  - error code from called system functions:
  *                          'open', 'tcsetattr', 'pthread_create'
  */
-extern int slcan_connect(slcan_port_t port, const char *device);
+SLCANAPI slcan_connect(slcan_port_t port, const char *device, const sio_attr_t *attr);
 
 
 /** @brief       terminates the connection with the serial communication device.
@@ -84,7 +86,22 @@ extern int slcan_connect(slcan_port_t port, const char *device);
  *  @retval      'errno'  - error code from called system functions:
  *                          'pthread_cancel', 'tcflush', 'close'
  */
-extern int slcan_disconnect(slcan_port_t port);
+SLCANAPI slcan_disconnect(slcan_port_t port);
+
+
+/** @brief       returns the serial communication attributes (baudrate, etc.).
+ *
+ *  @param[in]   port  - pointer to a SLCAN instance
+ *  @param[out]  attr  - serial communication attributes
+ *
+ *  @returns     0 if successful, or a negative value on error.
+ *
+ *  @note        System variable 'errno' will be set in case of an error.
+ *
+ *  @retval      ENODEV   - no such device (invalid port instance)
+ *  @retval      EINVAL   - invalid argument (attr is NULL)
+ */
+SLCANAPI slcan_get_attr(slcan_port_t port, slcan_attr_t *attr);
 
 
 /** @brief       setup with standard CAN bit-rates.
@@ -107,7 +124,7 @@ extern int slcan_disconnect(slcan_port_t port);
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_setup_bitrate(slcan_port_t port, uint8_t index);
+SLCANAPI slcan_setup_bitrate(slcan_port_t port, uint8_t index);
 
 
 /** @brief       setup with BTR0/BTR1 CAN bit-rates; see SJA1000 datasheet.
@@ -130,7 +147,7 @@ extern int slcan_setup_bitrate(slcan_port_t port, uint8_t index);
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_setup_btr(slcan_port_t port, uint16_t btr);
+SLCANAPI slcan_setup_btr(slcan_port_t port, uint16_t btr);
 
 
 /** @brief       opens the CAN channel.
@@ -154,7 +171,7 @@ extern int slcan_setup_btr(slcan_port_t port, uint16_t btr);
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_open_channel(slcan_port_t port);
+SLCANAPI slcan_open_channel(slcan_port_t port);
 
 
 /** @brief       closes the CAN channel.
@@ -176,7 +193,7 @@ extern int slcan_open_channel(slcan_port_t port);
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_close_channel(slcan_port_t port);
+SLCANAPI slcan_close_channel(slcan_port_t port);
 
 
 /** @brief       transmits a CAN message.
@@ -200,7 +217,7 @@ extern int slcan_close_channel(slcan_port_t port);
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_write_message(slcan_port_t port, const slcan_message_t *message, uint16_t timeout);
+SLCANAPI slcan_write_message(slcan_port_t port, const slcan_message_t *message, uint16_t timeout);
 
 
 /** @brief       read one message from the message queue, if any.
@@ -228,7 +245,7 @@ extern int slcan_write_message(slcan_port_t port, const slcan_message_t *message
  *               a message queue overflow has occurred and that at least one
  *               CAN message has been lost.
  */
-extern int slcan_read_message(slcan_port_t port, slcan_message_t *message, uint16_t timeout);
+SLCANAPI slcan_read_message(slcan_port_t port, slcan_message_t *message, uint16_t timeout);
 
 
 /** @brief       read status flags.
@@ -250,7 +267,7 @@ extern int slcan_read_message(slcan_port_t port, slcan_message_t *message, uint1
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_status_flags(slcan_port_t port, slcan_flags_t *flags);
+SLCANAPI slcan_status_flags(slcan_port_t port, slcan_flags_t *flags);
 
 
 /** @brief       sets Acceptance Code Register (ACn Register of SJA1000).
@@ -273,7 +290,7 @@ extern int slcan_status_flags(slcan_port_t port, slcan_flags_t *flags);
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_acceptance_code(slcan_port_t port, uint32_t code);
+SLCANAPI slcan_acceptance_code(slcan_port_t port, uint32_t code);
 
 
 /** @brief       sets Acceptance Mask Register (AMn Register of SJA1000).
@@ -296,7 +313,7 @@ extern int slcan_acceptance_code(slcan_port_t port, uint32_t code);
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_acceptance_mask(slcan_port_t port, uint32_t mask);
+SLCANAPI slcan_acceptance_mask(slcan_port_t port, uint32_t mask);
 
 
 /** @brief       get version number of both SLCAN hardware and software.
@@ -319,7 +336,7 @@ extern int slcan_acceptance_mask(slcan_port_t port, uint32_t mask);
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_version_number(slcan_port_t port, uint8_t *hardware, uint8_t *software);
+SLCANAPI slcan_version_number(slcan_port_t port, uint8_t *hardware, uint8_t *software);
 
 
 /** @brief       get serial number of the SLCAN device.
@@ -341,14 +358,33 @@ extern int slcan_version_number(slcan_port_t port, uint8_t *hardware, uint8_t *s
  *  @retval      'errno'   - error code from called system functions:
  *                           'write', 'read', etc.
  */
-extern int slcan_serial_number(slcan_port_t port, uint32_t *number);
+SLCANAPI slcan_serial_number(slcan_port_t port, uint32_t *number);
+
+
+/** @brief       signal all waiting objects, if any.
+ *
+ *  @param[in]   port  - pointer to a SLCAN instance
+ *
+ *  @returns     0 if successful, or a negative value on error.
+ */
+SLCANAPI slcan_signal(slcan_port_t port);
+
+
+/** @brief       retrieves version information of the SLCAN API as a
+ *               zero-terminated string.
+ *
+ *  @param[out]  version_no - major and minor version number (optional)
+ *  @param[out]  patch_no   - patch number (optional)
+ *  @param[out]  build_no   - build number (optional)
+ * 
+ *  @returns     pointer to a zero-terminated string, or NULL on error.
+ */
+SLCANAPI char *slcan_api_version(uint16_t *version_no, uint8_t *patch_no, uint32_t *build_no);
 ```
 
 ## This and That
 
-### SourceMedley Repo
-
-The modules in this folder are from the **SourceMedley** repo which is a collection of reusable sources for C and C++ projects.
+The documentation of the SLCAN protocol can be found on [Lawicel CANUSB product page](https://www.canusb.com/products/canusb).
 
 ### Dual-License
 
