@@ -399,6 +399,7 @@ Mac and macOS are trademarks of Apple Inc., registered in the U.S. and other cou
 Windows is a registered trademarks of Microsoft Corporation in the United States and/or other countries. \
 POSIX is a registered of the Institute of Electrical and Electronic Engineers, Inc. \
 Linux is a registered trademark of Linus Torvalds. \
+Cygwin is a registered trademark of Red Hat, Inc. \
 All other company, product and service names mentioned herein may be trademarks, registered trademarks, or service marks of their respective owners.
 
 ### Contact

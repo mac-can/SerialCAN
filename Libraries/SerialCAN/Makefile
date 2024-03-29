@@ -1,5 +1,5 @@
 #
-#	SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces
+#	SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 #
 #	Copyright (c) 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
@@ -81,7 +81,7 @@ TARGET  = $(LIBRARY).$(VERSION).dylib
 STATIC  = $(LIBRARY).a
 
 INSTALL_NAME = $(TARGET)
-CURRENT_VERSION = $(MAJOR).$(MINOR).0
+CURRENT_VERSION = $(MAJOR).$(MINOR).$(PATCH)
 COMPATIBILITY_VERSION = $(MAJOR).$(MINOR).0
 
 INSTALL = /usr/local/lib

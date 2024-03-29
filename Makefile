@@ -1,5 +1,5 @@
 #
-#	SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces
+#	SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 #
 #	Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
@@ -50,7 +50,6 @@ all:
 	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
-	$(MAKE) -C Libraries/SLCAN $@
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
 
@@ -58,7 +57,6 @@ clean:
 	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
-	$(MAKE) -C Libraries/SLCAN $@
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
 
@@ -66,7 +64,6 @@ pristine:
 	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
-	$(MAKE) -C Libraries/SLCAN $@
 	$(MAKE) -C Utilities/can_test $@
 	$(MAKE) -C Utilities/can_moni $@
 
@@ -74,7 +71,6 @@ install:
 #	$(MAKE) -C Trial $@
 	$(MAKE) -C Libraries/SerialCAN $@
 	$(MAKE) -C Libraries/CANAPI $@
-	$(MAKE) -C Libraries/SLCAN $@
 #	$(MAKE) -C Utilities/can_test $@
 #	$(MAKE) -C Utilities/can_moni $@
 
