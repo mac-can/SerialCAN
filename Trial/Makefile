@@ -1,7 +1,7 @@
 #
 #	Trial Program
 #	SerialCAN (SLCAN protocol)
-#	Bart Simpson didn´t do it
+#	Bart Simpson didn't do it
 #
 current_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown OS')
 current_OS := $(patsubst CYGWIN%,Cygwin,$(current_OS))
@@ -9,7 +9,11 @@ current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
 
-TARGET  = slcan_test
+ifeq ($(current_OS),$(filter $(current_OS),Linux Darwin))
+TARGET  = slc_test
+else
+TARGET  = slc_test.exe
+endif
 
 INSTALL = ~/bin
 
@@ -54,7 +58,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 
 LDFLAGS  += 
 
-ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
+ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
 ifeq ($(BINARY),UNIVERSAL)
 CFLAGS += -arch arm64 -arch x86_64
 CXXFLAGS += -arch arm64 -arch x86_64
@@ -67,11 +71,11 @@ ifeq ($(HUNTER),BUGS)
 CHECKER += --bug-hunting
 endif
 endif
-ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
+ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
 CXX = clang++
 CC = clang
 LD = clang++
-else
+else  # Linux, Cygwin - libserialcan.so
 CXX = g++
 CC = gcc
 LD = g++
