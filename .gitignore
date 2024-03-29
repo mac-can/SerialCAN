@@ -1,6 +1,6 @@
 #.gitignore
-Sources/CANAPI/.svn
 Sources/build_no.h
+Sources/CANAPI/.svn
 Trial/.objects
 Trial/.vs
 Trial/x64
