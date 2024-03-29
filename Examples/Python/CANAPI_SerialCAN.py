@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 #
-#	SerialCAN - CAN API V3 Driver for CAN over Serial-line Interfaces
+#	SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 #
-#	Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
 #
 #	This file is part of SerialCAN.
@@ -54,7 +54,7 @@
 
     $Author: makemake $
 
-    $Rev: 1049 $
+    $Rev: 1261 $
 """
 from CANAPI import *
 from ctypes import *
