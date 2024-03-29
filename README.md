@@ -100,11 +100,6 @@ See header file `SerialCAN.h` for a description of all class members.
 ___libUVCANSLC___ is a dynamic library with a CAN API V3 compatible application programming interface for use in __C__ applications.
 See header file `can_api.h` for a description of all API functions.
 
-#### libSLCAN
-
-___libSLCAN___ is a dynamic library with a basic SLCAN application programming interface for use in __C__ applications.
-See header file `slcan.h` for a description of all API functions.
-
 #### can_moni
 
 `can_moni` is a command line tool to view incoming CAN messages.
