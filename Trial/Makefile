@@ -45,7 +45,8 @@ HEADERS = -I$(SOURCE_DIR) \
 	-I$(WRAPPER_DIR) \
 	-I$(MAIN_DIR)
 
-LIBRARIES = -lpthread
+
+ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
 
 CFLAGS += -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
@@ -58,28 +59,44 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 
 LDFLAGS  += 
 
-ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
 ifeq ($(BINARY),UNIVERSAL)
 CFLAGS += -arch arm64 -arch x86_64
 CXXFLAGS += -arch arm64 -arch x86_64
 LDFLAGS += -arch arm64 -arch x86_64
 endif
 
+LIBRARIES = -lpthread
+
 CHECKER  = warning,information
 IGNORE   = -i can_msg.c -i can_dev.c
 ifeq ($(HUNTER),BUGS)
 CHECKER += --bug-hunting
 endif
-endif
-ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
+
 CXX = clang++
 CC = clang
 LD = clang++
+
 else  # Linux, Cygwin - libserialcan.so
+
+CFLAGS += -O2 -Wall -Wno-parentheses \
+	-fno-strict-aliasing \
+	$(DEFINES) \
+	$(HEADERS)
+
+CXXFLAGS += -g -Wall -Wextra -pthread \
+	$(DEFINES) \
+	$(HEADERS)
+
+LDFLAGS  += 
+
+LIBRARIES = -lpthread
+
 CXX = g++
 CC = gcc
 LD = g++
 endif
+
 RM = rm -f
 CP = cp -f
 
