@@ -76,7 +76,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=1;OPTION_SERIAL_DEBUG_LEVEL=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=1;OPTION_SERIAL_DEBUG_LEVEL=3</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\Sources;..\Sources;..\Sources\CANAPI;..\Sources\SLCAN;..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -89,7 +89,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=1;OPTION_SERIAL_DEBUG_LEVEL=1</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=0;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=1;OPTION_SERIAL_DEBUG_LEVEL=3</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>.\Sources;..\Sources;..\Sources\CANAPI;..\Sources\SLCAN;..\Sources\Wrapper;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
