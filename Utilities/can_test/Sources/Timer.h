@@ -2,7 +2,7 @@
 //
 //  Software for Industrial Communication, Motion Control and Automation
 //
-//  Copyright (c) 2002-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (c) 2002-2023 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //  All rights reserved.
 //
 //  This class is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -50,6 +50,7 @@
 #pragma once
 #endif
 
+#include <time.h>
 #include <stdint.h>
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -80,8 +81,11 @@ public:
     bool Timeout();                     // time-out occurred?
 
     static bool Delay(uint32_t u32Delay); // delay timer
+
+    static struct timespec GetTime();  // time with nanosecond resolution
+    static double DiffTime(struct timespec start, struct timespec stop);
 };
 
 #endif // TIMER_H_INCLUDED
 
-// $Id: Timer.h 710 2021-05-25 15:35:30Z eris $  Copyright (c) UV Software, Berlin //
+// $Id: Timer.h 799 2023-10-07 19:15:23Z makemake $  Copyright (c) UV Software, Berlin //
