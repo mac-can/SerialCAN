@@ -21,6 +21,13 @@ current_OS := $(patsubst CYGWIN%,Cygwin,$(current_OS))
 current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
+
+ifeq ($(current_OS),$(filter $(current_OS),Linux Darwin))
+TARGET  = can_moni
+else
+TARGET  = can_moni.exe
+endif
+INSTALL = ~/bin
 PROJ_DIR = ../..
 HOME_DIR = .
 MAIN_DIR = ./Sources
@@ -31,13 +38,9 @@ CANAPI_DIR = $(PROJ_DIR)/Sources/CANAPI
 OBJECTS = $(OUTDIR)/main.o $(OUTDIR)/Timer.o $(OUTDIR)/Message.o $(OUTDIR)/can_msg.o
 
 
-ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
 
-VERSION = 0.1.1
 
-TARGET  = can_moni
 
-INSTALL = ~/bin
 
 DEFINES = -DOPTION_CANAPI_DRIVER=1 \
 	-DOPTION_CANAPI_COMPANIONS=1
@@ -47,6 +50,8 @@ HEADERS = -I$(MAIN_DIR) \
 	-I$(DRIVER_DIR) \
 	-I$(CANAPI_DIR)
 
+ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
+OBJECTS  += $(BINDIR)/libSerialCAN.a
 CFLAGS += -O2 -Wall -Wextra -Wno-parentheses \
 	-fno-strict-aliasing \
 	$(DEFINES) \
@@ -56,9 +61,7 @@ CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-OBJECTS  += $(BINDIR)/libSerialCAN.a
 
-LIBRARIES =
 
 LDFLAGS  += -lpthread \
 	-rpath /usr/local/lib
@@ -69,26 +72,19 @@ CXXFLAGS += -arch arm64 -arch x86_64
 LDFLAGS += -arch arm64 -arch x86_64
 endif
 
+LIBRARIES =
 CXX = clang++
 CC = clang
 LD = clang++
 
 
-else				# linux - libserialcan.so.1
+else  # linux - libserialcan.so
 
-VERSION = 0.1.99
+OBJECTS  += $(BINDIR)/libserialcan.a
 
-TARGET  = can_moni
 
-INSTALL = ~/bin
 
-DEFINES = -DOPTION_CANAPI_DRIVER=1 \
-	-DOPTION_CANAPI_COMPANIONS=1
 
-HEADERS = -I$(MAIN_DIR) \
-	-I$(HOME_DIR) \
-	-I$(DRIVER_DIR) \
-	-I$(CANAPI_DIR)
 
 CFLAGS += -O2 -Wall -Wextra -Wno-parentheses \
 	-fno-strict-aliasing \
@@ -99,11 +95,10 @@ CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-OBJECTS  += $(BINDIR)/libserialcan.a
+LDFLAGS  += -lpthread
 
 LIBRARIES =
 
-LDFLAGS  += -lpthread
 
 CXX = g++
 CC = gcc

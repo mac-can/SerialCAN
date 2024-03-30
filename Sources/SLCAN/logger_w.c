@@ -49,9 +49,9 @@
  *
  *  @remarks     Windows compatible variant (_WIN32 and _WIN64)
  *
- *  @author      $Author: haumea $
+ *  @author      $Author: quaoar $
  *
- *  @version     $Rev: 802 $
+ *  @version     $Rev: 809 $
  *
  *  @addtogroup  logger
  *  @{
@@ -100,7 +100,7 @@ static HANDLE hThread = NULL;
 static HANDLE hMutex = NULL;
 static HANDLE hPipo, hPipi;
 static FILE *logger = NULL;
-static int running = 0;
+static volatile int running = 0;
 
 
 /*  -----------  functions  ----------------------------------------------
@@ -146,6 +146,7 @@ int log_init(const char *pathname/*, flags*/)
     if (pathname) {
         if ((fopen_s(&logger, pathname, "w+")) != 0) {
             /* errno set */
+            CloseHandle(hThread);
             CloseHandle(hMutex);
             CloseHandle(hPipi);
             CloseHandle(hPipo);
@@ -174,8 +175,10 @@ int log_exit(void)
     }
     /* kill the logging thread and release all resources */
     running = 0;
+    (void)CancelIoEx(hPipo, NULL);  // to cancel ReadPipe
     (void)SetEvent(hThread);
     (void)WaitForSingleObject(hThread, 3000);
+    (void)CloseHandle(hThread);
     (void)CloseHandle(hMutex);
     (void)CloseHandle(hPipi);
     (void)CloseHandle(hPipo);

@@ -2,7 +2,7 @@
 //
 //  Software for Industrial Communication, Motion Control and Automation
 //
-//  Copyright (c) 2002-2021 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (c) 2002-2023 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //  All rights reserved.
 //
 //  This class is dual-licensed under the BSD 2-Clause "Simplified" License and
@@ -52,17 +52,26 @@ static char THIS_FILE[]=__FILE__;
 #include "Timer.h"
 
 #if !defined(_WIN32) && !defined(_WIN64)
+#include <errno.h>
 #include <unistd.h>
 #include <sys/time.h>
 #endif
+#define POSIX_DEPRECATED  0  /* set to non-zero value to use 'gettimeofday' and 'usleep'*/
 
-// TODO: replace `gettimeofday' by `clock_gettime' and `usleep' by `clock_nanosleep'
 CTimer::CTimer(uint32_t u32Microseconds) {
 #if !defined(_WIN32) && !defined(_WIN64)
+#if (POSIX_DEPRECATED != 0)
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    m_u64UntilStop = ((uint64_t)tv.tv_sec * (uint64_t)1000000) + (uint64_t)tv.tv_usec \
+    m_u64UntilStop = ((uint64_t)tv.tv_sec * (uint64_t)1000000) + (uint64_t)tv.tv_usec
                    + ((uint64_t)u32Microseconds);
+#else
+    struct timespec now = { 0, 0 };
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    m_u64UntilStop = ((uint64_t)now.tv_sec * (uint64_t)1000000)
+                   + ((uint64_t)now.tv_nsec / (uint64_t)1000)
+                   + ((uint64_t)u32Microseconds);
+#endif
 #else
     LARGE_INTEGER largeCounter;  // high-resolution performance counter
 
@@ -80,10 +89,18 @@ CTimer::CTimer(uint32_t u32Microseconds) {
 
 bool CTimer::Restart(uint32_t u32Microseconds) {
 #if !defined(_WIN32) && !defined(_WIN64)
+#if (POSIX_DEPRECATED != 0)
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    m_u64UntilStop = ((uint64_t)tv.tv_sec * (uint64_t)1000000) + (uint64_t)tv.tv_usec \
+    m_u64UntilStop = ((uint64_t)tv.tv_sec * (uint64_t)1000000) + (uint64_t)tv.tv_usec
                    + ((uint64_t)u32Microseconds);
+#else
+    struct timespec now = { 0, 0 };
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    m_u64UntilStop = ((uint64_t)now.tv_sec * (uint64_t)1000000)
+                   + ((uint64_t)now.tv_nsec / (uint64_t)1000)
+                   + ((uint64_t)u32Microseconds);
+#endif
     return true;
 #else
     LARGE_INTEGER largeCounter;  // high-resolution performance counter
@@ -101,9 +118,16 @@ bool CTimer::Restart(uint32_t u32Microseconds) {
 bool CTimer::Timeout() {
 #if !defined(_WIN32) && !defined(_WIN64)
     uint64_t u64Now;
+#if (POSIX_DEPRECATED != 0)
     struct timeval tv;
     gettimeofday(&tv, NULL);
     u64Now = ((uint64_t)tv.tv_sec * (uint64_t)1000000) + (uint64_t)tv.tv_usec;
+#else
+    struct timespec now = { 0, 0 };
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    u64Now = ((uint64_t)now.tv_sec * (uint64_t)1000000)
+           + ((uint64_t)now.tv_nsec / (uint64_t)1000);
+#endif
     if(u64Now < this->m_u64UntilStop)
         return false;
     else
@@ -124,7 +148,20 @@ bool CTimer::Timeout() {
 
 bool CTimer::Delay(uint32_t u32Microseconds) {
 #if !defined(_WIN32) && !defined(_WIN64)
+#if (POSIX_DEPRECATED != 0)
     return (usleep((useconds_t)u32Microseconds) != 0) ? false : true;
+#else
+    int rc;
+    struct timespec delay;
+    delay.tv_sec = (time_t)(u32Microseconds / CTimer::SEC);
+    delay.tv_nsec = (long)((u32Microseconds % CTimer::SEC) * (uint32_t)1000);
+    errno = 0;
+    while ((rc = nanosleep(&delay, &delay))) {
+        if (errno != EINTR)
+            break;
+    }
+    return (rc != 0) ? false : true;
+#endif
 #else
 # ifndef CTIMER_WAITABLE_TIMER
     LARGE_INTEGER largeFrequency;  // frequency in counts per second
@@ -173,4 +210,50 @@ bool CTimer::Delay(uint32_t u32Microseconds) {
 #endif
 }
 
-// $Id: Timer.cpp 710 2021-05-25 15:35:30Z eris $  Copyright (c) UV Software, Berlin //
+struct timespec CTimer::GetTime() {
+    struct timespec now = { 0, 0 };
+#if !defined(_WIN32) && !defined(_WIN64)
+    clock_gettime(CLOCK_REALTIME, &now);
+#else
+    static bool fInitialied = false;         // initialization flag
+    static struct timespec tsStartTime;      // time at first call (UTC)
+    static LARGE_INTEGER largeFrequency;     // frequency in counts per second
+    static LARGE_INTEGER largeStartCounter;  // high-resolution performance counter
+    LARGE_INTEGER largeCurrentCounter;
+
+    if (!fInitialied) {
+        // retrieve the frequency of the high-resolution performance counter
+        if (!QueryPerformanceFrequency(&largeFrequency))
+            return now;
+        // retrieve the value of the high-resolution performance counter
+        if (!QueryPerformanceCounter(&largeStartCounter))
+            return now;
+        // retrieve the time as struct timespec
+        if (!timespec_get(&tsStartTime, TIME_UTC))
+            return now;
+        fInitialied = true;
+    }
+    // retrieve the current value of the high-resolution performance counter
+    if (!QueryPerformanceCounter(&largeCurrentCounter))
+        return now;
+    // calculate the current time with nanosecond resolution
+    largeCurrentCounter.QuadPart -= largeStartCounter.QuadPart;
+    time_t sec = largeCurrentCounter.QuadPart / largeFrequency.QuadPart;
+    long nsec = (long)(((largeCurrentCounter.QuadPart - (sec * largeFrequency.QuadPart))
+              * 1000000000UL) / largeFrequency.QuadPart);
+    now.tv_sec = tsStartTime.tv_sec + sec;
+    now.tv_nsec = tsStartTime.tv_nsec + nsec;
+    if (now.tv_nsec >= 1000000000UL) {
+        now.tv_sec += 1;
+        now.tv_nsec -= 1000000000UL;
+    }
+#endif
+    return now;
+}
+
+double CTimer::DiffTime(struct timespec start, struct timespec stop) {
+    return (((double)stop.tv_sec  + ((double)stop.tv_nsec  / 1000000000.f)) -
+            ((double)start.tv_sec + ((double)start.tv_nsec / 1000000000.f)));
+}
+
+// $Id: Timer.cpp 799 2023-10-07 19:15:23Z makemake $  Copyright (c) UV Software, Berlin //
