@@ -34,14 +34,14 @@ rem build the CAN API V3 C library (dynamic and static)
 call msbuild.exe .\Libraries\CANAPI\uvcanslc.vcxproj /t:Clean;Build /p:"Configuration=Release_dll";"Platform=x64"
 if errorlevel 1 goto end
 
-call msbuild.exe .\Libraries\CANAPI\uvcanslc.vcxproj /t:Clean;Build /p:"Configuration=Debug_lib";"Platform=x64"
+call msbuild.exe .\Libraries\CANAPI\uvcanslc.vcxproj /t:Clean;Build /p:"Configuration=Release_lib";"Platform=x64"
 if errorlevel 1 goto end
 
 rem build the CAN API V3 C++ library (dynamic and static)
 call msbuild.exe .\Libraries\SerialCAN\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Release_dll";"Platform=x64"
 if errorlevel 1 goto end
 
-call msbuild.exe .\Libraries\SerialCAN\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Debug_lib";"Platform=x64"
+call msbuild.exe .\Libraries\SerialCAN\SerialCAN.vcxproj /t:Clean;Build /p:"Configuration=Release_lib";"Platform=x64"
 if errorlevel 1 goto end
 
 rem copy the arifacts into the Binaries folder
@@ -60,12 +60,13 @@ copy /Y .\Libraries\SerialCAN\x64\Release_dll\uvSerialCAN.lib %BIN%
 copy /Y .\Libraries\SerialCAN\x64\Release_dll\uvSerialCAN.pdb %BIN%
 set BIN="%BIN%\lib"
 if not exist %BIN% mkdir %BIN%
-copy /Y .\Libraries\CANAPI\x64\Debug_lib\u3canslc.lib %BIN%
-copy /Y .\Libraries\CANAPI\x64\Debug_lib\u3canslc.pdb %BIN%
-copy /Y .\Libraries\SerialCAN\x64\Debug_lib\uvSerialCAN.lib %BIN%
-copy /Y .\Libraries\SerialCAN\x64\Debug_lib\uvSerialCAN.pdb %BIN%
+copy /Y .\Libraries\CANAPI\x64\Release_lib\u3canslc.lib %BIN%
+copy /Y .\Libraries\CANAPI\x64\Release_lib\u3canslc.pdb %BIN%
+copy /Y .\Libraries\SerialCAN\x64\Release_lib\uvSerialCAN.lib %BIN%
+copy /Y .\Libraries\SerialCAN\x64\Release_lib\uvSerialCAN.pdb %BIN%
 echo Static libraries (x64) > %BIN%\readme.txt
 
+rem copy the header files into the Includes folder
 echo Copying header files...
 set INC=".\Includes"
 if not exist %INC% mkdir %INC%
@@ -77,12 +78,12 @@ copy /Y .\Sources\CANAPI\CANBTR_Defaults.h %INC%
 copy /Y .\Sources\CANAPI\can_api.h %INC%
 copy /Y .\Sources\CANAPI\can_btr.h %INC%
 
-rem build the utilities 'can_mone' and 'can_test'
-rem call msbuild.exe .\Utilities\can_moni\can_moni.vcxproj /t:Clean;Build /p:"Configuration=Release";"Platform=x64"
-rem if errorlevel 1 goto end
+rem build the utilities 'can_moni' and 'can_test'
+call msbuild.exe .\Utilities\can_moni\can_moni.vcxproj /t:Clean;Build /p:"Configuration=Release";"Platform=x64"
+if errorlevel 1 goto end
 
-rem call msbuild.exe .\Utilities\can_test\can_test.vcxproj /t:Clean;Build /p:"Configuration=Release";"Platform=x64"
-rem if errorlevel 1 goto end
+call msbuild.exe .\Utilities\can_test\can_test.vcxproj /t:Clean;Build /p:"Configuration=Release";"Platform=x64"
+if errorlevel 1 goto end
 
 rem copy the utilities into the Binaries folder
 echo Copying utilities...
@@ -90,8 +91,8 @@ set BIN=".\Binaries"
 if not exist %BIN% mkdir %BIN%
 set BIN="%BIN%\x64"
 if not exist %BIN% mkdir %BIN%
-rem copy /Y .\Utilities\can_moni\x64\Release\can_moni.exe %BIN%
-rem copy /Y .\Utilities\can_test\x64\Release\can_test.exe %BIN%
+copy /Y .\Utilities\can_moni\x64\Release\can_moni.exe %BIN%
+copy /Y .\Utilities\can_test\x64\Release\can_test.exe %BIN%
 
 rem end of the job
 :end
