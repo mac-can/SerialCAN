@@ -2,7 +2,7 @@
 //
 //  CAN Tester for CAN-over-Serial-Line Interfaces
 //
-//  Copyright (c) 2007,2016-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (c) 2008-2010,2016-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -50,10 +50,31 @@
 #define SERIAL_CAN_SUPPORTED  1  // requires additional parameter
 
 #define TESTER_INTEFACE   "CAN-over-Serial-Line Interfaces"
-#define TESTER_COPYRIGHT  "2007,2016-2024 by Uwe Vogt, UV Software, Berlin"
+#define TESTER_COPYRIGHT  "2008-2010,2016-2024 by Uwe Vogt, UV Software, Berlin"
 
 #include "SerialCAN.h"
 
 typedef CSerialCAN  CCanDriver;
+
+#define BITRATE_1M(x)    DEFAULT_CAN_BR_1M(x)
+#define BITRATE_800K(x)  DEFAULT_CAN_BR_800K(x)
+#define BITRATE_500K(x)  DEFAULT_CAN_BR_500K(x)
+#define BITRATE_250K(x)  DEFAULT_CAN_BR_250K(x)
+#define BITRATE_125K(x)  DEFAULT_CAN_BR_125K(x)
+#define BITRATE_100K(x)  DEFAULT_CAN_BR_100K(x)
+#define BITRATE_50K(x)   DEFAULT_CAN_BR_50K(x)
+#define BITRATE_20K(x)   DEFAULT_CAN_BR_20K(x)
+#define BITRATE_10K(x)   DEFAULT_CAN_BR_10K(x)
+
+#if (CAN_FD_SUPPORTED != 0)
+#define BITRATE_FD_1M(x)      DEFAULT_CAN_FD_BR_1M(x)
+#define BITRATE_FD_500K(x)    DEFAULT_CAN_FD_BR_500K(x)
+#define BITRATE_FD_250K(x)    DEFAULT_CAN_FD_BR_250K(x)
+#define BITRATE_FD_125K(x)    DEFAULT_CAN_FD_BR_125K(x)
+#define BITRATE_FD_1M8M(x)    DEFAULT_CAN_FD_BR_1M8M(x)
+#define BITRATE_FD_500K4M(x)  DEFAULT_CAN_FD_BR_500K4M(x)
+#define BITRATE_FD_250K2M(x)  DEFAULT_CAN_FD_BR_250K2M(x)
+#define BITRATE_FD_125K1M(x)  DEFAULT_CAN_FD_BR_125K1M(x)
+#endif
 
 #endif // DRIVER_H_INCLUDED
