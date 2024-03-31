@@ -1,17 +1,19 @@
 ### Library for CAN-over-Serial-Line Interfaces (SLCAN Protocol)
 
-_Copyright &copy; 2016, 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_ \
-_All rights reserved._
+_Copyright &copy; 2016, 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)_
+
+![macOS Build](https://github.com/mac-can/SerialCAN/actions/workflows/macOS-build.yml/badge.svg)
+![MSBuild x64](https://github.com/mac-can/SerialCAN/actions/workflows/msbuild-x64.yml/badge.svg)
 
 # CAN API V3 Library for CAN-over-Serial-Line Interfaces
 
 CAN API V3 is a wrapper specification to have a uniform CAN Interface API for various CAN interfaces from different vendors running under multiple operating systems.
 
 This repo contains the source code for _CAN-over-Serial-Line_ interfaces based on
-[Lawicel SLCAN protocol](http://www.can232.com/docs/canusb_manual.pdf).
+[Lawicel SLCAN protocol](https://www.canusb.com/products/canusb).
 It provides the build environments to build dynamic libraries on macOS&reg;, Linux&reg;, Cygwin&reg; and Windows&reg;,
-either as a C++ class library ([_libSerialCAN_](#libSerialCAN)),
-or as a _CAN API V3_ driver library ([_libUVCANSLC_](#libUVCANSLC)),
+either as a C++ class library ([libSerialCAN](#libSerialCAN)),
+or as a _CAN API V3_ driver library ([libUVCANSLC](#libUVCANSLC)),
 as well as my beloved utilities [`can_moni`](#can_moni) and [`can_test`](#can_test),
 and some C/C++ example programs.
 
@@ -132,7 +134,7 @@ Windows&reg; (x64 operating system):
 
 #### macOS Sonoma
 
-- macOS Sonoma (14.4) on a Mac mini (M1, 2020)
+- macOS Sonoma (14.4.1) on a Mac mini (M1, 2020)
 - Apple clang version 15.0.0 (clang-1500.3.9.4)
 - Xcode Version 15.3 (15E204a)
 
@@ -148,14 +150,14 @@ Windows&reg; (x64 operating system):
 - Apple LLVM version 10.0.0 (clang-1000.11.45.5)
 - Xcode Version 10.1 (10B61)
 
-#### Debian Bullseye (11.2)
+#### Debian "bookworm" (12.5)
 
-- Debian 4.19.160-2 (2020-11-18) x86_64 GNU/Linux
-- gcc (Debian 10.2.1-6) 10.2.1 20210110
+- Debian 6.1,76-1 (2024-02-01) x86_64 GNU/Linux
+- gcc (Debian 12.2.0-14) 12.2.0
 
 #### Cygwin (64-bit)
 
-- Cygwin  3.5.1-1.x86_64 under Windows 10 Pro
+- Cygwin 3.5.1-1.x86_64 2024-02-27 11:54 UTC x86_64 Cygwin
 - GNU C/C++ Compiler (GCC) 11.4.0
 
 #### Windows 10 & 11
