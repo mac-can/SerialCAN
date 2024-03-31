@@ -27,7 +27,6 @@ TARGET  = can_test
 else
 TARGET  = can_test.exe
 endif
-
 INSTALL = ~/bin
 
 PROJ_DIR = ../..
@@ -136,7 +135,7 @@ install:
 	$(CP) $(TARGET) $(INSTALL)
 
 
-$(OUTDIR)/main.o: $(MAIN_DIR)/main.cpp
+$(OUTDIR)/main.o: $(MAIN_DIR)/main.cpp $(MAIN_DIR)/main_p.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 $(OUTDIR)/Timer.o: $(MAIN_DIR)/Timer.cpp

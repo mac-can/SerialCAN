@@ -28,6 +28,7 @@ else
 TARGET  = can_moni.exe
 endif
 INSTALL = ~/bin
+
 PROJ_DIR = ../..
 HOME_DIR = .
 MAIN_DIR = ./Sources
@@ -37,11 +38,6 @@ CANAPI_DIR = $(PROJ_DIR)/Sources/CANAPI
 
 OBJECTS = $(OUTDIR)/main.o $(OUTDIR)/Timer.o $(OUTDIR)/Message.o $(OUTDIR)/can_msg.o
 
-
-
-
-
-
 DEFINES = -DOPTION_CANAPI_DRIVER=1 \
 	-DOPTION_CANAPI_COMPANIONS=1
 
@@ -50,8 +46,11 @@ HEADERS = -I$(MAIN_DIR) \
 	-I$(DRIVER_DIR) \
 	-I$(CANAPI_DIR)
 
+
 ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
+
 OBJECTS  += $(BINDIR)/libSerialCAN.a
+
 CFLAGS += -O2 -Wall -Wextra -Wno-parentheses \
 	-fno-strict-aliasing \
 	$(DEFINES) \
@@ -60,8 +59,6 @@ CFLAGS += -O2 -Wall -Wextra -Wno-parentheses \
 CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
-
-
 
 LDFLAGS  += -lpthread \
 	-rpath /usr/local/lib
@@ -73,18 +70,14 @@ LDFLAGS += -arch arm64 -arch x86_64
 endif
 
 LIBRARIES =
+
 CXX = clang++
 CC = clang
 LD = clang++
 
-
 else  # linux - libserialcan.so
 
 OBJECTS  += $(BINDIR)/libserialcan.a
-
-
-
-
 
 CFLAGS += -O2 -Wall -Wextra -Wno-parentheses \
 	-fno-strict-aliasing \
@@ -98,7 +91,6 @@ CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 LDFLAGS  += -lpthread
 
 LIBRARIES =
-
 
 CXX = g++
 CC = gcc
@@ -143,7 +135,7 @@ install:
 	$(CP) $(TARGET) $(INSTALL)
 
 
-$(OUTDIR)/main.o: $(MAIN_DIR)/main.cpp
+$(OUTDIR)/main.o: $(MAIN_DIR)/main.cpp $(MAIN_DIR)/main_p.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 $(OUTDIR)/Timer.o: $(MAIN_DIR)/Timer.cpp

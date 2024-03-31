@@ -68,7 +68,7 @@ endif
 LIBRARIES = -lpthread
 
 CHECKER  = warning,information
-IGNORE   = -i can_msg.c -i can_dev.c
+IGNORE   = -i serial_w.c -i buffer_w.c -i queue_w.c -i logger_w.c -i can_msg.c -i can_dev.c
 ifeq ($(HUNTER),BUGS)
 CHECKER += --bug-hunting
 endif
@@ -117,7 +117,7 @@ outdir:
 	@mkdir -p $(OUTDIR)
 
 check:
-ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
+ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
 	cppcheck --enable=$(CHECKER) --suppressions-list=$(HOME_DIR)/suppress.txt \
 	-D__APPLE__ $(DEFINES) $(HEADERS) $(IGNORE) $(SOURCE_DIR)
 else
