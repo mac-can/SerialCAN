@@ -12,6 +12,7 @@ Trial/*.vcxproj.user
 Libraries/CANAPI/.objects
 Libraries/CANAPI/*.dylib
 Libraries/CANAPI/*.so.*
+Libraries/CANAPI/*.a
 Libraries/CANAPI/.vs
 Libraries/CANAPI/x64
 Libraries/CANAPI/x86
@@ -24,6 +25,7 @@ Libraries/CANAPI/*.vcxproj.user
 Libraries/SerialCAN/.objects
 Libraries/SerialCAN/*.dylib
 Libraries/SerialCAN/*.so.*
+Libraries/SerialCAN/*.a
 Libraries/SerialCAN/.vs
 Libraries/SerialCAN/x64
 Libraries/SerialCAN/x86
