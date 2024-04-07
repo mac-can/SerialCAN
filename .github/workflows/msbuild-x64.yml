@@ -37,4 +37,4 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: ${{env.SOLUTION_FILE_PATH}}\x64_build.bat NOVARS NOTRIAL
+      run: ${{env.SOLUTION_FILE_PATH}}\x64_build.bat NOVARS NOTRIAL NODEBUG
