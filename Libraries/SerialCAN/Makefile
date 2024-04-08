@@ -67,10 +67,24 @@ SERIAL_DIR = $(HOME_DIR)/Sources/SLCAN
 CANAPI_DIR = $(HOME_DIR)/Sources/CANAPI
 WRAPPER_DIR = $(HOME_DIR)/Sources/Wrapper
 
-OBJECTS = $(OUTDIR)/SerialCAN.o \
-	$(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o \
+OBJECTS = $(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
-	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o
+	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o \
+	$(OUTDIR)/SerialCAN.o
+
+
+DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
+	-DOPTION_CANAPI_DRIVER=1 \
+	-DOPTION_CANAPI_RETVALS=0 \
+	-DOPTION_CANAPI_COMPANIONS=1 \
+	-DOPTION_CANAPI_DEBUG_LEVEL=0 \
+	-DOPTION_SERIAL_DEBUG_LEVEL=0 \
+	-DOPTION_SLCAN_DEBUG_LEVEL=0
+
+HEADERS = -I$(SOURCE_DIR) \
+	-I$(CANAPI_DIR) \
+	-I$(SERIAL_DIR) \
+	-I$(WRAPPER_DIR)
 
 
 ifeq ($(current_OS),Darwin) # macOS - libSerialCAN.dylib
@@ -86,23 +100,8 @@ COMPATIBILITY_VERSION = $(MAJOR).$(MINOR).0
 
 INSTALL = /usr/local/lib
 
-INCLUDE = /usr/local/include
-
-DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
-	-DOPTION_SERIALCAN_DYLIB=1 \
-	-DOPTION_CANAPI_DRIVER=1 \
-	-DOPTION_CANAPI_RETVALS=0 \
-	-DOPTION_CANAPI_COMPANIONS=1 \
-	-DOPTION_CANAPI_DEBUG_LEVEL=0 \
-	-DOPTION_SERIAL_DEBUG_LEVEL=0 \
-	-DOPTION_SLCAN_DEBUG_LEVEL=0
-
-HEADERS = -I$(SOURCE_DIR) \
-	-I$(CANAPI_DIR) \
-	-I$(SERIAL_DIR) \
-	-I$(WRAPPER_DIR)
-
-LIBRARIES = -lpthread
+DEFINES += -DOPTION_SERIALCAN_DYLIB=1 \
+	-DOPTION_CANAPI_SERIALCAN_DYLIB=0
 
 CFLAGS += -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
@@ -113,7 +112,7 @@ CXXFLAGS += -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LDFLAGS  += -nostartfiles -dynamiclib -fvisibility=hidden \
+LDFLAGS += -nostartfiles -dynamiclib -fvisibility=hidden \
 	-install_name @rpath/$(INSTALL_NAME) \
 	-current_version $(CURRENT_VERSION) \
 	-compatibility_version $(COMPATIBILITY_VERSION)
@@ -126,11 +125,14 @@ CXXFLAGS += -arch arm64 -arch x86_64
 LDFLAGS += -arch arm64 -arch x86_64
 endif
 
+LIBRARIES = -lpthread
+
 CXX = clang++
 CC = clang
 LD = clang++
 LT = libtool
 endif
+
 
 ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin)) # linux - libserial.so.1
 
@@ -142,42 +144,30 @@ STATIC  = $(LIBRARY).a
 
 INSTALL = /usr/local/lib
 
-INCLUDE = /usr/local/include
-
-DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
-	-DOPTION_SERIALCAN_SO=1 \
-	-DOPTION_CANAPI_DRIVER=1 \
-	-DOPTION_CANAPI_RETVALS=0 \
-	-DOPTION_CANAPI_COMPANIONS=1 \
-	-DOPTION_CANAPI_DEBUG_LEVEL=0 \
-	-DOPTION_SERIAL_DEBUG_LEVEL=0 \
-	-DOPTION_SLCAN_DEBUG_LEVEL=0
-
-HEADERS = -I$(SOURCE_DIR) \
-	-I$(CANAPI_DIR) \
-	-I$(SERIAL_DIR) \
-	-I$(WRAPPER_DIR)
+DEFINES += -DOPTION_SERIALCAN_SO=1 \
+	-DOPTION_CANAPI_SERIALCAN_SO=0
 
 CFLAGS += -fPIC -O2 -Wall -Wno-parentheses \
 	-fno-strict-aliasing \
 	$(DEFINES) \
 	$(HEADERS)
 
-LIBRARIES = -lpthread
-
 CXXFLAGS += -fPIC -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LDFLAGS  += --shared -Wl,-soname,$(SONAME) -lc
+LDFLAGS += --shared -Wl,-soname,$(SONAME)
 
 ARFLAGS = r
+
+LIBRARIES = -lc -lpthread
 
 CXX = g++
 CC = gcc
 LD = g++
 AR = ar
 endif
+
 
 RM = rm -f
 CP = cp -f
@@ -221,9 +211,10 @@ ifeq ($(current_OS),Darwin)
 	$(RM) $(BINDIR)/*.dylib $(BINDIR)/*.a
 endif
 ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
-	$(RM) *.so *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
-	$(RM) $(BINDIR)/*.so $(BINDIR)/*.a
+	$(RM) *.so.* *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	$(RM) $(BINDIR)/*.so.* $(BINDIR)/*.a
 endif
+	$(RM) $(INCDIR)/*.h
 
 install:
 	@echo "Copying library file..."
@@ -266,14 +257,11 @@ $(STATIC): $(OBJECTS)
 ifeq ($(current_OS),Darwin)
 	$(LT) $(LTFLAGS) -o $@ $(OBJECTS)
 	@lipo -archs $@
-	$(CP) $(STATIC) $(BINDIR)
-	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
-endif
-ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
+else
 	$(AR) $(ARFLAGS) $@ $(OBJECTS)
+endif
 	$(CP) $(STATIC) $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
-endif
 
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
