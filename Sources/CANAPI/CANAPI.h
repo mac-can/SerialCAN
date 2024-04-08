@@ -73,9 +73,9 @@
 ///              zero to compile your program with the CAN API source files or to
 ///              link your program with the static library at compile-time.
 ///
-/// \author      $Author: haumea $
+/// \author      $Author: quaoar $
 //
-/// \version     $Rev: 1260 $
+/// \version     $Rev: 1268 $
 //
 /// \defgroup    can_api CAN Interface API, Version 3
 /// \{
@@ -227,21 +227,16 @@ public:
     static bool GetFirstChannel(SChannelInfo &info, void *param = NULL);
 #endif
 
-    /// \brief       query channel information of the first CAN interface in the
+    /// \brief       query channel information of the next CAN interface in the
     ///              list of CAN interfaces, if any.
     //
-    /// \param[in]   library - library id of the CAN interface list, or -1 for all vendors
     /// \param[out]  info    - the channel information of the next entry in the list
     /// \param[out]  param   - pointer to channel-specific parameters
     //
     /// \returns     true if channel information have been successfully read, or
     ///              false on error.
     //
-#if (OPTION_CANAPI_LIBRARY != 0)
-    static bool GetNextChannel(int32_t library, SChannelInfo &info, void *param = NULL);
-#else
-   static bool GetNextChannel(SChannelInfo &info, void *param = NULL);
-#endif
+    static bool GetNextChannel(SChannelInfo &info, void *param = NULL);
 
     /// \brief       probes if the CAN interface (hardware and driver) given by
     ///              the argument [ 'library' and ] 'channel' is present,
@@ -520,4 +515,4 @@ public:
 /// \}
 #endif // CANAPI_H_INCLUDED
 /// \}
-// $Id: CANAPI.h 1260 2024-03-24 15:16:47Z haumea $  Copyright (c) UV Software //
+// $Id: CANAPI.h 1268 2024-04-08 07:19:23Z quaoar $  Copyright (c) UV Software //
