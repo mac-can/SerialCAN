@@ -19,6 +19,7 @@
 //
 #include "Driver.h"
 #include "Timer.h"
+#include "Version.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -34,6 +35,19 @@ extern "C" {
 
 #include <inttypes.h>
 
+#if defined(_WIN64)
+#define PLATFORM  "x64"
+#elif defined(_WIN32)
+#define PLATFORM  "x86"
+#elif defined(__linux__)
+#define PLATFORM  "Linux"
+#elif defined(__APPLE__)
+#define PLATFORM  "macOS"
+#elif defined(__CYGWIN__)
+#define PLATFORM  "Cygwin"
+#else
+#error Platform not supported
+#endif
 #ifdef _MSC_VER
 //not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
 #define strncasecmp _strnicmp

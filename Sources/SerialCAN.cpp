@@ -45,27 +45,6 @@
 //  You should have received a copy of the GNU General Public License
 //  along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
 //
-#include "build_no.h"
-#define VERSION_MAJOR    0
-#define VERSION_MINOR    1
-#define VERSION_PATCH    2
-#define VERSION_BUILD    BUILD_NO
-#define VERSION_STRING   TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) "." TOSTRING(VERSION_PATCH) " (" TOSTRING(BUILD_NO) ")"
-#if defined(_WIN64)
-#define PLATFORM        "x64"
-#elif defined(_WIN32)
-#define PLATFORM        "x86"
-#elif defined(__linux__)
-#define PLATFORM        "Linux"
-#elif defined(__APPLE__)
-#define PLATFORM        "macOS"
-#elif defined(__CYGWIN__)
-#define PLATFORM        "Cygwin"
-#else
-#error Platform not supported
-#endif
-static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
-
 #ifdef _MSC_VER
 //no Microsoft extensions please!
 #ifndef _CRT_SECURE_NO_WARNINGS
@@ -73,6 +52,8 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 #endif
 #endif
 #include "SerialCAN.h"
+#include "Version.h"
+
 #include "can_defs.h"
 #include "can_api.h"
 #include "can_btr.h"
@@ -82,6 +63,41 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 #include <errno.h>
 #include <assert.h>
 #include <limits.h>
+
+#if defined(_WIN64)
+#define PLATFORM  "x64"
+#elif defined(_WIN32)
+#define PLATFORM  "x86"
+#elif defined(__linux__)
+#define PLATFORM  "Linux"
+#elif defined(__APPLE__)
+#define PLATFORM  "macOS"
+#elif defined(__CYGWIN__)
+#define PLATFORM  "Cygwin"
+#else
+#error Platform not supported
+#endif
+#ifndef _MSC_VER
+#define STRCPY_S(dest,size,src)         strcpy(dest,src)
+#define STRNCPY_S(dest,size,src,len)    strncpy(dest,src,len)
+#define SSCANF_S(buf,format,...)        sscanf(buf,format,__VA_ARGS__)
+#define SPRINTF_S(buf,size,format,...)  snprintf(buf,size,format,__VA_ARGS__)
+#else
+#define STRCPY_S(dest,size,src)         strcpy_s(dest,size,src)
+#define STRNCPY_S(dest,size,src,len)    strncpy_s(dest,size,src,len)
+#define SSCANF_S(buf,format,...)        sscanf_s(buf,format,__VA_ARGS__)
+#define SPRINTF_S(buf,size,format,...)  sprintf_s(buf,size,format,__VA_ARGS__)
+#endif
+#if !defined(_WIN32) && !defined(_WIN64)
+#define SERIAL_PORTNAME  "/dev/ttyS%i"
+#else
+#define SERIAL_PORTNAME  "\\\\.\\COM%i"
+#endif
+#define SERIAL_BAUDRATE  57600U
+#define SERIAL_BYTESIZE  CANSIO_8DATABITS
+#define SERIAL_PARITY    CANSIO_NOPARITY
+#define SERIAL_STOPBITS  CANSIO_1STOPBIT
+#define SERIAL_OPTIONS  (CANSIO_SLCAN)
 
 #if ((OPTION_SERIALCAN_DYLIB != 0) || (OPTION_SERIALCAN_SO != 0))
 __attribute__((constructor))
@@ -97,28 +113,7 @@ static void _finalizer() {
 #define EXPORT
 #endif
 
-#ifndef _MSC_VER
-#define STRCPY_S(dest,size,src)         strcpy(dest,src)
-#define STRNCPY_S(dest,size,src,len)    strncpy(dest,src,len)
-#define SSCANF_S(buf,format,...)        sscanf(buf,format,__VA_ARGS__)
-#define SPRINTF_S(buf,size,format,...)  snprintf(buf,size,format,__VA_ARGS__)
-#else
-#define STRCPY_S(dest,size,src)         strcpy_s(dest,size,src)
-#define STRNCPY_S(dest,size,src,len)    strncpy_s(dest,size,src,len)
-#define SSCANF_S(buf,format,...)        sscanf_s(buf,format,__VA_ARGS__)
-#define SPRINTF_S(buf,size,format,...)  sprintf_s(buf,size,format,__VA_ARGS__)
-#endif
-
-#if !defined(_WIN32) && !defined(_WIN64)
-#define SERIAL_PORTNAME  "/dev/ttyS%i"
-#else
-#define SERIAL_PORTNAME  "\\\\.\\COM%i"
-#endif
-#define SERIAL_BAUDRATE  57600U
-#define SERIAL_BYTESIZE  CANSIO_8DATABITS
-#define SERIAL_PARITY    CANSIO_NOPARITY
-#define SERIAL_STOPBITS  CANSIO_1STOPBIT
-#define SERIAL_OPTIONS  (CANSIO_SLCAN)
+static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 
 EXPORT
 CSerialCAN::CSerialCAN() {

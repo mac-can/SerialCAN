@@ -19,25 +19,9 @@
 //
 #ifndef DRIVER_H_INCLUDED
 #define DRIVER_H_INCLUDED
-#include "build_no.h"
-#define VERSION_MAJOR      0
-#define VERSION_MINOR      1
-#define VERSION_PATCH      2
-#define VERSION_BUILD      BUILD_NO
-#define VERSION_STRING     TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) "." TOSTRING(VERSION_PATCH) " (" TOSTRING(BUILD_NO) ")"
-#if defined(_WIN64)
-#define PLATFORM          "x64"
-#elif defined(_WIN32)
-#define PLATFORM          "x86"
-#elif defined(__linux__)
-#define PLATFORM          "Linux"
-#elif defined(__APPLE__)
-#define PLATFORM          "macOS"
-#elif defined(__CYGWIN__)
-#define PLATFORM          "Cygwin"
-#else
-#error Platform not supported
-#endif
+
+#include "SerialCAN.h"
+
 #if (OPTION_CAN_2_0_ONLY != 0)
 #ifdef _MSC_VER
 #pragma message ( "Compilation with legacy CAN 2.0 frame format!" )
@@ -51,10 +35,6 @@
 
 #define MONITOR_INTEFACE  "CAN-over-Serial-Line Interfaces"
 #define MONITOR_COPYRIGHT "2007,2016-2024 by Uwe Vogt, UV Software, Berlin"
-
-#include "SerialCAN.h"
-
-typedef CSerialCAN  CCanDriver;
 
 #define BITRATE_1M(x)    DEFAULT_CAN_BR_1M(x)
 #define BITRATE_800K(x)  DEFAULT_CAN_BR_800K(x)
@@ -76,5 +56,7 @@ typedef CSerialCAN  CCanDriver;
 #define BITRATE_FD_250K2M(x)  DEFAULT_CAN_FD_BR_250K2M(x)
 #define BITRATE_FD_125K1M(x)  DEFAULT_CAN_FD_BR_125K1M(x)
 #endif
+
+typedef CSerialCAN  CCanDriver;
 
 #endif // DRIVER_H_INCLUDED

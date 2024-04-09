@@ -49,44 +49,32 @@
 /** @addtogroup  can_api
  *  @{
  */
-#include "build_no.h"
-#define VERSION_MAJOR    0
-#define VERSION_MINOR    1
-#define VERSION_PATCH    2
-#define VERSION_BUILD    BUILD_NO
-#define VERSION_STRING   TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) "." TOSTRING(VERSION_PATCH) " (" TOSTRING(BUILD_NO) ")"
 #if defined(_WIN64)
-#define PLATFORM        "x64"
+#define PLATFORM  "x64"
 #elif defined(_WIN32)
-#define PLATFORM        "x86"
+#define PLATFORM  "x86"
 #elif defined(__linux__)
-#define PLATFORM        "Linux"
+#define PLATFORM  "Linux"
 #elif defined(__APPLE__)
-#define PLATFORM        "macOS"
+#define PLATFORM  "macOS"
 #elif defined(__CYGWIN__)
-#define PLATFORM        "Cygwin"
+#define PLATFORM  "Cygwin"
 #else
 #error Platform not supported
 #endif
-static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
-
-
-/*  -----------  includes  -----------------------------------------------
- */
 #ifdef _MSC_VER
 //no Microsoft extensions please!
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 #endif
+
+/*  -----------  includes  -----------------------------------------------
+ */
 #include "can_defs.h"
 #include "can_api.h"
 #include "can_btr.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-#include <errno.h>
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include "slcan.h"
@@ -94,14 +82,15 @@ static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, V
 #include <unistd.h>
 #include "slcan.h"
 #endif
+#include "Version.h"
 
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+#include <errno.h>
 
 /*  -----------  options  ------------------------------------------------
  */
-#if (OPTION_CAN_2_0_ONLY != 0)
-/* Compilation with legacy CAN 2.0 frame format! */
-#endif
-
 #if ((OPTION_CANAPI_SERIALCAN_DYLIB != 0) || (OPTION_CANAPI_SERIALCAN_SO != 0))
 __attribute__((constructor))
 static void _initializer() {
@@ -178,6 +167,7 @@ static void var_init(void);             // initialize variables
 
 /*  -----------  variables  ----------------------------------------------
  */
+static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 
 EXPORT
 can_board_t can_boards[CANSIO_BOARDS+1] = {  // list of supported CAN Interfaces
