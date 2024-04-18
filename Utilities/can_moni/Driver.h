@@ -32,6 +32,7 @@
 #define CAN_FD_SUPPORTED   1  // don't touch that dial!
 #endif
 #define SERIAL_CAN_SUPPORTED  1  // requires additional parameter
+#define BITRATE_800K_UNSUPPORTED  1  // set to zero if 800kbps is supported
 
 #define MONITOR_INTEFACE  "CAN-over-Serial-Line Interfaces"
 #define MONITOR_COPYRIGHT "2007,2016-2024 by Uwe Vogt, UV Software, Berlin"
