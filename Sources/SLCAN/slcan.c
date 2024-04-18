@@ -1,12 +1,14 @@
 /*  SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later */
 /*
- *  Controller Area Network - Lawicel SLCAN Protocol (Serial-Line CAN)
+ *  Software for Industrial Communication, Motion Control and Automation
  *
- *  Copyright (c) 2016-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2002-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
- *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
- *  under the GNU General Public License v3.0 (or any later version).
+ *  Module 'SLCAN'
+ *
+ *  This module is dual-licensed under the BSD 2-Clause "Simplified" License
+ *  and under the GNU General Public License v3.0 (or any later version).
  *  You can choose between one of them if you use this module.
  *
  *  BSD 2-Clause "Simplified" License:
@@ -49,7 +51,7 @@
  *
  *  @author      $Author: quaoar $
  *
- *  @version     $Rev: 808 $
+ *  @version     $Rev: 811 $
  *
  *  @addtogroup  slcan
  *  @{
@@ -787,7 +789,7 @@ int slcan_serial_number(slcan_port_t port, uint32_t *number) {
 EXPORT
 char *slcan_api_version(uint16_t *version_no, uint8_t *patch_no, uint32_t *build_no) {
     static char str[100 + 1] = "Try to relaxe and enjoy the crisis.";
-    const char svn[17 + 1] = "$Rev: 808 $";
+    const char svn[17 + 1] = "$Rev: 811 $";
     unsigned rev = 0u;
 
     /* determine pseudo build no. from SVN revision */
