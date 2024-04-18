@@ -142,8 +142,8 @@ static char* option[MAX_OPTIONS] = {
 class CCanDevice : public CCanDriver {
 public:
     uint64_t ReceiverTest(bool checkCounter = false, uint64_t expectedNumber = 0U, bool stopOnError = false);
-    uint64_t TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id = 0x100U, uint8_t dlc = 0U, uint32_t delay = 0U, uint64_t offset = 0U);
-    uint64_t TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random = false, uint32_t id = 0x100U, uint8_t dlc = 0U, uint32_t delay = 0U, uint64_t offset = 0U);
+    uint64_t TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id = 0x100U, uint8_t dlc = 0U, uint64_t delay = 0U, uint64_t offset = 0U);
+    uint64_t TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random = false, uint32_t id = 0x100U, uint8_t dlc = 0U, uint64_t delay = 0U, uint64_t offset = 0U);
 public:
     static int ListCanDevices(void);
     static int TestCanDevices(CANAPI_OpMode_t opMode);
@@ -838,13 +838,13 @@ int main(int argc, const char * argv[]) {
     /* - do your job well: */
     switch (mode) {
     case TxMODE:    /* transmitter test (duration) */
-        (void)canDevice.TransmitterTest((time_t)txtime, opMode, (uint32_t)can_id, (uint8_t)can_dlc, (uint32_t)delay, (uint64_t)number);
+        (void)canDevice.TransmitterTest((time_t)txtime, opMode, (uint32_t)can_id, (uint8_t)can_dlc, (uint64_t)delay, (uint64_t)number);
         break;
     case TxFRAMES:  /* transmitter test (frames) */
-        (void)canDevice.TransmitterTest((uint64_t)txframes, opMode, false, (uint32_t)can_id, (uint8_t)can_dlc, (uint32_t)delay, (uint64_t)number);
+        (void)canDevice.TransmitterTest((uint64_t)txframes, opMode, false, (uint32_t)can_id, (uint8_t)can_dlc, (uint64_t)delay, (uint64_t)number);
         break;
     case TxRANDOM:  /* transmitter test (random) */
-        (void)canDevice.TransmitterTest((uint64_t)txframes, opMode, true, (uint32_t)can_id, (uint8_t)can_dlc, (uint32_t)delay, (uint64_t)number);
+        (void)canDevice.TransmitterTest((uint64_t)txframes, opMode, true, (uint32_t)can_id, (uint8_t)can_dlc, (uint64_t)delay, (uint64_t)number);
         break;
     default:        /* receiver test (abort with Ctrl+C) */
         (void)canDevice.ReceiverTest((bool)n, (uint64_t)number, (bool)stop_on_error);
@@ -936,23 +936,21 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
     if (opMode.fdoe) {
         if (opMode.brse) {
             fprintf(stdout, "CAN FD with Bit-rate Switching (BRS):\n");
-            BITRATE_FD_1M8M(bitrate[0]);
-            BITRATE_FD_500K4M(bitrate[1]);
-            BITRATE_FD_250K2M(bitrate[2]);
-            BITRATE_FD_125K1M(bitrate[3]);
+            BITRATE_FD_1M8M(bitrate[n]); n += 1;
+            BITRATE_FD_500K4M(bitrate[n]); n += 1;
+            BITRATE_FD_250K2M(bitrate[n]); n += 1;
+            BITRATE_FD_125K1M(bitrate[n]); n += 1;
             hasDataPhase = true;
             hasNoSamp = false;
-            n = 4;
         }
         else {
             fprintf(stdout, "CAN FD without Bit-rate Switching (BRS):\n");
-            BITRATE_FD_1M(bitrate[0]);
-            BITRATE_FD_500K(bitrate[1]);
-            BITRATE_FD_250K(bitrate[2]);
-            BITRATE_FD_125K(bitrate[3]);
+            BITRATE_FD_1M(bitrate[n]); n += 1;
+            BITRATE_FD_500K(bitrate[n]); n += 1;
+            BITRATE_FD_250K(bitrate[n]); n += 1;
+            BITRATE_FD_125K(bitrate[n]); n += 1;
             hasDataPhase = false;
             hasNoSamp = false;
-            n = 4;
         }
     }
     else {
@@ -960,18 +958,19 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
     {
 #endif
         fprintf(stdout, "Classical CAN:\n");
-        BITRATE_1M(bitrate[0]);
-        BITRATE_800K(bitrate[1]);
-        BITRATE_500K(bitrate[2]);
-        BITRATE_250K(bitrate[3]);
-        BITRATE_125K(bitrate[4]);
-        BITRATE_100K(bitrate[5]);
-        BITRATE_50K(bitrate[6]);
-        BITRATE_20K(bitrate[7]);
-        BITRATE_10K(bitrate[8]);
+        BITRATE_1M(bitrate[n]); n += 1;
+#if (BITRATE_800K_UNSUPPORTED == 0)
+        BITRATE_800K(bitrate[n]); n += 1;
+#endif
+        BITRATE_500K(bitrate[n]); n += 1;
+        BITRATE_250K(bitrate[n]); n += 1;
+        BITRATE_125K(bitrate[n]); n += 1;
+        BITRATE_100K(bitrate[n]); n += 1;
+        BITRATE_50K(bitrate[n]); n += 1;
+        BITRATE_20K(bitrate[n]); n += 1;
+        BITRATE_10K(bitrate[n]); n += 1;
         hasDataPhase = false;
         hasNoSamp = true;
-        n = 9;
     }
     for (i = 0; i < n; i++) {
         if ((retVal = CCanDevice::MapBitrate2Speed(bitrate[i], speed)) == CCanApi::NoError) {
@@ -979,6 +978,8 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
 #if (CAN_FD_SUPPORTED != 0)
             if (opMode.brse)
                 fprintf(stdout, ":%4.0fkbps@%.1f%%", speed.data.speed / 1000., speed.data.samplepoint * 100.);
+#else
+            (void)opMode;  // to avoid compiler warnings
 #endif
         }
         strcpy(string, "=oops, something went wrong!");
@@ -988,7 +989,7 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
     return n;
 }
 
-uint64_t CCanDevice::TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id, uint8_t dlc, uint32_t delay, uint64_t offset) {
+uint64_t CCanDevice::TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id, uint8_t dlc, uint64_t delay, uint64_t offset) {
     CANAPI_Message_t message;
     CANAPI_Return_t retVal;
 
@@ -1057,7 +1058,7 @@ retry_tx_test:
     return frames;
 }
 
-uint64_t CCanDevice::TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random, uint32_t id, uint8_t dlc, uint32_t delay, uint64_t offset) {
+uint64_t CCanDevice::TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random, uint32_t id, uint8_t dlc, uint64_t delay, uint64_t offset) {
     CANAPI_Message_t message;
     CANAPI_Return_t retVal;
 
@@ -1111,7 +1112,7 @@ retry_tx_test:
             errors++;
         /* pause between two messages, as you please */
         if (random)
-            CTimer::Delay(CTimer::USEC * (delay + (uint32_t)(rand() % 54945)));
+            CTimer::Delay(CTimer::USEC * (delay + (uint64_t)(rand() % 54945)));
         else
             CTimer::Delay(CTimer::USEC * delay);
         if (!running) {
