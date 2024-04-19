@@ -2,7 +2,7 @@
 //
 //  CAN Monitor for generic Interfaces (CAN API V3)
 //
-//  Copyright (c) 2007,2016-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (c) 2007,2012-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
