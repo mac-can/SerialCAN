@@ -58,7 +58,7 @@
  */
 #define VERSION_MAJOR    1
 #define VERSION_MINOR    0
-#define VERSION_PATCH    0
+#define VERSION_PATCH    1
 #if defined(_WIN64)
 #define PLATFORM        "x64"
 #elif defined(_WIN32)
