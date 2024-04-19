@@ -738,6 +738,7 @@ int main(int argc, const char * argv[]) {
         else if (can_dlc > 12) can_dlc = 0xA;
         else if (can_dlc > 8) can_dlc = 0x9;
     }
+#endif
     /* - check operation mode flags */
     if ((mode != RxMODE) && opMode.mon) {
         fprintf(stderr, "%s: illegal option /MON:YES alias /LISTEN-ONLY for transmitter test\n", basename(argv[0]));
@@ -755,7 +756,6 @@ int main(int argc, const char * argv[]) {
         fprintf(stderr, "%s: illegal option /RTR:NO for transmitter test\n", basename(argv[0]));
         return 1;
     }
-#endif
     /* CAN Tester for generic CAN interfaces */
     fprintf(stdout, "%s\n%s\n\n%s\n\n", APPLICATION, COPYRIGHT, WARRANTY);
     /* - show operation mode and bit-rate settings */

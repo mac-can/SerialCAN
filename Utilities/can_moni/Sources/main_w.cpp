@@ -219,10 +219,11 @@ int main(int argc, const char * argv[]) {
     (void)CCanMessage::SetWraparound(wraparound);
     (void)mw;
 
+#ifdef ACCEPTANCE_FILTERING
     /* default acceptance filter */
     uint32_t code11 = CANACC_CODE_11BIT, mask11 = CANACC_MASK_11BIT;
     uint32_t code29 = CANACC_CODE_29BIT, mask29 = CANACC_MASK_29BIT;
-
+#endif
     /* exclude list (11-bit IDs only) */
     for (int i = 0; i < MAX_ID; i++) {
         can_id[i] = 1;
@@ -597,10 +598,12 @@ int main(int argc, const char * argv[]) {
                 return 1;
             }
             break;
+#ifdef ACCEPTANCE_FILTERING
         /* option `--code=<11-bit-code>' */
         /* option `--mask=<11-bit-mask>' */
         /* option `--xtd-code=<29-bit-code>' */
         /* option `--xtd-mask=<29-bit-mask>' */
+#endif
         /* option `--list-bitrates[=(2.0|FDF[+BRS])]' */
         case LISTBITRATES_STR:
             if ((optarg = getOptionParameter()) != NULL) {
@@ -720,10 +723,12 @@ int main(int argc, const char * argv[]) {
                              speed.nominal.speed / 1000.,
                              speed.nominal.samplepoint * 100., -bitrate.index);
         }
+#ifdef ACCEPTANCE_FILTERING
         if ((code11 != CANACC_CODE_11BIT) || (mask11 != CANACC_MASK_11BIT))
             fprintf(stdout, "Acc.-Filter 11-bit=set (code=%03lXh, mask=%03lXh)\n", code11, mask11);
         if (((code29 != CANACC_CODE_29BIT) || (mask29 != CANACC_MASK_29BIT)) && !opMode.nxtd)
             fprintf(stdout, "Acc.-Filter 29-bit=set (code=%08lXh, mask=%08lXh)\n", code29, mask29);
+#endif
         fputc('\n', stdout);
     }
     /* - initialize interface */
@@ -744,6 +749,7 @@ int main(int argc, const char * argv[]) {
         fputc('\n', stderr);
         goto finalize;
     }
+#ifdef ACCEPTANCE_FILTERING
     /* -- set acceptance filter for 11-bit IDs */
     if ((code11 != CANACC_CODE_11BIT) || (mask11 != CANACC_MASK_11BIT)) {
         retVal = canDevice.SetFilter11Bit(code11, mask11);
@@ -762,6 +768,7 @@ int main(int argc, const char * argv[]) {
             goto teardown;
         }
     }
+#endif
     fprintf(stdout, "OK!\n");
     /* - start communication */
     if (bitrate.btr.frequency > 0) {
@@ -1054,6 +1061,12 @@ static void usage(FILE *stream, const char *program)
     fprintf(stream, "  /Wraparound:(No|8|10|16|32|64)      wraparound after n data bytes (default=NO)\n");
 #endif
     fprintf(stream, "  /eXclude:[~]<id-list>               exclude CAN-IDs: <id-list> = <id>[-<id>]{,<id>[-<id>]}\n");
+#ifdef ACCEPTANCE_FILTERING
+    fprintf(stream, "  /CODE:<id>                          acceptance code for 11-bit IDs (default=0x%03lx)\n", CANACC_CODE_11BIT);
+    fprintf(stream, "  /MASK:<id>                          acceptance mask for 11-bit IDs (default=0x%03lx)\n", CANACC_MASK_11BIT);
+    fprintf(stream, "  /XTD-CODE:<id>                      acceptance code for 29-bit IDs (default=0x%08lx)\n", CANACC_CODE_29BIT);
+    fprintf(stream, "  /XTD-MASK:<id>                      acceptance mask for 29-bit IDs (default=0x%08lx)\n", CANACC_MASK_29BIT);
+#endif
 //    fprintf(stream, "  /Script:<filename>                  execute a script file\n"); // TODO: script engine
 #if (CAN_FD_SUPPORTED != 0)
     fprintf(stream, "  /Mode:(2.0|FDf[+BRS])               CAN operation mode: CAN 2.0 or CAN FD mode\n");

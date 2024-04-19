@@ -29,9 +29,9 @@
 #warning Compilation with legacy CAN 2.0 frame format!
 #endif
 #else
-#define CAN_FD_SUPPORTED   1  // don't touch that dial!
+#define CAN_FD_SUPPORTED   0  // set to non-zero once CAN FD is supported
 #endif
-#define SERIAL_CAN_SUPPORTED  1  // requires additional parameter
+#define SERIAL_CAN_SUPPORTED  1  // requires additional parameter (COM port)
 
 #define MONITOR_INTEFACE  "CAN-over-Serial-Line Interfaces"
 #define MONITOR_COPYRIGHT "2007,2016-2024 by Uwe Vogt, UV Software, Berlin"
