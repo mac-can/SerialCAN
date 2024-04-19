@@ -7,8 +7,8 @@
 //
 //  This file is part of CAN API V3.
 //
-//  CAN API V3 is dual-licensed under the BSD 2-Clause "Simplified" License and
-//  under the GNU General Public License v3.0 (or any later version).
+//  CAN API V3 is dual-licensed under the BSD 2-Clause "Simplified" License
+//  and under the GNU General Public License v3.0 (or any later version).
 //  You can choose between one of them if you use this file.
 //
 //  BSD 2-Clause "Simplified" License:
@@ -73,9 +73,9 @@
 ///              zero to compile your program with the CAN API source files or to
 ///              link your program with the static library at compile-time.
 ///
-/// \author      $Author: quaoar $
+/// \author      $Author: eris $
 //
-/// \version     $Rev: 1268 $
+/// \version     $Rev: 1270 $
 //
 /// \defgroup    can_api CAN Interface API, Version 3
 /// \{
@@ -515,4 +515,4 @@ public:
 /// \}
 #endif // CANAPI_H_INCLUDED
 /// \}
-// $Id: CANAPI.h 1268 2024-04-08 07:19:23Z quaoar $  Copyright (c) UV Software //
+// $Id: CANAPI.h 1270 2024-04-15 18:42:43Z eris $  Copyright (c) UV Software //
