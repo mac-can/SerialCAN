@@ -535,18 +535,18 @@ int main(int argc, const char * argv[]) {
 #endif
             (void)CCanDevice::MapBitrate2String(bitrate, property, CANPROP_MAX_BUFFER_SIZE,
                                                 (opMode.byte & CANMODE_BRSE), hasNoSamp);
-            fprintf(stdout, " (%s)\n\n", property);
+            fprintf(stdout, " (%s)\n", property);
         }
         else {
-            fprintf(stdout, "Baudrate=%.0fkbps@%.1f%% (index %i)\n\n",
+            fprintf(stdout, "Baudrate=%.0fkbps@%.1f%% (index %i)\n",
                              speed.nominal.speed / 1000.,
                              speed.nominal.samplepoint * 100., -bitrate.index);
         }
 #ifdef ACCEPTANCE_FILTERING
         if ((code11 != CANACC_CODE_11BIT) || (mask11 != CANACC_MASK_11BIT))
-            fprintf(stdout, "Acc.-Filter 11-bit=set (code=%03lXh, mask=%03lXh)\n", code11, mask11);
+            fprintf(stdout, "Acc.-filter 11-bit=set (code=%03Xh, mask=%03Xh)\n", code11, mask11);
         if (((code29 != CANACC_CODE_29BIT) || (mask29 != CANACC_MASK_29BIT)) && !opMode.nxtd)
-            fprintf(stdout, "Acc.-Filter 29-bit=set (code=%08lXh, mask=%08lXh)\n", code29, mask29);
+            fprintf(stdout, "Acc.-filter 29-bit=set (code=%08Xh, mask=%08Xh)\n", code29, mask29);
 #endif
         fputc('\n', stdout);
     }
@@ -881,10 +881,10 @@ static void usage(FILE *stream, const char *program)
 #endif
     fprintf(stream, " -x, --exclude=[~]<id-list>           exclude CAN-IDs: <id-list> = <id>[-<id>]{,<id>[-<id>]}\n");
 #ifdef ACCEPTANCE_FILTERING
-    fprintf(stream, "     --code=<id>                      acceptance code for 11-bit IDs (default=0x%03lx)\n", CANACC_CODE_11BIT);
-    fprintf(stream, "     --mask=<id>                      acceptance mask for 11-bit IDs (default=0x%03lx)\n", CANACC_MASK_11BIT);
-    fprintf(stream, "     --xtd-code=<id>                  acceptance code for 29-bit IDs (default=0x%08lx)\n", CANACC_CODE_29BIT);
-    fprintf(stream, "     --xtd-mask=<id>                  acceptance mask for 29-bit IDs (default=0x%08lx)\n", CANACC_MASK_29BIT);
+    fprintf(stream, "     --code=<id>                      acceptance code for 11-bit IDs (default=0x%03x)\n", CANACC_CODE_11BIT);
+    fprintf(stream, "     --mask=<id>                      acceptance mask for 11-bit IDs (default=0x%03x)\n", CANACC_MASK_11BIT);
+    fprintf(stream, "     --xtd-code=<id>                  acceptance code for 29-bit IDs (default=0x%08x)\n", CANACC_CODE_29BIT);
+    fprintf(stream, "     --xtd-mask=<id>                  acceptance mask for 29-bit IDs (default=0x%08x)\n", CANACC_MASK_29BIT);
 #endif
 //    fprintf(stream, " -s, --script=<filename>              execute a script file\n"); // TODO: script engine
 #if (CAN_FD_SUPPORTED != 0)

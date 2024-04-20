@@ -716,18 +716,18 @@ int main(int argc, const char * argv[]) {
 #endif
             (void)CCanDevice::MapBitrate2String(bitrate, property, CANPROP_MAX_BUFFER_SIZE,
                                                 (opMode.byte & CANMODE_BRSE), hasNoSamp);
-            fprintf(stdout, " (%s)\n\n", property);
+            fprintf(stdout, " (%s)\n", property);
         }
         else {
-            fprintf(stdout, "Baudrate=%.0fkbps@%.1f%% (index %i)\n\n",
+            fprintf(stdout, "Baudrate=%.0fkbps@%.1f%% (index %i)\n",
                              speed.nominal.speed / 1000.,
                              speed.nominal.samplepoint * 100., -bitrate.index);
         }
 #ifdef ACCEPTANCE_FILTERING
         if ((code11 != CANACC_CODE_11BIT) || (mask11 != CANACC_MASK_11BIT))
-            fprintf(stdout, "Acc.-Filter 11-bit=set (code=%03lXh, mask=%03lXh)\n", code11, mask11);
+            fprintf(stdout, "Acc.-filter 11-bit=set (code=%03Xh, mask=%03Xh)\n", code11, mask11);
         if (((code29 != CANACC_CODE_29BIT) || (mask29 != CANACC_MASK_29BIT)) && !opMode.nxtd)
-            fprintf(stdout, "Acc.-Filter 29-bit=set (code=%08lXh, mask=%08lXh)\n", code29, mask29);
+            fprintf(stdout, "Acc.-filter 29-bit=set (code=%08Xh, mask=%08Xh)\n", code29, mask29);
 #endif
         fputc('\n', stdout);
     }
