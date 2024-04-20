@@ -89,8 +89,16 @@
 #include <assert.h>
 #include <errno.h>
 
+
 /*  -----------  options  ------------------------------------------------
  */
+#if (OPTION_CAN_2_0_ONLY != 0)
+#ifdef _MSC_VER
+#pragma message ( "Compilation with with legacy CAN 2.0 frame format!" )
+#else
+#warning Compilation with legacy CAN 2.0 frame format!
+#endif
+#endif
 #if ((OPTION_CANAPI_SERIALCAN_DYLIB != 0) || (OPTION_CANAPI_SERIALCAN_SO != 0))
 __attribute__((constructor))
 static void _initializer() {
@@ -107,16 +115,11 @@ static void _finalizer() {
 
 /*  -----------  defines  ------------------------------------------------
  */
-
 #ifndef CAN_MAX_HANDLES
 #define CAN_MAX_HANDLES         (16)    // maximum number of open handles
 #endif
 #define INVALID_HANDLE          (-1)
 #define IS_HANDLE_VALID(hnd)    ((0 <= (hnd)) && ((hnd) < CAN_MAX_HANDLES))
-
-#ifndef SYSERR_OFFSET
-#define SYSERR_OFFSET           (-10000)
-#endif
 
 #define SERIAL_BAUDRATE         57600U
 #define SERIAL_BYTESIZE         CANSIO_8DATABITS
@@ -129,11 +132,12 @@ static void _finalizer() {
 #define CAN_BTR_DEFAULT         0x011CU
 #define SLCAN_QUEUE_SIZE        65536U
 
-
+#ifndef SYSERR_OFFSET
+#define SYSERR_OFFSET           (-10000)
+#endif
 
 /*  -----------  types  --------------------------------------------------
  */
-
 typedef struct {                        // frame counters:
     uint64_t tx;                        //   number of transmitted CAN frames
     uint64_t rx;                        //   number of received CAN frames
@@ -153,7 +157,6 @@ typedef struct {                        // SLCAN interface:
 
 /*  -----------  prototypes  ---------------------------------------------
  */
-
 static slcan_attr_t* slcan_attr(const can_sio_attr_t* attr);
 static int slcan_error(int code);       // SLCAN specific errors
 
@@ -700,7 +703,6 @@ char *can_firmware(int handle)
 
 /*  -----------  local functions  ----------------------------------------
  */
-
 static int slcan_error(int code)
 {
     int rc = CANERR_NOERROR;
@@ -1177,7 +1179,6 @@ static void var_init(void)
 
 /*  -----------  revision control  ---------------------------------------
  */
-
 EXPORT
 char* can_version(void)
 {
