@@ -56,7 +56,7 @@ public:
     CANAPI_Return_t ResetController();
 
     CANAPI_Return_t WriteMessage(CANAPI_Message_t message, uint16_t timeout = 0U);
-    CANAPI_Return_t ReadMessage(CANAPI_Message_t &message, uint16_t timeout = CANREAD_INFINITE);
+    CANAPI_Return_t ReadMessage(CANAPI_Message_t &message, uint16_t timeout = CANWAIT_INFINITE);
 
     CANAPI_Return_t GetStatus(CANAPI_Status_t &status);
     CANAPI_Return_t GetBusLoad(uint8_t &load);
