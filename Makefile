@@ -1,7 +1,7 @@
 #
 #	SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
 #
-#	Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2016,2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
 #
 #	This file is part of SerialCAN.

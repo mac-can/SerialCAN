@@ -1,9 +1,9 @@
 #!/bin/sh
 echo "/*  -- Do not commit this file --" > ./Sources/build_no.h
 echo " *" >> ./Sources/build_no.h
-echo " *  SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces" >> ./Sources/build_no.h
+echo " *  CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)" >> ./Sources/build_no.h
 echo " *" >> ./Sources/build_no.h
-echo " *  Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)" >> ./Sources/build_no.h
+echo " *  Copyright (c) 2016,2020-2024 Uwe Vogt, UV Software, Berlin (info@mac-can.com)" >> ./Sources/build_no.h
 echo " *  All rights reserved." >> ./Sources/build_no.h
 echo " *" >> ./Sources/build_no.h
 echo " *  This file is part of SerialCAN." >> ./Sources/build_no.h
@@ -44,7 +44,7 @@ echo " *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the" >> ./So
 echo " *  GNU General Public License for more details." >> ./Sources/build_no.h
 echo " *" >> ./Sources/build_no.h
 echo " *  You should have received a copy of the GNU General Public License" >> ./Sources/build_no.h
-echo " *  along with SerialCAN.  If not, see <http://www.gnu.org/licenses/>." >> ./Sources/build_no.h
+echo " *  along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>." >> ./Sources/build_no.h
 echo " */" >> ./Sources/build_no.h
 echo "#ifndef BUILD_NO_H_INCLUDED" >> ./Sources/build_no.h
 echo "#define BUILD_NO_H_INCLUDED" >> ./Sources/build_no.h

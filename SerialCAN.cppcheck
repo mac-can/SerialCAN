@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="1">
     <builddir>SerialCAN-cppcheck-build-dir</builddir>
-    <platform>Unspecified</platform>
-    <importproject>Trial/SerialCAN.vcxproj/SerialCAN.vcxproj</importproject>
+    <importproject>Trial/slc_test.vcxproj</importproject>
     <analyze-all-vs-configs>false</analyze-all-vs-configs>
     <check-headers>true</check-headers>
     <check-unused-templates>true</check-unused-templates>
@@ -10,7 +9,6 @@
     <max-template-recursion>100</max-template-recursion>
     <vs-configurations>
         <config>Debug</config>
-        <config>Release</config>
     </vs-configurations>
     <libraries>
         <library>windows</library>

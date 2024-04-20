@@ -27,7 +27,7 @@ call build_no.bat
 
 rem build the trial program
 if %TRIAL% == "True" ( 
-   call msbuild.exe .\Trial\slc_test.vcxproj /t:Clean;Build /p:"Configuration=Debug";"Platform=x86"
+   call msbuild.exe .\Trial\slc_test.vcxproj /t:Clean;Build /p:"Configuration=Debug";"Platform=Win32"
    if errorlevel 1 goto end
 )
 rem build the CAN API V3 C library (dynamic and static)
