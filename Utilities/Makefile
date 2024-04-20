@@ -1,7 +1,7 @@
 #
-#	CAN Utilities for CAN-over-Serial-Line Interfaces
+#	CAN Utilities for generic CAN Interfaces
 #
-#	Copyright (c) 2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2007-2024 Uwe Vogt, UV Software, Berlin (info@mac-can.com)
 #
 #	These utilities is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
