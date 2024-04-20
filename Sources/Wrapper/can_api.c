@@ -94,7 +94,7 @@
  */
 #if (OPTION_CAN_2_0_ONLY != 0)
 #ifdef _MSC_VER
-#pragma message ( "Compilation with with legacy CAN 2.0 frame format!" )
+#pragma message ( "Compilation with legacy CAN 2.0 frame format!" )
 #else
 #warning Compilation with legacy CAN 2.0 frame format!
 #endif
