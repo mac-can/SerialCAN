@@ -297,7 +297,7 @@
     <ClInclude Include="..\..\Sources\SerialCAN_Defines.h" />
     <ClInclude Include="Sources\framework.h" />
     <ClInclude Include="Sources\pch.h" />
-    <ClInclude Include="Sources\resource.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Sources\CANAPI\can_btr.c">
