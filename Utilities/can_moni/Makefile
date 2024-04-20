@@ -60,8 +60,7 @@ CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LDFLAGS  += -lpthread \
-	-rpath /usr/local/lib
+LDFLAGS  += -rpath /usr/local/lib
 
 ifeq ($(BINARY),UNIVERSAL)
 CFLAGS += -arch arm64 -arch x86_64
@@ -69,7 +68,7 @@ CXXFLAGS += -arch arm64 -arch x86_64
 LDFLAGS += -arch arm64 -arch x86_64
 endif
 
-LIBRARIES =
+LIBRARIES = -lpthread
 
 CXX = clang++
 CC = clang
@@ -88,9 +87,9 @@ CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LDFLAGS  += -lpthread
+LDFLAGS  +=
 
-LIBRARIES =
+LIBRARIES = -lpthread
 
 CXX = g++
 CC = gcc
