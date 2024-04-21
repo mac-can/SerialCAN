@@ -71,9 +71,6 @@ extern "C" {
 /** @note  Set define OPTION_CAN_2_0_ONLY to a non-zero value to compile
  *         with CAN 2.0 frame format only (e.g. in the build environment).
  */
-/** @note  Set define OPTION_PCAN_BIT_TIMING to a non-zero value to compile
- *         with non CiA bit-timing (e.g. in the build environment).
- */
 #ifndef OPTION_DISABLED
 #define OPTION_DISABLED  0  /**< if a define is not defined, it is automatically set to 0 */
 #endif
@@ -209,5 +206,5 @@ typedef struct can_sio_param_t_ {       /* device parameters: */
 /*  ----------------------------------------------------------------------
  *  Uwe Vogt,  UV Software,  Chausseestrasse 33 A,  10115 Berlin,  Germany
  *  Tel.: +49-30-46799872,  Fax: +49-30-46799873,  Mobile: +49-170-3801903
- *  E-Mail: uwe.vogt@uv-software.de,  Homepage: http://www.uv-software.de/
+ *  E-Mail: uwe.vogt@uv-software.de, Homepage: https://www.uv-software.de/
  */

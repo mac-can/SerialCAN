@@ -135,6 +135,11 @@ static void _finalizer() {
 #ifndef SYSERR_OFFSET
 #define SYSERR_OFFSET           (-10000)
 #endif
+#define LIB_ID                  SLCAN_LIB_ID
+#define LIB_DLLNAME             SLCAN_LIB_WRAPPER
+#define DEV_VENDOR              SLCAN_LIB_VENDOR
+#define DEV_DLLNAME             SLCAN_LIB_DRIVER
+#define NUM_CHANNELS            CANSIO_BOARDS
 
 /*  -----------  types  --------------------------------------------------
  */
@@ -157,6 +162,8 @@ typedef struct {                        // SLCAN interface:
 
 /*  -----------  prototypes  ---------------------------------------------
  */
+static void var_init(void);             // initialize variables
+
 static slcan_attr_t* slcan_attr(const can_sio_attr_t* attr);
 static int slcan_error(int code);       // SLCAN specific errors
 
@@ -165,28 +172,27 @@ static int get_sio_attr(slcan_port_t port, can_sio_attr_t *attr);
 static int lib_parameter(uint16_t param, void *value, size_t nbyte);
 static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte);
 
-static void var_init(void);             // initialize variables
-
-
 /*  -----------  variables  ----------------------------------------------
  */
 static const char version[] = "CAN API V3 for CAN-over-Serial-Line Interfaces, Version " VERSION_STRING;
 
 EXPORT
-can_board_t can_boards[CANSIO_BOARDS+1] = {  // list of supported CAN Interfaces
+can_board_t can_boards[NUM_CHANNELS+1] = {  // list of supported CAN channels
     // note: check the device manager of '/dev/tty*' to find compatibe interfaces
     {EOF, NULL}
 };
-static can_interface_t can[CAN_MAX_HANDLES]; // interface handles
-static int init =  0;  // initialization flag
-
+//static const uint8_t dlc_table[16] = {  // DLC to length
+//    0,1,2,3,4,5,6,7,8,12,16,20,24,32,48,64
+//};
+static can_interface_t can[CAN_MAX_HANDLES];  // interface handles
+static int init = 0;                    // initialization flag
 
 /*  -----------  functions  ----------------------------------------------
  */
 EXPORT
 int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
 {
-    int rc = CANERR_NOERROR;            // return code
+    int rc = CANERR_NOERROR;            // return value
     int i;
 
     if (result)                         // serial device not testtable
@@ -238,7 +244,7 @@ err_test:
 EXPORT
 int can_init(int32_t channel, uint8_t mode, const void *param)
 {
-    int rc = CANERR_FATAL;              // return code
+    int rc = CANERR_FATAL;              // return value
     int fd = -1;                        // file descriptor
     int i;
 
@@ -326,7 +332,7 @@ err_init:                               // otherwise:
 EXPORT
 int can_exit(int handle)
 {
-    int rc;                             // return code
+    int rc;                             // return value
     int i;
 
     if (!init)                          // must be initialized
@@ -369,7 +375,7 @@ int can_exit(int handle)
 EXPORT
 int can_kill(int handle)
 {
-    int rc;                             // return code
+    int rc;                             // return value
     int i;
 
     if (!init)                          // must be initialized
@@ -398,7 +404,7 @@ int can_start(int handle, const can_bitrate_t *bitrate)
 {
     uint16_t btr0btr1 = CAN_BTR_DEFAULT;// btr0btr1 value
     can_bitrate_t temporary;            // bit-rate settings
-    int rc = CANERR_FATAL;              // return code
+    int rc = CANERR_FATAL;              // return value
 
     if (!init)                          // must be initialized
         return CANERR_NOTINIT;
@@ -446,7 +452,7 @@ int can_start(int handle, const can_bitrate_t *bitrate)
 EXPORT
 int can_reset(int handle)
 {
-    int rc = CANERR_FATAL;              // return code
+    int rc = CANERR_FATAL;              // return value
 
     if (!init)                          // must be initialized!
         return CANERR_NOTINIT;
@@ -470,7 +476,7 @@ EXPORT
 int can_write(int handle, const can_msg_t *msg, uint16_t timeout)
 {
     slcan_message_t slcan;              // SLCAN message
-    int rc = CANERR_FATAL;              // return code
+    int rc = CANERR_FATAL;              // return value
 
     if (!init)                          // must be initialized
         return CANERR_NOTINIT;
@@ -515,7 +521,7 @@ EXPORT
 int can_read(int handle, can_msg_t *msg, uint16_t timeout)
 {
     slcan_message_t slcan;              // SLCAN message
-    int rc = CANERR_FATAL;              // return code
+    int rc = CANERR_FATAL;              // return value
 
     if (!init)                          // must be initialized
         return CANERR_NOTINIT;
@@ -562,7 +568,7 @@ EXPORT
 int can_status(int handle, uint8_t *status)
 {
     slcan_flags_t flags;                // SLCAN flags
-    int rc;                             // return code
+    int rc;                             // return value
 
     if (!init)                          // must be initialized
         return CANERR_NOTINIT;
@@ -703,6 +709,28 @@ char *can_firmware(int handle)
 
 /*  -----------  local functions  ----------------------------------------
  */
+static void var_init(void)
+{
+    int i;
+
+    for (i = 0; i < CAN_MAX_HANDLES; i++) {
+        memset(&can[i], 0, sizeof(can_interface_t));
+        can[i].port = NULL;
+        can[i].name[0] = '\0';
+        can[i].attr.baudrate = SERIAL_BAUDRATE;
+        can[i].attr.bytesize = SERIAL_BYTESIZE;
+        can[i].attr.parity = SERIAL_PARITY;
+        can[i].attr.stopbits = SERIAL_STOPBITS;
+        can[i].attr.options = SERIAL_OPTIONS;
+        can[i].btr0btr1 = CAN_BTR_DEFAULT;
+        can[i].mode.byte = CANMODE_DEFAULT;
+        can[i].status.byte = CANSTAT_RESET;
+        can[i].counters.tx = 0ull;
+        can[i].counters.rx = 0ull;
+        can[i].counters.err = 0ull;
+    }
+}
+
 static int slcan_error(int code)
 {
     int rc = CANERR_NOERROR;
@@ -787,7 +815,6 @@ static int get_sio_attr(slcan_port_t port, can_sio_attr_t *attr)
 static int lib_parameter(uint16_t param, void *value, size_t nbyte)
 {
     int rc = CANERR_ILLPARA;            // suppose an invalid parameter
-
     static int idx_board = EOF;         // actual index in the interface list
 
     if (value == NULL) {                // check for null-pointer
@@ -825,7 +852,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_GET_LIBRARY_ID:        // library id of the library (int32_t)
         if (nbyte >= sizeof(int32_t)) {
-            *(int32_t*)value = (int32_t)SLCAN_LIB_ID;
+            *(int32_t*)value = (int32_t)LIB_ID;
             rc = CANERR_NOERROR;
         }
         break;
@@ -836,20 +863,20 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         }
         break;
     case CANPROP_GET_LIBRARY_DLLNAME:   // file name of the library (char[256])
-        if ((nbyte > strlen(SLCAN_LIB_WRAPPER)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, SLCAN_LIB_WRAPPER);
+        if ((nbyte > strlen(LIB_DLLNAME)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+            strcpy((char*)value, LIB_DLLNAME);
             rc = CANERR_NOERROR;
         }
         break;
     case CANPROP_GET_DEVICE_VENDOR:     // vendor name of the CAN interface (char[256])
-        if ((nbyte > strlen(SLCAN_LIB_VENDOR)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, SLCAN_LIB_VENDOR);
+        if ((nbyte > strlen(DEV_VENDOR)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+            strcpy((char*)value, DEV_VENDOR);
             rc = CANERR_NOERROR;
         }
         break;
     case CANPROP_GET_DEVICE_DLLNAME:    // file name of the CAN interface DLL (char[256])
-        if ((nbyte > strlen(SLCAN_LIB_DRIVER)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, SLCAN_LIB_DRIVER);
+        if ((nbyte > strlen(DEV_DLLNAME)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+            strcpy((char*)value, DEV_DLLNAME);
             rc = CANERR_NOERROR;
         }
         break;
@@ -893,7 +920,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         if ((0U < nbyte) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
             if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
-                strncpy((char*)value, SLCAN_LIB_DRIVER, nbyte);
+                strncpy((char*)value, DEV_DLLNAME, nbyte);
                 ((char*)value)[(nbyte - 1)] = '\0';
                 rc = CANERR_NOERROR;
             }
@@ -905,7 +932,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         if (nbyte >= sizeof(int32_t)) {
             if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
-                *(int32_t*)value = (int32_t)SLCAN_LIB_ID;
+                *(int32_t*)value = (int32_t)LIB_ID;
                 rc = CANERR_NOERROR;
             }
             else
@@ -916,7 +943,7 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         if ((0U < nbyte) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
             if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
-                strncpy((char*)value, SLCAN_LIB_VENDOR, nbyte);
+                strncpy((char*)value, DEV_VENDOR, nbyte);
                 ((char*)value)[(nbyte - 1)] = '\0';
                 rc = CANERR_NOERROR;
             }
@@ -1066,15 +1093,16 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_GET_NUM_CHANNELS:      // numbers of CAN channels on the CAN interface (uint8_t)
         if (nbyte >= sizeof(uint8_t)) {
-		    *(uint8_t*)value = (uint8_t)1;
+            *(uint8_t*)value = (uint8_t)1;  // FIXME: replace magic number
             rc = CANERR_NOERROR;
         }
         break;
     case CANPROP_GET_CAN_CHANNEL:       // active CAN channel on the CAN interface (uint8_t)
         if (nbyte >= sizeof(uint8_t)) {
-		    *(uint8_t*)value = (uint8_t)0;
+            *(uint8_t*)value = (uint8_t)0;  // FIXME: replace magic number
             rc = CANERR_NOERROR;
         }
+        break;
     case CANPROP_GET_CAN_CLOCK:         // frequency of the CAN controller clock in [Hz] (int32_t)
         if (nbyte >= sizeof(int32_t)) {
             *(int32_t*)value = (int32_t)CAN_CLOCK_FREQUENCY;
@@ -1150,37 +1178,16 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         }
         break;
     default:
-        rc = lib_parameter(param, value, nbyte);
+        rc = lib_parameter(param, value, nbyte);   // library properties (see lib_parameter)
         break;
     }
     return rc;
 }
 
-static void var_init(void)
-{
-    int i;
-
-    for (i = 0; i < CAN_MAX_HANDLES; i++) {
-        can[i].port = NULL;
-        can[i].name[0] = '\0';
-        can[i].attr.baudrate = SERIAL_BAUDRATE;
-        can[i].attr.bytesize = SERIAL_BYTESIZE;
-        can[i].attr.parity = SERIAL_PARITY;
-        can[i].attr.stopbits = SERIAL_STOPBITS;
-        can[i].attr.options = SERIAL_OPTIONS;
-        can[i].btr0btr1 = CAN_BTR_DEFAULT;
-        can[i].mode.byte = CANMODE_DEFAULT;
-        can[i].status.byte = CANSTAT_RESET;
-        can[i].counters.tx = 0ull;
-        can[i].counters.rx = 0ull;
-        can[i].counters.err = 0ull;
-    }
-}
-
 /*  -----------  revision control  ---------------------------------------
  */
 EXPORT
-char* can_version(void)
+char *can_version(void)
 {
     return (char*)version;
 }
@@ -1189,5 +1196,5 @@ char* can_version(void)
 /*  ----------------------------------------------------------------------
  *  Uwe Vogt,  UV Software,  Chausseestrasse 33 A,  10115 Berlin,  Germany
  *  Tel.: +49-30-46799872,  Fax: +49-30-46799873,  Mobile: +49-170-3801903
- *  E-Mail: uwe.vogt@uv-software.de,  Homepage: http://www.uv-software.de/
+ *  E-Mail: uwe.vogt@uv-software.de, Homepage: https://www.uv-software.de/
  */

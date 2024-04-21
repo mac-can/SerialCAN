@@ -1,6 +1,6 @@
 //  SPDX-License-Identifier: GPL-3.0-or-later
 //
-//  CAN Tester for CAN-over-Serial-Line Interfaces
+//  CAN Tester for CAN-over-Serial-Line Interfaces (CAN API V3)
 //
 //  Copyright (c) 2008-2010,2012-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
@@ -29,7 +29,7 @@
 #warning Compilation with legacy CAN 2.0 frame format!
 #endif
 #else
-#define CAN_FD_SUPPORTED   0  // set to non-zero once CAN FD is supported
+#define CAN_FD_SUPPORTED  0  // set to non-zero once CAN FD is supported
 #endif
 #define SERIAL_CAN_SUPPORTED  1  // requires additional parameter (COM port)
 
