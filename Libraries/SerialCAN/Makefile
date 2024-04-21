@@ -72,7 +72,6 @@ OBJECTS = $(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o \
 	$(OUTDIR)/SerialCAN.o
 
-
 DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
 	-DOPTION_CANAPI_DRIVER=1 \
 	-DOPTION_CANAPI_RETVALS=0 \
@@ -103,19 +102,19 @@ INSTALL = /usr/local/lib
 DEFINES += -DOPTION_SERIALCAN_DYLIB=1 \
 	-DOPTION_CANAPI_SERIALCAN_DYLIB=0
 
-CFLAGS += -O2 -Wall -Wno-parentheses \
+CFLAGS += -O2 -Wall -Wextra -Wno-parentheses \
 	-fno-strict-aliasing \
 	$(DEFINES) \
 	$(HEADERS)
 
-CXXFLAGS += -g -Wall -Wextra -pthread \
+CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
 LDFLAGS += -nostartfiles -dynamiclib -fvisibility=hidden \
-	-install_name @rpath/$(INSTALL_NAME) \
-	-current_version $(CURRENT_VERSION) \
-	-compatibility_version $(COMPATIBILITY_VERSION)
+	-Wl,-install_name,@rpath/$(INSTALL_NAME) \
+	-Wl,-current_version,$(CURRENT_VERSION) \
+	-Wl,-compatibility_version,$(COMPATIBILITY_VERSION)
 
 LTFLAGS += -static
 
@@ -147,12 +146,12 @@ INSTALL = /usr/local/lib
 DEFINES += -DOPTION_SERIALCAN_SO=1 \
 	-DOPTION_CANAPI_SERIALCAN_SO=0
 
-CFLAGS += -fPIC -O2 -Wall -Wno-parentheses \
+CFLAGS += -fPIC -O2 -Wall -Wextra -Wno-parentheses \
 	-fno-strict-aliasing \
 	$(DEFINES) \
 	$(HEADERS)
 
-CXXFLAGS += -fPIC -g -Wall -Wextra -pthread \
+CXXFLAGS += -fPIC -O2 -g -Wall -Wextra -pthread\
 	$(DEFINES) \
 	$(HEADERS)
 

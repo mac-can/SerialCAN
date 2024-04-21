@@ -1,5 +1,5 @@
 #
-#	CAN Tester for CAN-over-Serial-Line Interfaces
+#	CAN Tester for CAN-over-Serial-Line Interfaces (CAN API V3)
 #
 #	Copyright (c) 2008-2010,2012-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #

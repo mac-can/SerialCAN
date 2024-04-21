@@ -1,5 +1,5 @@
 #
-#	CAN Monitor for CAN-over-Serial-Line Interfaces
+#	CAN Monitor for CAN-over-Serial-Line Interfaces (CAN API V3)
 #
 #	Copyright (c) 2007,2012-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #
