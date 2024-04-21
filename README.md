@@ -90,7 +90,7 @@ uranus@uv-pc007linux:~/Projects/CAN/Drivers/SerialCAN$ make clean
 uranus@uv-pc007linux:~/Projects/CAN/Drivers/SerialCAN$ make all
 uranus@uv-pc007linux:~/Projects/CAN/Drivers/SerialCAN$ sudo make install
 ```
-_(The version number of the libraries can be adapted by editing the `Makefile`s in the subfolders and changing the variable `VERSION` accordingly.  Don´t forget to set the version number also in the source files.)_
+_(The version number of the libraries can be adapted by editing the `Makefile`s in the subfolders and changing the variable `VERSION` accordingly.  Don´t forget to set the version number also in the header file `Version.h`.)_
 
 #### libSerialCAN
 
@@ -125,10 +125,10 @@ POSIX&reg; compatible operating systems:
 1. Linux&reg;
 1. Cygwin&reg;
 
-Windows&reg; (x64 operating system):
+Windows&reg; operating system:
 
-1. Windows 10 Pro
-1. Windows 11 Pro
+1. Windows 10 (x86 and x64)
+1. Windows 11 (x86 and x64)
 
 ### Development Environments
 
@@ -162,7 +162,7 @@ Windows&reg; (x64 operating system):
 
 #### Windows 10 & 11
 
-- Microsoft Visual Studio Community 2022 (Version 17.9.4)
+- Microsoft Visual Studio Community 2022 (Version 17.9.5)
 
 ### CAN Hardware
 
@@ -175,7 +175,7 @@ Windows&reg; (x64 operating system):
 
 2. Time-stamps are currently not supported.
 
-3. Python Ctrl+C issue still unsolved.
+3. Python Ctrl+C issue is still unsolved.
 
 ## This and That
 
