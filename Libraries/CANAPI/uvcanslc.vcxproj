@@ -288,7 +288,7 @@
     <ClInclude Include="..\..\Sources\Wrapper\can_defs.h" />
     <ClInclude Include="Sources\framework.h" />
     <ClInclude Include="Sources\pch.h" />
-    <ClInclude Include="Sources\resource.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Sources\CANAPI\can_btr.c">

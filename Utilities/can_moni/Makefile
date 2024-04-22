@@ -1,7 +1,7 @@
 #
-#	CAN Monitor for CAN-over-Serial-Line Interfaces
+#	CAN Monitor for CAN-over-Serial-Line Interfaces (CAN API V3)
 #
-#	Copyright (c) 2007,2016-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2007,2012-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #
 #	This program is free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
@@ -60,8 +60,7 @@ CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LDFLAGS  += -lpthread \
-	-rpath /usr/local/lib
+LDFLAGS  += -rpath /usr/local/lib
 
 ifeq ($(BINARY),UNIVERSAL)
 CFLAGS += -arch arm64 -arch x86_64
@@ -69,7 +68,7 @@ CXXFLAGS += -arch arm64 -arch x86_64
 LDFLAGS += -arch arm64 -arch x86_64
 endif
 
-LIBRARIES =
+LIBRARIES = -lpthread
 
 CXX = clang++
 CC = clang
@@ -88,9 +87,9 @@ CXXFLAGS += -O2 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
-LDFLAGS  += -lpthread
+LDFLAGS  +=
 
-LIBRARIES =
+LIBRARIES = -lpthread
 
 CXX = g++
 CC = gcc

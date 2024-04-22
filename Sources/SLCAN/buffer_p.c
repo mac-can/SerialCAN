@@ -5,8 +5,10 @@
  *  Copyright (c) 2002-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
- *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
- *  under the GNU General Public License v3.0 (or any later version).
+ *  Module 'buffer'
+ *
+ *  This module is dual-licensed under the BSD 2-Clause "Simplified" License
+ *  and under the GNU General Public License v3.0 (or any later version).
  *  You can choose between one of them if you use this module.
  *
  *  BSD 2-Clause "Simplified" License:
@@ -49,9 +51,9 @@
  *
  *  @remarks     POSIX compatible variant (e.g. Linux, macOS)
  *
- *  @author      $Author: haumea $
+ *  @author      $Author: quaoar $
  *
- *  @version     $Rev: 802 $
+ *  @version     $Rev: 811 $
  *
  *  @addtogroup  buffer
  *  @{

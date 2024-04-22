@@ -5,8 +5,10 @@
  *  Copyright (c) 2002-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
- *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
- *  under the GNU General Public License v3.0 (or any later version).
+ *  Module 'serial'
+ *
+ *  This module is dual-licensed under the BSD 2-Clause "Simplified" License
+ *  and under the GNU General Public License v3.0 (or any later version).
  *  You can choose between one of them if you use this module.
  *
  *  BSD 2-Clause "Simplified" License:
@@ -43,17 +45,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this module.  If not, see <https://www.gnu.org/licenses/>.
  */
- /** @file        serial_attr.h
-  *
-  *  @brief       Serial transmission attributes.
-  *
-  *  @author      $Author: haumea $
-  *
-  *  @version     $Rev: 802 $
-  *
-  *  @addtogroup  serial
-  *  @{
-  */
+/** @file        serial_attr.h
+ *
+ *  @brief       Serial transmission attributes.
+ *
+ *  @author      $Author: quaoar $
+ *
+ *  @version     $Rev: 811 $
+ *
+ *  @addtogroup  serial
+ *  @{
+ */
 #ifndef SERIAL_ATTR_H_INCLUDED
 #define SERIAL_ATTR_H_INCLUDED
 

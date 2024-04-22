@@ -2,11 +2,13 @@
 /*
  *  Software for Industrial Communication, Motion Control and Automation
  *
- *  Copyright (c) 2016-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2002-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
- *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
- *  under the GNU General Public License v3.0 (or any later version).
+ *  Module 'logger'
+ *
+ *  This module is dual-licensed under the BSD 2-Clause "Simplified" License
+ *  and under the GNU General Public License v3.0 (or any later version).
  *  You can choose between one of them if you use this module.
  *
  *  BSD 2-Clause "Simplified" License:
@@ -51,7 +53,7 @@
  *
  *  @author      $Author: quaoar $
  *
- *  @version     $Rev: 809 $
+ *  @version     $Rev: 811 $
  *
  *  @addtogroup  logger
  *  @{

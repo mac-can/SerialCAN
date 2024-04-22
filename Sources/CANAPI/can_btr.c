@@ -7,8 +7,8 @@
  *
  *  This file is part of CAN API V3.
  *
- *  CAN API V3 is dual-licensed under the BSD 2-Clause "Simplified" License and
- *  under the GNU General Public License v3.0 (or any later version).
+ *  CAN API V3 is dual-licensed under the BSD 2-Clause "Simplified" License
+ *  and under the GNU General Public License v3.0 (or any later version).
  *  You can choose between one of them if you use this file.
  *
  *  BSD 2-Clause "Simplified" License:
@@ -55,9 +55,9 @@
  *               |  SJW  |          BRP          |SAM|   TSEG2   |     TSEG1     |<br>
  *               +-7-+-6-+-5-+---+---+---+---+-0-+-7-+-6-+---+-4-+-3-+---+---+-0-+<br>
  *
- *  @author      $Author: haumea $
+ *  @author      $Author: eris $
  *
- *  @version     $Rev: 1259 $
+ *  @version     $Rev: 1270 $
  *
  *  @addtogroup  can_btr
  *  @{
@@ -166,6 +166,8 @@ int btr_check_bitrate(const btr_bitrate_t *bitrate, bool fdoe, bool brse) {
         if ((bitrate->btr.nominal.sjw < BTR_NOMINAL_SJW_MIN) || (BTR_NOMINAL_SJW_MAX < bitrate->btr.nominal.sjw))
             return BTRERR_BAUDRATE;
 #if (OPTION_CAN_2_0_ONLY != OPTION_DISABLED)
+        (void)fdoe; (void)brse;  // To avoid compiler warnings
+        
         if ((bitrate->btr.nominal.sam != BTR_NOMINAL_SAM_SINGLE) && (BTR_NOMINAL_SAM_TRIPLE != bitrate->btr.nominal.sam))
             return BTRERR_BAUDRATE;
 #else
@@ -278,6 +280,8 @@ int btr_compare_bitrates(const btr_bitrate_t *bitrate1, const btr_bitrate_t *bit
         if (cmp_sp && (data_sp1 != data_sp2))
             return (data_sp1 < data_sp2) ? -4 : +4;
     }
+#else
+    (void)fdoe; (void)brse;  // To avoid compiler warnings
 #endif
     /* if the bit-rates are equal return 1*/
     return 0;

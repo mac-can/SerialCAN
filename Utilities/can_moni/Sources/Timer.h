@@ -2,11 +2,13 @@
 //
 //  Software for Industrial Communication, Motion Control and Automation
 //
-//  Copyright (c) 2002-2023 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (c) 2002-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //  All rights reserved.
 //
-//  This class is dual-licensed under the BSD 2-Clause "Simplified" License and
-//  under the GNU General Public License v3.0 (or any later version).
+//  Class CTimer
+//
+//  This class is dual-licensed under the BSD 2-Clause "Simplified" License
+//  and under the GNU General Public License v3.0 (or any later version).
 //  You can choose between one of them if you use this class.
 //
 //  BSD 2-Clause "Simplified" License:
@@ -41,7 +43,7 @@
 //  GNU General Public License for more details.
 //
 //  You should have received a copy of the GNU General Public License
-//  along with this class.  If not, see <http://www.gnu.org/licenses/>.
+//  along with this class.  If not, see <https://www.gnu.org/licenses/>.
 //
 #ifndef TIMER_H_INCLUDED
 #define TIMER_H_INCLUDED
@@ -62,10 +64,10 @@
 
 class CTimer {
 public:
-    static const uint32_t USEC = 1U;  // 1 microsecond
-    static const uint32_t MSEC = 1000U;  // 1 millisecond
-    static const uint32_t SEC = 1000000U;  // 1 second
-    static const uint32_t MIN = 60000000U;  // 1 minute
+    static const uint64_t USEC = 1U;  // 1 microsecond
+    static const uint64_t MSEC = 1000U;  // 1 millisecond
+    static const uint64_t SEC = 1000000U;  // 1 second
+    static const uint64_t MIN = 60000000U;  // 1 minute
 private:
 #if !defined(_WIN32) && !defined(_WIN64)
     uint64_t m_u64UntilStop;  // counter value for the desired time-out
@@ -74,13 +76,13 @@ private:
     LONGLONG      m_llUntilStop;     // counter value for the desired time-out
 #endif
 public:
-    CTimer(uint32_t u32Microseconds = 0);
+    CTimer(uint64_t u64Microseconds = 0);
     virtual ~CTimer() {};
 
-    bool Restart(uint32_t u32Timeout);  // restart the timer!
-    bool Timeout();                     // time-out occurred?
+    bool Restart(uint64_t u64Microseconds);  // restart the timer!
+    bool Timeout();                          // time-out occurred?
 
-    static bool Delay(uint32_t u32Delay); // delay timer
+    static bool Delay(uint64_t u64Microseconds);  // delay timer
 
     static struct timespec GetTime();  // time with nanosecond resolution
     static double DiffTime(struct timespec start, struct timespec stop);
@@ -88,4 +90,4 @@ public:
 
 #endif // TIMER_H_INCLUDED
 
-// $Id: Timer.h 799 2023-10-07 19:15:23Z makemake $  Copyright (c) UV Software, Berlin //
+// $Id: Timer.h 810 2024-04-18 14:01:00Z quaoar $  Copyright (c) UV Software, Berlin //

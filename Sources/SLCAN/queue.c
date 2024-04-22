@@ -5,8 +5,10 @@
  *  Copyright (c) 2002-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
- *  This module is dual-licensed under the BSD 2-Clause "Simplified" License and
- *  under the GNU General Public License v3.0 (or any later version).
+ *  Module 'queue'
+ *
+ *  This module is dual-licensed under the BSD 2-Clause "Simplified" License
+ *  and under the GNU General Public License v3.0 (or any later version).
  *  You can choose between one of them if you use this module.
  *
  *  BSD 2-Clause "Simplified" License:
@@ -49,4 +51,4 @@
 #include "queue_p.c"
 #endif
 
-/* $Id: queue.c 802 2024-03-24 17:11:20Z haumea $  Copyright (c) UV Software */
+/* $Id: queue.c 811 2024-04-18 14:03:48Z quaoar $  Copyright (c) UV Software */

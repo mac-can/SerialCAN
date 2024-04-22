@@ -59,7 +59,7 @@
 #define SERIALCAN_LIBRARY_NAME  CANDLL_SERIALCAN
 #define SERIALCAN_LIBRARY_VENDOR  "UV Software, Berlin"
 #define SERIALCAN_LIBRARY_LICENSE  "BSD-2-Clause OR GPL-3.0-or-later"
-#define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (c) 2016-2024  Uwe Vogt, UV Software, Berlin"
+#define SERIALCAN_LIBRARY_COPYRIGHT  "Copyright (c) 2016-2024 by Uwe Vogt, UV Software, Berlin"
 #define SERIALCAN_LIBRARY_HAZARD_NOTE  "If you connect your CAN device to a real CAN network when using this library,\n" \
                                        "you might damage your application."
 /// \}

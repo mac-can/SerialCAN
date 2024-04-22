@@ -2,7 +2,7 @@
 //
 //  CAN Tester for generic Interfaces (CAN API V3)
 //
-//  Copyright (c) 2008-2010,2014-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+//  Copyright (c) 2008-2010,2012-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 //
 #include "Driver.h"
 #include "Timer.h"
+#include "Version.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -34,6 +35,19 @@ extern "C" {
 
 #include <inttypes.h>
 
+#if defined(_WIN64)
+#define PLATFORM  "x64"
+#elif defined(_WIN32)
+#define PLATFORM  "x86"
+#elif defined(__linux__)
+#define PLATFORM  "Linux"
+#elif defined(__APPLE__)
+#define PLATFORM  "macOS"
+#elif defined(__CYGWIN__)
+#define PLATFORM  "Cygwin"
+#else
+#error Platform not supported
+#endif
 #ifdef _MSC_VER
 //not #if defined(_WIN32) || defined(_WIN64) because we have strncasecmp in mingw
 #define strncasecmp _strnicmp
@@ -128,8 +142,8 @@ static char* option[MAX_OPTIONS] = {
 class CCanDevice : public CCanDriver {
 public:
     uint64_t ReceiverTest(bool checkCounter = false, uint64_t expectedNumber = 0U, bool stopOnError = false);
-    uint64_t TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id = 0x100U, uint8_t dlc = 0U, uint32_t delay = 0U, uint64_t offset = 0U);
-    uint64_t TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random = false, uint32_t id = 0x100U, uint8_t dlc = 0U, uint32_t delay = 0U, uint64_t offset = 0U);
+    uint64_t TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id = 0x100U, uint8_t dlc = 0U, uint64_t delay = 0U, uint64_t offset = 0U);
+    uint64_t TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random = false, uint32_t id = 0x100U, uint8_t dlc = 0U, uint64_t delay = 0U, uint64_t offset = 0U);
 public:
     static int ListCanDevices(void);
     static int TestCanDevices(CANAPI_OpMode_t opMode);
@@ -724,6 +738,7 @@ int main(int argc, const char * argv[]) {
         else if (can_dlc > 12) can_dlc = 0xA;
         else if (can_dlc > 8) can_dlc = 0x9;
     }
+#endif
     /* - check operation mode flags */
     if ((mode != RxMODE) && opMode.mon) {
         fprintf(stderr, "%s: illegal option /MON:YES alias /LISTEN-ONLY for transmitter test\n", basename(argv[0]));
@@ -741,7 +756,6 @@ int main(int argc, const char * argv[]) {
         fprintf(stderr, "%s: illegal option /RTR:NO for transmitter test\n", basename(argv[0]));
         return 1;
     }
-#endif
     /* CAN Tester for generic CAN interfaces */
     fprintf(stdout, "%s\n%s\n\n%s\n\n", APPLICATION, COPYRIGHT, WARRANTY);
     /* - show operation mode and bit-rate settings */
@@ -824,13 +838,13 @@ int main(int argc, const char * argv[]) {
     /* - do your job well: */
     switch (mode) {
     case TxMODE:    /* transmitter test (duration) */
-        (void)canDevice.TransmitterTest((time_t)txtime, opMode, (uint32_t)can_id, (uint8_t)can_dlc, (uint32_t)delay, (uint64_t)number);
+        (void)canDevice.TransmitterTest((time_t)txtime, opMode, (uint32_t)can_id, (uint8_t)can_dlc, (uint64_t)delay, (uint64_t)number);
         break;
     case TxFRAMES:  /* transmitter test (frames) */
-        (void)canDevice.TransmitterTest((uint64_t)txframes, opMode, false, (uint32_t)can_id, (uint8_t)can_dlc, (uint32_t)delay, (uint64_t)number);
+        (void)canDevice.TransmitterTest((uint64_t)txframes, opMode, false, (uint32_t)can_id, (uint8_t)can_dlc, (uint64_t)delay, (uint64_t)number);
         break;
     case TxRANDOM:  /* transmitter test (random) */
-        (void)canDevice.TransmitterTest((uint64_t)txframes, opMode, true, (uint32_t)can_id, (uint8_t)can_dlc, (uint32_t)delay, (uint64_t)number);
+        (void)canDevice.TransmitterTest((uint64_t)txframes, opMode, true, (uint32_t)can_id, (uint8_t)can_dlc, (uint64_t)delay, (uint64_t)number);
         break;
     default:        /* receiver test (abort with Ctrl+C) */
         (void)canDevice.ReceiverTest((bool)n, (uint64_t)number, (bool)stop_on_error);
@@ -922,23 +936,21 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
     if (opMode.fdoe) {
         if (opMode.brse) {
             fprintf(stdout, "CAN FD with Bit-rate Switching (BRS):\n");
-            BITRATE_FD_1M8M(bitrate[0]);
-            BITRATE_FD_500K4M(bitrate[1]);
-            BITRATE_FD_250K2M(bitrate[2]);
-            BITRATE_FD_125K1M(bitrate[3]);
+            BITRATE_FD_1M8M(bitrate[n]); n += 1;
+            BITRATE_FD_500K4M(bitrate[n]); n += 1;
+            BITRATE_FD_250K2M(bitrate[n]); n += 1;
+            BITRATE_FD_125K1M(bitrate[n]); n += 1;
             hasDataPhase = true;
             hasNoSamp = false;
-            n = 4;
         }
         else {
             fprintf(stdout, "CAN FD without Bit-rate Switching (BRS):\n");
-            BITRATE_FD_1M(bitrate[0]);
-            BITRATE_FD_500K(bitrate[1]);
-            BITRATE_FD_250K(bitrate[2]);
-            BITRATE_FD_125K(bitrate[3]);
+            BITRATE_FD_1M(bitrate[n]); n += 1;
+            BITRATE_FD_500K(bitrate[n]); n += 1;
+            BITRATE_FD_250K(bitrate[n]); n += 1;
+            BITRATE_FD_125K(bitrate[n]); n += 1;
             hasDataPhase = false;
             hasNoSamp = false;
-            n = 4;
         }
     }
     else {
@@ -946,18 +958,19 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
     {
 #endif
         fprintf(stdout, "Classical CAN:\n");
-        BITRATE_1M(bitrate[0]);
-        BITRATE_800K(bitrate[1]);
-        BITRATE_500K(bitrate[2]);
-        BITRATE_250K(bitrate[3]);
-        BITRATE_125K(bitrate[4]);
-        BITRATE_100K(bitrate[5]);
-        BITRATE_50K(bitrate[6]);
-        BITRATE_20K(bitrate[7]);
-        BITRATE_10K(bitrate[8]);
+        BITRATE_1M(bitrate[n]); n += 1;
+#if (BITRATE_800K_UNSUPPORTED == 0)
+        BITRATE_800K(bitrate[n]); n += 1;
+#endif
+        BITRATE_500K(bitrate[n]); n += 1;
+        BITRATE_250K(bitrate[n]); n += 1;
+        BITRATE_125K(bitrate[n]); n += 1;
+        BITRATE_100K(bitrate[n]); n += 1;
+        BITRATE_50K(bitrate[n]); n += 1;
+        BITRATE_20K(bitrate[n]); n += 1;
+        BITRATE_10K(bitrate[n]); n += 1;
         hasDataPhase = false;
         hasNoSamp = true;
-        n = 9;
     }
     for (i = 0; i < n; i++) {
         if ((retVal = CCanDevice::MapBitrate2Speed(bitrate[i], speed)) == CCanApi::NoError) {
@@ -965,6 +978,8 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
 #if (CAN_FD_SUPPORTED != 0)
             if (opMode.brse)
                 fprintf(stdout, ":%4.0fkbps@%.1f%%", speed.data.speed / 1000., speed.data.samplepoint * 100.);
+#else
+            (void)opMode;  // to avoid compiler warnings
 #endif
         }
         strcpy(string, "=oops, something went wrong!");
@@ -974,7 +989,7 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
     return n;
 }
 
-uint64_t CCanDevice::TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id, uint8_t dlc, uint32_t delay, uint64_t offset) {
+uint64_t CCanDevice::TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id, uint8_t dlc, uint64_t delay, uint64_t offset) {
     CANAPI_Message_t message;
     CANAPI_Return_t retVal;
 
@@ -1043,7 +1058,7 @@ retry_tx_test:
     return frames;
 }
 
-uint64_t CCanDevice::TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random, uint32_t id, uint8_t dlc, uint32_t delay, uint64_t offset) {
+uint64_t CCanDevice::TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random, uint32_t id, uint8_t dlc, uint64_t delay, uint64_t offset) {
     CANAPI_Message_t message;
     CANAPI_Return_t retVal;
 
@@ -1097,7 +1112,7 @@ retry_tx_test:
             errors++;
         /* pause between two messages, as you please */
         if (random)
-            CTimer::Delay(CTimer::USEC * (delay + (uint32_t)(rand() % 54945)));
+            CTimer::Delay(CTimer::USEC * (delay + (uint64_t)(rand() % 54945)));
         else
             CTimer::Delay(CTimer::USEC * delay);
         if (!running) {
