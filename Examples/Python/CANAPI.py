@@ -69,7 +69,7 @@ if platform.system() == "Darwin":
 
 # CAN API V3 - Python Wrapper
 #
-CAN_API_V3_PYTHON = {'major': 0, 'minor': 2, 'patch': 1}
+CAN_API_V3_PYTHON = {'major': 0, 'minor': 2, 'patch': 2}
 
 # CAN Identifier Ranges
 #
@@ -650,7 +650,7 @@ class CANAPI:
         """
         try:
             self.__m_library.can_hardware.restype = c_char_p
-            version_c = self.__m_library.can_hardware()
+            version_c = self.__m_library.can_hardware(self.__m_handle)
             if version_c is not None:
                 return version_c.decode('utf-8')
             else:
@@ -671,7 +671,7 @@ class CANAPI:
         """
         try:
             self.__m_library.can_firmware.restype = c_char_p
-            version_c = self.__m_library.can_firmware()
+            version_c = self.__m_library.can_firmware(self.__m_handle)
             if version_c is not None:
                 return version_c.decode('utf-8')
             else:
