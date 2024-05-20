@@ -49,6 +49,12 @@
 /** @addtogroup  can_api
  *  @{
  */
+#ifdef _MSC_VER
+//no Microsoft extensions please!
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif
+#endif
 #if defined(_WIN64)
 #define PLATFORM  "x64"
 #elif defined(_WIN32)
@@ -61,12 +67,6 @@
 #define PLATFORM  "Cygwin"
 #else
 #error Platform not supported
-#endif
-#ifdef _MSC_VER
-//no Microsoft extensions please!
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS 1
-#endif
 #endif
 
 /*  -----------  includes  -----------------------------------------------
@@ -82,7 +82,6 @@
 #include <unistd.h>
 #include "slcan.h"
 #endif
-#include "Version.h"
 
 #include <stdio.h>
 #include <string.h>

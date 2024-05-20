@@ -50,7 +50,7 @@
 #include "build_no.h"
 #define VERSION_MAJOR    0
 #define VERSION_MINOR    1
-#define VERSION_PATCH    2
+#define VERSION_PATCH    99
 #define VERSION_BUILD    BUILD_NO
 #if (VERSION_PATCH == 0)
 #define VERSION_STRING   TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) " (" TOSTRING(BUILD_NO) ")"
