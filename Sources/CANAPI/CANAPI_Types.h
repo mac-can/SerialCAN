@@ -49,9 +49,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces - Data Types and Defines
  *
- *  @author      $Author: eris $
+ *  @author      $Author: quaoar $
  *
- *  @version     $Rev: 1270 $
+ *  @version     $Rev: 1286 $
  *
  *  @addtogroup  can_api
  *  @{
@@ -320,13 +320,13 @@ extern "C" {
 #define CANPROP_GET_PATCH_NO         2U /**< patch number of the library (uint8_t) */
 #define CANPROP_GET_BUILD_NO         3U /**< build number of the library (uint32_t) */
 #define CANPROP_GET_LIBRARY_ID       4U /**< library id of the library (int32_t) */
-#define CANPROP_GET_LIBRARY_VENDOR   5U /**< vendor name of the library (char[256]) */
-#define CANPROP_GET_LIBRARY_DLLNAME  6U /**< file name of the library DLL (char[256]) */
+#define CANPROP_GET_LIBRARY_VENDOR   5U /**< vendor name of the library (char[]) */
+#define CANPROP_GET_LIBRARY_DLLNAME  6U /**< file name of the library DLL (char[]) */
 #define CANPROP_GET_DEVICE_TYPE     10U /**< device type of the CAN interface (int32_t) */
-#define CANPROP_GET_DEVICE_NAME     11U /**< device name of the CAN interface (char[256]) */
-#define CANPROP_GET_DEVICE_VENDOR   12U /**< vendor name of the CAN interface (char[256]) */
-#define CANPROP_GET_DEVICE_DLLNAME  13U /**< file name of the CAN interface DLL (char[256]) */
-#define CANPROP_GET_DEVICE_PARAM    14U /**< device parameter of the CAN interface (char[256]) */
+#define CANPROP_GET_DEVICE_NAME     11U /**< device name of the CAN interface (char[]) */
+#define CANPROP_GET_DEVICE_VENDOR   12U /**< vendor name of the CAN interface (char[]) */
+#define CANPROP_GET_DEVICE_DLLNAME  13U /**< file name of the CAN interface DLL (char[]) */
+#define CANPROP_GET_DEVICE_PARAM    14U /**< device parameter of the CAN interface (char[]) */
 #define CANPROP_GET_OP_CAPABILITY   15U /**< supported operation modes of the CAN controller (uint8_t) */
 #define CANPROP_GET_OP_MODE         16U /**< active operation mode of the CAN controller (uint8_t) */
 #define CANPROP_GET_BITRATE         17U /**< active bit-rate of the CAN controller (can_bitrate_t) */
@@ -355,21 +355,21 @@ extern "C" {
 #define CANPROP_GET_BTR_INDEX       64U /**< bit-rate as CiA index (int32_t) */
 #define CANPROP_GET_BTR_VALUE       65U /**< bit-rate as struct (can_bitrate_t) */
 #define CANPROP_GET_BTR_SPEED       66U /**< bit-rate as bus speed (can_speed_t) */
-#define CANPROP_GET_BTR_STRING      67U /**< bit-rate as string (char[256]) */
+#define CANPROP_GET_BTR_STRING      67U /**< bit-rate as string (char[]) */
 #define CANPROP_GET_BTR_SJA1000     68U /**< bit-rate as SJA1000 register (uint16_t) */
 #define CANPROP_SET_BTR_INDEX       72U /**< set value for conversion form CiA index (int32_t) */
 #define CANPROP_SET_BTR_VALUE       73U /**< set value for conversion form struct (can_bitrate_t) */
 #define CANPROP_SET_BTR_SPEED       74U /**< set value for conversion form bus speed (can_speed_t) */
-#define CANPROP_SET_BTR_STRING      75U /**< set value for conversion form string (char[256]) */
+#define CANPROP_SET_BTR_STRING      75U /**< set value for conversion form string (char[]) */
 #define CANPROP_SET_BTR_SJA1000     76U /**< set value for conversion form SJA1000 register (uint16_t) */
 /* - -  build-in message formatter  - - - - - - - - - - - - - - - - - - */
-#define CANPROP_GET_MSG_STRING     128U /**< last received or sent message as formatted string (char[1024]) */
-#define CANPROP_GET_MSG_TIME       129U /**< time-stamp of last received or sent message (char[256]) */
-#define CANPROP_GET_MSG_ID         130U /**< identifier of last received or sent message (char[256]) */
-#define CANPROP_GET_MSG_DLC        131U /**< DLC/length of last received or sent message (char[256]) */
-#define CANPROP_GET_MSG_FLAGS      132U /**< flags of last received or sent message (char[256]) */
-#define CANPROP_GET_MSG_DATA       133U /**< data of last received or sent message (char[256]) */
-#define CANPROP_GET_MSG_ASCII      134U /**< data as ASCII of last received or sent message (char[256]) */
+#define CANPROP_GET_MSG_STRING     128U /**< last received or sent message as formatted string (char[]) */
+#define CANPROP_GET_MSG_TIME       129U /**< time-stamp of last received or sent message (char[]) */
+#define CANPROP_GET_MSG_ID         130U /**< identifier of last received or sent message (char[]) */
+#define CANPROP_GET_MSG_DLC        131U /**< DLC/length of last received or sent message (char[]) */
+#define CANPROP_GET_MSG_FLAGS      132U /**< flags of last received or sent message (char[]) */
+#define CANPROP_GET_MSG_DATA       133U /**< data of last received or sent message (char[]) */
+#define CANPROP_GET_MSG_ASCII      134U /**< data as ASCII of last received or sent message (char[]) */
 #define CANPROP_SET_MSG_FORMAT     144U /**< set message output format {DEFAULT, ...} (int) */
 #define CANPROP_SET_FMT_TIMESTAMP  145U /**< set formatter option: time-stamp {ZERO, ABS, REL} (int) */
 #define CANPROP_SET_FMT_TIEMUSEC   146U /**< set formatter option: time-stamp in usec {OFF, ON} (int) */
@@ -396,22 +396,23 @@ extern "C" {
 #define CANPROP_SET_FIRST_VENDOR   224U /**< set index to the first entry in the vendor list (NULL) */
 #define CANPROP_SET_NEXT_VENDOR    225U /**< set index to the next entry in the vendor list (NULL) */
 #define CANPROP_GET_VENDOR_ID      226U /**< get library id at actual index in the vendor list (int32_t) */
-#define CANPROP_GET_VENDOR_NAME    227U /**< get vendor name at actual index in the vendor list (char[256]) */
-#define CANPROP_GET_VENDOR_DLLNAME 228U /**< get file name of the DLL at actual index in the vendor list (char[256]) */
+#define CANPROP_GET_VENDOR_NAME    227U /**< get vendor name at actual index in the vendor list (char[]) */
+#define CANPROP_GET_VENDOR_DLLNAME 228U /**< get file name of the DLL at actual index in the vendor list (char[]) */
 #endif
 #define CANPROP_SET_FIRST_CHANNEL  240U /**< set index to the first entry in the interface list (int32_t or NULL) */
 #define CANPROP_SET_NEXT_CHANNEL   241U /**< set index to the next entry in the interface list (NULL) */
 #define CANPROP_GET_CHANNEL_NO     242U /**< get channel no. at actual index in the interface list (int32_t) */
-#define CANPROP_GET_CHANNEL_NAME   243U /**< get channel name at actual index in the interface list (char[256]) */
-#define CANPROP_GET_CHANNEL_DLLNAME 244U /**< get file name of the DLL at actual index in the interface list (char[256]) */
+#define CANPROP_GET_CHANNEL_NAME   243U /**< get channel name at actual index in the interface list (char[]) */
+#define CANPROP_GET_CHANNEL_DLLNAME 244U /**< get file name of the DLL at actual index in the interface list (char[]) */
 #define CANPROP_GET_CHANNEL_VENDOR_ID 245U /**< get library id at actual index in the interface list (int32_t) */
-#define CANPROP_GET_CHANNEL_VENDOR_NAME 246U /**< get vendor name at actual index in the interface list (char[256]) */
+#define CANPROP_GET_CHANNEL_VENDOR_NAME 246U /**< get vendor name at actual index in the interface list (char[]) */
 /* - -  search path for JSON files (for C++ wrapper classes)  - - - - - */
 #if (OPTION_CANAPI_LIBRARY != 0)
-#define CANPROP_SET_SEARCH_PATH    253U /**< set search path for interface configuration files (char[256]) */
+#define CANPROP_SET_SEARCH_PATH    253U /**< set search path for interface configuration files (char[]) */
+#define CANPROP_GET_SEARCH_PATH    254U /**< get search path for interface configuration files (char[]) */
 #endif
 /* - -  access to device handle (for C++ wrapper classes) - - - - - - - */
-#define CANPROP_GET_CPP_BACKDOOR   255U /**< get device handle (int32_t) */
+#define CANPROP_GET_CPP_BACKDOOR   255U /**< get device handle (int) */
 /* - -  access to vendor-specific properties  - - - - - - - - - - - - - */
 #define CANPROP_GET_VENDOR_PROP    256U /**< offset to get a vendor-specific property value (void*) */
 #define CANPROP_SET_VENDOR_PROP    512U /**< offset to set a vendor-specific property value (void*) */

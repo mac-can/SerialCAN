@@ -73,9 +73,9 @@
 ///              zero to compile your program with the CAN API source files or to
 ///              link your program with the static library at compile-time.
 ///
-/// \author      $Author: eris $
+/// \author      $Author: quaoar $
 //
-/// \version     $Rev: 1270 $
+/// \version     $Rev: 1294 $
 //
 /// \defgroup    can_api CAN Interface API, Version 3
 /// \{
@@ -191,7 +191,20 @@ public:
         char m_szVendorName[CANPROP_MAX_BUFFER_SIZE];  ///< vendor name at actual index in the vendor list
         char m_szVendorDllName[CANPROP_MAX_BUFFER_SIZE];  ///< file name of the DLL at actual index in the vendor list
     };
-    /// \brief       query library information of the first CAN API library in the
+    /// \brief       sets the search path for readings library informations from
+    ///              JSON files.
+    //
+    /// \note        The search path can only be set once, either by ths function
+    ///               or by the non-default constructor with a path argument.
+    //
+    /// \param[in]   path    - path name, or NULL for current working directory
+    //
+    /// \returns     true if the search path has been successfully set, or
+    ///              false on error.
+    //
+    static bool SetSearchPath(const char *path);
+
+    /// \brief       queries library information of the first CAN API library in the
     ///              list of vendors, if any.
     //
     /// \param[out]  info    - the library information of the first entry in the list
@@ -201,7 +214,7 @@ public:
     //
     static bool GetFirstLibrary(SLibraryInfo &info);
     
-    /// \brief       query library information of the next CAN API library in the
+    /// \brief       queries library information of the next CAN API library in the
     ///              list of vendors, if any.
     //
     /// \param[out]  info    - the library information of the next entry in the list
@@ -211,7 +224,7 @@ public:
     //
     static bool GetNextLibrary(SLibraryInfo &info);
 #endif
-    /// \brief       query channel information of the first CAN interface in the
+    /// \brief       queries channel information of the first CAN interface in the
     ///              list of CAN interfaces, if any.
     //
     /// \param[in]   library - library id of the CAN interface list, or -1 for all vendors
@@ -227,7 +240,7 @@ public:
     static bool GetFirstChannel(SChannelInfo &info, void *param = NULL);
 #endif
 
-    /// \brief       query channel information of the next CAN interface in the
+    /// \brief       queries channel information of the next CAN interface in the
     ///              list of CAN interfaces, if any.
     //
     /// \param[out]  info    - the channel information of the next entry in the list
@@ -464,8 +477,16 @@ public:
     //
     virtual char *GetFirmwareVersion() = 0;  // deprecated
 
-    /// \brief       retrieves version information of the CAN API V3 driver
-    ///              as a zero-terminated string.
+#if (OPTION_CANAPI_LIBRARY != 0)
+    /// \brief       retrieves version information of the CAN API V3 wrapper
+    ///              library as a zero-terminated string.
+    //
+    /// \returns     pointer to a zero-terminated string, or NULL on error.
+    //
+    virtual char *GetSoftwareVersion() = 0;  // deprecated
+#endif
+    /// \brief       retrieves version information of the CAN API V3 wrapper
+    ///              (or loader) library as a zero-terminated string.
     //
     /// \returns     pointer to a zero-terminated string, or NULL on error.
     //
@@ -515,4 +536,4 @@ public:
 /// \}
 #endif // CANAPI_H_INCLUDED
 /// \}
-// $Id: CANAPI.h 1270 2024-04-15 18:42:43Z eris $  Copyright (c) UV Software //
+// $Id: CANAPI.h 1294 2024-05-16 19:50:25Z quaoar $  Copyright (c) UV Software //
