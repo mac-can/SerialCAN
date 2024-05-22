@@ -104,7 +104,7 @@
     <ClInclude Include="..\Sources\SerialCAN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\SerialCAN_Defines.h">
+    <ClInclude Include="..\Sources\CANAPI\SerialCAN_Defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
