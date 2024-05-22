@@ -151,16 +151,16 @@ extern "C" {
  *  @{ */
 #define SLCAN_LIB_ID             900    /**< library ID (CAN/COP API V1 compatible) */
 #if defined(_WIN32) || defined (_WIN64)
-#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_DRIVER        "(driverless)"
 #define SLCAN_LIB_WRAPPER       "u3canslc.dll"
 #elif defined(__linux__)
-#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_DRIVER        "(driverless)"
 #define SLCAN_LIB_WRAPPER       "libuvcanslc.so"
 #elif defined(__APPLE__)
-#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_DRIVER        "(driverless)"
 #define SLCAN_LIB_WRAPPER       "libUVCANSLC.dylib"
 #elif defined(__CYGWIN__)
-#define SLCAN_LIB_DRIVER        "(none)"
+#define SLCAN_LIB_DRIVER        "(driverless)"
 #define SLCAN_LIB_WRAPPER       "libuvcanslc.so"
 #else
 #error Platform not supported

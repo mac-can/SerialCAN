@@ -191,7 +191,7 @@ bindir:
 
 incdir:
 	@mkdir -p $(INCDIR)
-	$(CP) $(SOURCE_DIR)/SerialCAN_Defines.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/SerialCAN_Defines.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Types.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANBTR_Defaults.h $(INCDIR)
