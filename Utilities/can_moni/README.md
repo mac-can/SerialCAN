@@ -1,4 +1,4 @@
-__CAN Monitor for CAN-over-Serial-Line Interfaces, Version 0.1.2__ \
+__CAN Monitor for CAN-over-Serial-Line Interfaces, Version 0.2__ \
 Copyright &copy; 2007,2012-2024 by Uwe Vogt, UV Software, Berlin
 
 ```
