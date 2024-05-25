@@ -211,6 +211,7 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
     if (result)                         // serial device not testtable
         *result = CANBRD_NOT_TESTABLE;
 
+#if (OPTION_SERIAL_CHANNEL != 0)
     if (channel != CANDEV_SERIAL)       // must be serial port device!
 #ifndef OPTION_CANAPI_RETVALS
         return CANERR_HANDLE;
@@ -218,6 +219,11 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
         // note: can_init shall return vendor-specific error code or
         //       CANERR_NOTINIT in this case
         return CANERR_NOTINIT;
+#endif
+#else
+    // note: channel no. is not used in this implementation
+    //       because the serial port is selected by its name
+    (void)channel;                      // to avoid compiler warning
 #endif
     if (param == NULL)                  // must have serial port parameter
         return CANERR_NULLPTR;
@@ -261,6 +267,7 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     int fd = -1;                        // file descriptor
     int i;
 
+#if (OPTION_SERIAL_CHANNEL != 0)
     if (channel != CANDEV_SERIAL)       // must be serial port device!
 #ifndef OPTION_CANAPI_RETVALS
         return CANERR_HANDLE;
@@ -268,6 +275,11 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
         // note: can_init shall return vendor-specific error code or
         //       CANERR_NOTINIT in this case
         return CANERR_NOTINIT;
+#endif
+#else
+    // note: channel no. is not used in this implementation
+    //       because the serial port is selected by its name
+    (void)channel;                      // to avoid compiler warning
 #endif
     if (param == NULL)                  // must have serial port parameter
         return CANERR_NULLPTR;
