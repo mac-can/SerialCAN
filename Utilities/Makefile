@@ -1,9 +1,10 @@
 #
-#	CAN Utilities for generic CAN Interfaces
+#	CAN Utilities for generic CAN Interfaces (CAN API V3)
 #
-#	Copyright (c) 2007-2024 Uwe Vogt, UV Software, Berlin (info@mac-can.com)
+#	Copyright (c) 2005-2010 Uwe Vogt, UV Software, Friedrichshafen
+#	Copyright (c) 2012-2024 Uwe Vogt, UV Software, Berlin (info@mac-can.com)
 #
-#	These utilities is free software: you can redistribute it and/or modify
+#	These utilities are free software: you can redistribute it and/or modify
 #	it under the terms of the GNU General Public License as published by
 #	the Free Software Foundation, either version 3 of the License, or
 #	(at your option) any later version.

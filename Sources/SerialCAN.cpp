@@ -183,7 +183,6 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode
 
 EXPORT
 CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr, EChannelState &state) {
-    int32_t channel = CANDEV_SERIAL;
     can_sio_param_t param;
     param.name = (char*)device;
     param.attr.baudrate = sioAttr.baudrate;
@@ -191,15 +190,27 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode
     param.attr.parity = sioAttr.parity;
     param.attr.stopbits = sioAttr.stopbits;
     param.attr.options = sioAttr.options;
+    // delegated to standard initialization function
+    return ProbeChannel(CANDEV_SERIAL, opMode, (void*)&param, state);
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state) {
+    // delegate with value NULL for parameter 'param'
+    return ProbeChannel(channel, opMode, NULL, state);
+}
+
+EXPORT
+CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state) {
     // test the CAN interface (hardware and driver)
     int result = CANBRD_NOT_TESTABLE;
-    CANAPI_Return_t rc = can_test(channel, opMode.byte, &param, &result);
+    CANAPI_Return_t rc = can_test(channel, opMode.byte, param, &result);
     state = (EChannelState)result;
     return rc;
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode) {
+CANAPI_Return_t CSerialCAN::InitializeChannel(const char* device, const CANAPI_OpMode_t& opMode) {
     SSerialAttributes sioAttr = {};
     sioAttr.baudrate = SERIAL_BAUDRATE;
     sioAttr.bytesize = SERIAL_BYTESIZE;
@@ -211,8 +222,7 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, const CANAPI_O
 }
 
 EXPORT
-CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, const CANAPI_OpMode_t &opMode, const SSerialAttributes &sioAttr) {
-    int32_t channel = CANDEV_SERIAL;
+CANAPI_Return_t CSerialCAN::InitializeChannel(const char* device, const CANAPI_OpMode_t& opMode, const SSerialAttributes& sioAttr) {
     can_sio_param_t param;
     param.name = (char*)device;
     param.attr.baudrate = sioAttr.baudrate;
@@ -220,40 +230,23 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(const char *device, const CANAPI_O
     param.attr.parity = sioAttr.parity;
     param.attr.stopbits = sioAttr.stopbits;
     param.attr.options = sioAttr.options;
-    // initialize the CAN interface
-    CANAPI_Return_t rc = CANERR_FATAL;
-    CANAPI_Handle_t hnd = can_init(channel, opMode.byte, &param);
-    if (0 <= hnd) {
-        m_Handle = hnd;  // we got a handle
-        rc = CANERR_NOERROR;
-    } else {
-        rc = (CANAPI_Return_t)hnd;
-    }
-    return rc;
-}
-
-EXPORT
-CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, EChannelState &state) {
-    // delegate with value NULL for parameter 'param'
-    return ProbeChannel(channel, opMode, NULL, state);
-}
-
-EXPORT
-CANAPI_Return_t CSerialCAN::ProbeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param, EChannelState &state) {
-    char device[CANPROP_MAX_BUFFER_SIZE];
-    SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
-    (void)param;  // TODO: map comm attributes
-    // delegate with device name instead of channel number
-    return ProbeChannel(device, opMode, state);
+    // delegated to standard initialization function
+    return InitializeChannel(CANDEV_SERIAL, opMode, (void*)&param);;
 }
 
 EXPORT
 CANAPI_Return_t CSerialCAN::InitializeChannel(int32_t channel, const CANAPI_OpMode_t &opMode, const void *param) {
-    char device[CANPROP_MAX_BUFFER_SIZE];
-    SPRINTF_S(device, CANPROP_MAX_BUFFER_SIZE, SERIAL_PORTNAME, channel + 1);
-    (void)param;  // TODO: map comm attributes
-    // delegate with device name instead of channel number
-    return InitializeChannel(device, opMode);
+    // initialize the CAN interface
+    CANAPI_Return_t rc = CANERR_FATAL;
+    CANAPI_Handle_t hnd = can_init(channel, opMode.byte, param);
+    if (0 <= hnd) {
+        m_Handle = hnd;  // we got a handle
+        rc = CANERR_NOERROR;
+    }
+    else {
+        rc = (CANAPI_Return_t)hnd;
+    }
+    return rc;
 }
 
 EXPORT

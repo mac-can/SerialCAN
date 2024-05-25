@@ -21,9 +21,6 @@
     <ClCompile Include="Sources\dosopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\main_w.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Message.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -31,6 +28,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Sources\CANAPI\can_msg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Options_w.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +68,10 @@
     <ClInclude Include="..\..\Sources\SerialCAN.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Sources\SerialCAN_Defines.h">
+    <ClInclude Include="..\..\Sources\CANAPI\SerialCAN_Defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

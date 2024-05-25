@@ -9,18 +9,20 @@ Options:
  -d, --data=(HEX|DEC|OCT)             display mode of data bytes (default=HEX)
  -a, --ascii=(ON|OFF)                 display data bytes in ASCII (default=ON)
  -x, --exclude=[~]<id-list>           exclude CAN-IDs: <id-list> = <id>[-<id>]{,<id>[-<id>]}
+     --code=<id>                      acceptance code for 11-bit IDs (default=0x000)
+     --mask=<id>                      acceptance mask for 11-bit IDs (default=0x000)
+     --xtd-code=<id>                  acceptance code for 29-bit IDs (default=0x00000000)
+     --xtd-mask=<id>                  acceptance mask for 29-bit IDs (default=0x00000000)
  -m, --mode=2.0                       CAN operation mode: CAN 2.0
      --shared                         shared CAN controller access (if supported)
-     --listen-only                    monitor mode (listen-only, transmitter is off)
+     --listen-only                    monitor mode (listen-only mode)
      --error-frames                   allow reception of error frames
      --no-remote-frames               suppress remote frames (RTR frames)
      --no-extended-frames             suppress extended frames (29-bit identifier)
  -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or
-     --bitrate=<bit-rate>             CAN bit-rate settings (as a string)
+     --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)
  -v, --verbose                        show detailed bit-rate settings
-     --list-bitrates[=2.0]            list standard bit-rate settings
- -L, --list-boards                    list all supported CAN interfaces and exit
- -T, --test-boards                    list all available CAN interfaces and exit
+     --list-bitrates[=2.0]            list standard bit-rate settings and exit
  -h, --help                           display this help screen and exit
      --version                        show version information and exit
 Arguments:

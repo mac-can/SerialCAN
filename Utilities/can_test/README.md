@@ -1,5 +1,6 @@
 __CAN Tester for CAN-over-Serial-Line Interfaces, Version 0.2__ \
-Copyright &copy; 2008-2010,2012-2024 by Uwe Vogt, UV Software, Berlin
+Copyright &copy; 2005-2010 Uwe Vogt, UV Software, Friedrichshafen \
+Copyright &copy; 2012-2024 Uwe Vogt, UV Software, Berlin
 
 ```
 Usage: can_test <interface> [<option>...]
@@ -9,12 +10,12 @@ Options for receiver test (default test mode):
  -s, --stop                           stop on error (with option --number)
  -m, --mode=2.0                       CAN operation mode: CAN 2.0
      --shared                         shared CAN controller access (if supported)
-     --listen-only                    monitor mode (listen-only, transmitter is off)
+     --listen-only                    monitor mode (listen-only mode)
      --error-frames                   allow reception of error frames
      --no-remote-frames               suppress remote frames (RTR frames)
      --no-extended-frames             suppress extended frames (29-bit identifier)
  -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or
-     --bitrate=<bit-rate>             CAN bit-rate settings (as a string)
+     --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)
  -v, --verbose                        show detailed bit-rate settings
 Options for transmitter test:
  -t, --transmit=<time>                send messages for the given time in seconds, or
@@ -28,12 +29,10 @@ Options for transmitter test:
  -m, --mode=2.0                       CAN operation mode: CAN 2.0
      --shared                         shared CAN controller access (if supported)
  -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or
-     --bitrate=<bit-rate>             CAN bit-rate settings (as a string)
+     --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)
  -v, --verbose                        show detailed bit-rate settings
 Other options:
-     --list-bitrates[=2.0]            list standard bit-rate settings
- -L, --list-boards                    list all supported CAN interfaces and exit
- -T, --test-boards                    list all available CAN interfaces and exit
+     --list-bitrates[=2.0]            list standard bit-rate settings and exit
  -h, --help                           display this help screen and exit
      --version                        show version information and exit
 Arguments:

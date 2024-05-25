@@ -33,8 +33,22 @@
 #endif
 #define SERIAL_CAN_SUPPORTED  1  // requires additional parameter (COM port)
 
-#define MONITOR_INTEFACE  "CAN-over-Serial-Line Interfaces"
+#define MONITOR_INTERFACE "CAN-over-Serial-Line Interfaces"
 #define MONITOR_COPYRIGHT "2007,2012-2024 by Uwe Vogt, UV Software, Berlin"
+#if defined(_WIN32) || defined(_WIN64)
+#define MONITOR_PLATFORM  "Windows"
+#define MONITOR_TTYNAME   "\\\\.\\COM"
+#elif defined(__linux__)
+#define MONITOR_PLATFORM  "Linux"
+#define MONITOR_TTYNAME   "/dev/ttyUSB"
+#elif defined(__APPLE__)
+#define MONITOR_PLATFORM  "macOS"
+#define MONITOR_TTYNAME   "/dev/tty.usbserial-<id>"
+#elif defined(__CYGWIN__)
+#define MONITOR_PLATFORM  "Cygwin"
+#define MONITOR_TTYNAME   "/dev/ttyS"
+#endif
+#define MONITOR_ALIASNAME "SLC:"
 
 #define BITRATE_1M(x)    DEFAULT_CAN_BR_1M(x)
 #define BITRATE_800K(x)  DEFAULT_CAN_BR_800K(x)
