@@ -45,7 +45,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** @addtogroup  can_api
+/** @file        SerialCAN_Defines.h
+ *
+ *  @brief       CAN API V3 for generic CAN Interfaces - Definitions and Options
+ *
+ *  @author      $Author: quaoar $
+ *
+ *  @version     $Rev: 1312 $
+ *
+ *  @addtogroup  can_api
  *  @{
  */
 #ifndef CANAPI_SERIALCAN_H_INCLUDED
