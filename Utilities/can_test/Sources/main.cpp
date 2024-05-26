@@ -569,7 +569,7 @@ bool CCanDevice::WriteJsonFile(const char* filename) {
             "    \"id\": %" PRIi32 ",\n"
             "    \"name\": \"%s\",\n"
             "    \"driver\": \"%s\",\n"
-            "    \"library\": \"%s\"\n"
+            "    \"library\": \"%s\",\n"
             "    \"legacy\": false\n",
             channel.m_nLibraryId,
             channel.m_szVendorName,
