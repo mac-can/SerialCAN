@@ -127,20 +127,19 @@ POSIX&reg; compatible operating systems:
 
 Windows&reg; operating system:
 
-1. Windows 10 (x86 and x64)
-1. Windows 11 (x86 and x64)
+1. Windows 10 & 11 (x86 and x64)
 
 ### Development Environments
 
 #### macOS Sonoma
 
-- macOS Sonoma (14.4.1) on a Mac mini (M1, 2020)
+- macOS Sonoma (14.5) on a Mac mini (M1, 2020)
 - Apple clang version 15.0.0 (clang-1500.3.9.4)
-- Xcode Version 15.3 (15E204a)
+- Xcode Version 15.4 (15F31d)
 
 #### macOS Monterey
 
-- macOS Monterey (12.7.4) on a MacBook Pro (2019)
+- macOS Monterey (12.7.5) on a MacBook Pro (2019)
 - Apple clang version 13.0.0 (clang-1300.0.29.30)
 - Xcode Version 13.2.1 (13C100)
 
@@ -152,17 +151,17 @@ Windows&reg; operating system:
 
 #### Debian "bookworm" (12.5)
 
-- Debian 6.1,76-1 (2024-02-01) x86_64 GNU/Linux
+- Debian 6.1.85-1 (2024-04-11) x86_64 GNU/Linux
 - gcc (Debian 12.2.0-14) 12.2.0
 
 #### Cygwin (64-bit)
 
-- Cygwin 3.5.1-1.x86_64 2024-02-27 11:54 UTC x86_64 Cygwin
+- Cygwin 3.5.3-1.x86_64 2024-04-03 17:25 UTC x86_64 Cygwin
 - GNU C/C++ Compiler (GCC) 11.4.0
 
 #### Windows 10 & 11
 
-- Microsoft Visual Studio Community 2022 (Version 17.9.5)
+- Microsoft Visual Studio Community 2022 (Version 17.9.7)
 
 ### CAN Hardware
 
@@ -188,8 +187,6 @@ A generic documentation of the CAN API V3 application programming interface can 
 Except where otherwise noted, this work is dual-licensed under the terms of the BSD 2-Clause "Simplified" License
 and under the terms of the GNU General Public License v3.0 (or any later version).
 You can choose between one of them if you use these portions of this work in whole or in part.
-
-`SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later`
 
 ### Trademarks
 
