@@ -21,8 +21,9 @@
   <ItemGroup>
     <ClCompile Include="..\..\Sources\CANAPI\can_msg.c" />
     <ClCompile Include="Sources\dosopt.c" />
-    <ClCompile Include="Sources\main_w.cpp" />
+    <ClCompile Include="Sources\main.cpp" />
     <ClCompile Include="Sources\Message.cpp" />
+    <ClCompile Include="Sources\Options_w.cpp" />
     <ClCompile Include="Sources\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -32,10 +33,11 @@
     <ClInclude Include="..\..\Sources\CANAPI\CANBTR_Defaults.h" />
     <ClInclude Include="..\..\Sources\CANAPI\can_msg.h" />
     <ClInclude Include="..\..\Sources\SerialCAN.h" />
-    <ClInclude Include="..\..\Sources\SerialCAN_Defines.h" />
+    <ClInclude Include="..\..\Sources\CANAPI\SerialCAN_Defines.h" />
     <ClInclude Include="Driver.h" />
     <ClInclude Include="Sources\dosopt.h" />
     <ClInclude Include="Sources\Message.h" />
+    <ClInclude Include="Sources\Options.h" />
     <ClInclude Include="Sources\Timer.h" />
   </ItemGroup>
   <ItemGroup>

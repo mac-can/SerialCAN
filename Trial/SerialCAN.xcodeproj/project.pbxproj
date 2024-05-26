@@ -45,7 +45,7 @@
 		44A0782B27D51B0500AD6EA4 /* can_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = can_api.h; path = ../../Sources/CANAPI/can_api.h; sourceTree = "<group>"; };
 		44A0782C27D51B2400AD6EA4 /* can_api.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = can_api.c; path = ../../Sources/Wrapper/can_api.c; sourceTree = "<group>"; };
 		44A0782D27D51B2400AD6EA4 /* can_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = can_defs.h; path = ../../Sources/Wrapper/can_defs.h; sourceTree = "<group>"; };
-		44A0782F27D51B5600AD6EA4 /* SerialCAN_Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SerialCAN_Defines.h; path = ../../Sources/SerialCAN_Defines.h; sourceTree = "<group>"; };
+		44A0782F27D51B5600AD6EA4 /* SerialCAN_Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SerialCAN_Defines.h; path = ../../Sources/CANAPI/SerialCAN_Defines.h; sourceTree = "<group>"; };
 		44A0785327D51C9000AD6EA4 /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = buffer.h; path = ../../Sources/SLCAN/buffer.h; sourceTree = "<group>"; };
 		44A0785427D51C9000AD6EA4 /* slcan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = slcan.h; path = ../../Sources/SLCAN/slcan.h; sourceTree = "<group>"; };
 		44A0785627D51C9000AD6EA4 /* logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = logger.h; path = ../../Sources/SLCAN/logger.h; sourceTree = "<group>"; };
@@ -151,7 +151,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = "UV Software, Berlin";
 				TargetAttributes = {
 					0F8206332460255D00CD103A = {
@@ -243,7 +243,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"OPTION_CAN_2_0_ONLY=1",
+					"OPTION_CAN_2_0_ONLY=0",
 					"OPTION_CANAPI_COMPANIONS=1",
 					"OPTION_SERIAL_DEBUG_LEVEL=1",
 					"OPTION_SLCAN_DEBUG_LEVEL=1",
@@ -310,7 +310,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"OPTION_CAN_2_0_ONLY=1",
+					"OPTION_CAN_2_0_ONLY=0",
 					"OPTION_CANAPI_COMPANIONS=1",
 					"OPTION_SERIAL_DEBUG_LEVEL=0",
 					"OPTION_SLCAN_DEBUG_LEVEL=0",

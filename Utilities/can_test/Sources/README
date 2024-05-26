@@ -1,0 +1,36 @@
+# CAN Tester for generic CAN Interfaces
+
+Copyright &copy; 2005-2010 by Uwe Vogt, UV Software, Friedrichshafen \
+Copyright &copy; 2012-2024 by Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+
+## Utility program `can_test`
+
+`can_test` is a command line tool to test CAN communication.
+Originally developed for electronic environmental tests on an embedded Linux system with SocketCAN,
+I´m using it for many years as a traffic generator for CAN stress-tests.
+
+## CAN Interface API, Version 3
+
+**CAN API V3** is a wrapper specification by UV Software to have a uniform CAN Interface API for various CAN interfaces from different vendors running under multiple operating systems.
+
+## Git repo `can_test`
+
+This repo only contains the source code for the utility program `can_test` to be integrated into CAN API V3 wrapper implementations as a git submodule.
+
+## License
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+CAN API V3 is dual-licensed under the terms of the BSD 2-Clause "Simplified" License and under the terms of the GNU General Public License v3.0 (or any later version).
+In this case the terms of the GNU General Public License v3.0 (or any later version) shall be applied to CAN API V3.

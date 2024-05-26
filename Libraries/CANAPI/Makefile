@@ -50,8 +50,8 @@ current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
 MAJOR = 0
-MINOR = 1
-PATCH = 2
+MINOR = 2
+PATCH = 0
 
 ifeq ($(PATCH),0)
 VERSION = $(MAJOR).$(MINOR)
@@ -191,7 +191,7 @@ bindir:
 
 incdir:
 	@mkdir -p $(INCDIR)
-	$(CP) $(SOURCE_DIR)/SerialCAN_Defines.h $(INCDIR)
+	$(CP) $(CANAPI_DIR)/SerialCAN_Defines.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Types.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANAPI_Defines.h $(INCDIR)
 	$(CP) $(CANAPI_DIR)/CANBTR_Defaults.h $(INCDIR)

@@ -55,6 +55,7 @@
 /*  -----------  includes  ------------------------------------------------
  */
 
+#include "Version.h"
 #include "CANAPI_Defines.h"
 #include "SerialCAN_Defines.h"
 

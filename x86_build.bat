@@ -107,7 +107,8 @@ rem copy the header files into the Includes folder
 echo Copying header files...
 set INC=.\Includes
 if not exist %INC% mkdir %INC%
-copy /Y .\Sources\SerialCAN*.h %INC%
+copy /Y .\Sources\SerialCAN.h %INC%
+copy /Y .\Sources\CANAPI\SerialCAN_Defines.h %INC%
 copy /Y .\Sources\CANAPI\CANAPI.h %INC%
 copy /Y .\Sources\CANAPI\CANAPI_Types.h %INC%
 copy /Y .\Sources\CANAPI\CANAPI_Defines.h %INC%

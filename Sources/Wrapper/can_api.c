@@ -49,6 +49,12 @@
 /** @addtogroup  can_api
  *  @{
  */
+#ifdef _MSC_VER
+//no Microsoft extensions please!
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 1
+#endif
+#endif
 #if defined(_WIN64)
 #define PLATFORM  "x64"
 #elif defined(_WIN32)
@@ -61,12 +67,6 @@
 #define PLATFORM  "Cygwin"
 #else
 #error Platform not supported
-#endif
-#ifdef _MSC_VER
-//no Microsoft extensions please!
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS 1
-#endif
 #endif
 
 /*  -----------  includes  -----------------------------------------------
@@ -82,13 +82,11 @@
 #include <unistd.h>
 #include "slcan.h"
 #endif
-#include "Version.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
-
 
 /*  -----------  options  ------------------------------------------------
  */
@@ -131,7 +129,12 @@ static void _finalizer() {
 #define CAN_CLOCK_FREQUENCY     CANBTR_FREQ_SJA1000
 #define CAN_BTR_DEFAULT         0x011CU
 #define SLCAN_QUEUE_SIZE        65536U
-
+#define FILTER_STD_CODE         (uint32_t)(0x000)
+#define FILTER_STD_MASK         (uint32_t)(0x000)
+#define FILTER_XTD_CODE         (uint32_t)(0x00000000)
+#define FILTER_XTD_MASK         (uint32_t)(0x00000000)
+#define FILTER_SJA1000_CODE     (uint32_t)(0x00000000)
+#define FILTER_SJA1000_MASK     (uint32_t)(0xFFFFFFFF)
 #ifndef SYSERR_OFFSET
 #define SYSERR_OFFSET           (-10000)
 #endif
@@ -143,6 +146,14 @@ static void _finalizer() {
 
 /*  -----------  types  --------------------------------------------------
  */
+typedef struct {                        // message filtering:
+    struct {                            //   acceptance filter:
+        uint32_t code;                  //     acceptance code
+        uint32_t mask;                  //     acceptance mask
+    } std, xtd,                         //   for standard and extended frames
+      sja1000;                          //   and SJA1000 ACn and AMn register
+} can_filter_t;
+
 typedef struct {                        // frame counters:
     uint64_t tx;                        //   number of transmitted CAN frames
     uint64_t rx;                        //   number of received CAN frames
@@ -152,22 +163,24 @@ typedef struct {                        // frame counters:
 typedef struct {                        // SLCAN interface:
     slcan_port_t port;                  //   serial comm port
     can_sio_attr_t attr;                //   serial comm attributes
-    can_mode_t mode;                    //   operation mode of the CAN channel
+    can_mode_t mode;                    //   CAN operation mode
+    can_filter_t filter;                //   message filter settings
     can_status_t status;                //   8-bit status register
     can_counter_t counters;             //   statistical counters
     uint16_t btr0btr1;                  //   bit-rate settings
     char name[CANPROP_MAX_BUFFER_SIZE]; //   TTY device name
 } can_interface_t;
 
-
 /*  -----------  prototypes  ---------------------------------------------
  */
-static void var_init(void);             // initialize variables
+static void init_vars(void);            // initialize variables
 
 static slcan_attr_t* slcan_attr(const can_sio_attr_t* attr);
 static int slcan_error(int code);       // SLCAN specific errors
 
 static int get_sio_attr(slcan_port_t port, can_sio_attr_t *attr);
+static int set_filter(int handle, uint64_t filter, bool xtd);
+static int reset_filter(int handle);
 
 static int lib_parameter(uint16_t param, void *value, size_t nbyte);
 static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte);
@@ -198,6 +211,7 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
     if (result)                         // serial device not testtable
         *result = CANBRD_NOT_TESTABLE;
 
+#if (OPTION_SERIAL_CHANNEL != 0)
     if (channel != CANDEV_SERIAL)       // must be serial port device!
 #ifndef OPTION_CANAPI_RETVALS
         return CANERR_HANDLE;
@@ -206,6 +220,11 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
         //       CANERR_NOTINIT in this case
         return CANERR_NOTINIT;
 #endif
+#else
+    // note: channel no. is not used in this implementation
+    //       because the serial port is selected by its name
+    (void)channel;                      // to avoid compiler warning
+#endif
     if (param == NULL)                  // must have serial port parameter
         return CANERR_NULLPTR;
 
@@ -213,8 +232,8 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
     if (name == NULL)                   // must have at least a TTY name
         return CANERR_NULLPTR;
 
-    if (!init) {                        // when not init before:
-        var_init();                     //   initialize the variables
+    if (!init) {                        // if not init before:
+        init_vars();                    //   initialize variables
         init = 1;                       //   set initialization flag
     }
     // (1) check requested protocol option (SLCAN)
@@ -248,6 +267,7 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     int fd = -1;                        // file descriptor
     int i;
 
+#if (OPTION_SERIAL_CHANNEL != 0)
     if (channel != CANDEV_SERIAL)       // must be serial port device!
 #ifndef OPTION_CANAPI_RETVALS
         return CANERR_HANDLE;
@@ -256,6 +276,11 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
         //       CANERR_NOTINIT in this case
         return CANERR_NOTINIT;
 #endif
+#else
+    // note: channel no. is not used in this implementation
+    //       because the serial port is selected by its name
+    (void)channel;                      // to avoid compiler warning
+#endif
     if (param == NULL)                  // must have serial port parameter
         return CANERR_NULLPTR;
 
@@ -263,8 +288,8 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     if (name == NULL)                   // must have at least a TTY name
         return CANERR_NULLPTR;
 
-    if (!init) {                        // when not init before:
-        var_init();                     //   initialize the variables
+    if (!init) {                        // if not init before:
+        init_vars();                    //   initialize variables
         init = 1;                       //   set initialization flag
     }
     for (i = 0; i < CAN_MAX_HANDLES; i++) {
@@ -342,7 +367,7 @@ int can_exit(int handle)
             return CANERR_HANDLE;
         if (can[handle].port == NULL)   // must be an open handle
             return CANERR_HANDLE;
-        if (!can[handle].status.can_stopped) { // when running then go bus off
+        if (!can[handle].status.can_stopped) { // if running then go bus off
             (void)can_reset(handle);
         }
         rc = slcan_disconnect(can[handle].port);
@@ -358,7 +383,7 @@ int can_exit(int handle)
         for (i = 0; i < CAN_MAX_HANDLES; i++) {
             if (can[i].port != NULL)    // must be an open handle
             {
-                if (!can[i].status.can_stopped) { // when running then go bus off
+                if (!can[i].status.can_stopped) { // if running then go bus off
                     (void)can_reset(i);
                 }
                 (void)slcan_disconnect(can[i].port);  // resistance is futile!
@@ -417,35 +442,40 @@ int can_start(int handle, const can_bitrate_t *bitrate)
     if (!can[handle].status.can_stopped) // must be stopped!
         return CANERR_ONLINE;
 
-    // check bit-rate settings (possibly after conversion from index)
+    // (1) check bit-rate settings (possibly after conversion from index)
     memcpy(&temporary, bitrate, sizeof(can_bitrate_t));
     if (bitrate->index <= 0) {
         // convert index to bit-rate
         if (btr_index2bitrate(bitrate->index, &temporary) != CANERR_NOERROR)
-            return CANERR_BAUDRATE;  // FIXME: single point of exit
+            return CANERR_BAUDRATE;
     }
-    // convert bit-rate to SJA1000 BTR0/BTR1 register
+    // (2) convert bit-rate to SJA1000 BTR0/BTR1 register
     if (btr_bitrate2sja1000(&temporary, &btr0btr1) != CANERR_NOERROR)
-        return CANERR_BAUDRATE;  // FIXME: single point of exit
-
-    // set the bit-timing register
+        return CANERR_BAUDRATE;
+    // (3) set the bit-timing register
     rc = slcan_setup_btr(can[handle].port, btr0btr1);
-    rc = slcan_error(rc);
-    if (rc == CANERR_NOERROR) {
-        // start the CAN controller
-        rc = slcan_open_channel(can[handle].port);
-        rc = slcan_error(rc);
-        if (rc == CANERR_NOERROR) {
-            // clear old status and counters
-            can[handle].status.byte = 0x00;
-            can[handle].counters.tx = 0ull;
-            can[handle].counters.rx = 0ull;
-            can[handle].counters.err = 0ull;
-            // store bit-rate settings
-            can[handle].btr0btr1 = btr0btr1;
-        }
-        can[handle].status.can_stopped = (rc == CANERR_NOERROR) ? 0 : 1;
-    }
+    if (rc < 0)
+        return slcan_error(rc);
+    // (4) set acceptance filter (code and mask)
+    rc = slcan_acceptance_code(can[handle].port, can[handle].filter.sja1000.code);
+    if (rc < 0)
+        return slcan_error(rc);
+    rc = slcan_acceptance_mask(can[handle].port, can[handle].filter.sja1000.mask);
+    if (rc < 0)
+        return slcan_error(rc);
+    // (5) start the CAN controller
+    rc = slcan_open_channel(can[handle].port);
+    if (rc < 0)
+        return slcan_error(rc);
+    // (6) store the bit-rate settings
+    can[handle].btr0btr1 = btr0btr1;
+    // (7) clear old status and counters
+    can[handle].status.byte = 0x00;
+    can[handle].counters.tx = 0ull;
+    can[handle].counters.rx = 0ull;
+    can[handle].counters.err = 0ull;
+    // hurray, the CAN is running now
+    can[handle].status.can_stopped = 0;
     return rc;
 }
 
@@ -461,7 +491,7 @@ int can_reset(int handle)
     if (can[handle].port == NULL)       // must be an open handle
         return CANERR_HANDLE;
 
-    if (!can[handle].status.can_stopped) { // when running then go bus off
+    if (!can[handle].status.can_stopped) { // if running then go bus off
         rc = slcan_close_channel(can[handle].port);
         rc = slcan_error(rc);
         can[handle].status.can_stopped = (rc == CANERR_NOERROR) ? 1 : 0;
@@ -577,7 +607,7 @@ int can_status(int handle, uint8_t *status)
     if (can[handle].port == NULL)       // must be an open handle
         return CANERR_HANDLE;
 
-    if (!can[handle].status.can_stopped) { // when running get status
+    if (!can[handle].status.can_stopped) { // if running get status
         if ((rc = slcan_status_flags(can[handle].port, &flags)) != 0)
             return slcan_error(rc);
         // TODO: SJA1000 datasheet, rtfm!
@@ -604,7 +634,7 @@ int can_busload(int handle, uint8_t *load, uint8_t *status)
     if (can[handle].port == NULL)       // must be an open handle
         return CANERR_HANDLE;
 
-    if (!can[handle].status.can_stopped) { // when running get bus load
+    if (!can[handle].status.can_stopped) { // if running get bus load
         (void)busload; //  TODO: measure bus load
     }
     if (load)                           // bus-load (in [percent])
@@ -709,7 +739,7 @@ char *can_firmware(int handle)
 
 /*  -----------  local functions  ----------------------------------------
  */
-static void var_init(void)
+static void init_vars(void)
 {
     int i;
 
@@ -725,6 +755,12 @@ static void var_init(void)
         can[i].btr0btr1 = CAN_BTR_DEFAULT;
         can[i].mode.byte = CANMODE_DEFAULT;
         can[i].status.byte = CANSTAT_RESET;
+        can[i].filter.sja1000.code = FILTER_SJA1000_CODE;
+        can[i].filter.sja1000.mask = FILTER_SJA1000_MASK;
+        can[i].filter.std.code = FILTER_STD_CODE;
+        can[i].filter.std.mask = FILTER_STD_MASK;
+        can[i].filter.xtd.code = FILTER_XTD_CODE;
+        can[i].filter.xtd.mask = FILTER_XTD_MASK;
         can[i].counters.tx = 0ull;
         can[i].counters.rx = 0ull;
         can[i].counters.err = 0ull;
@@ -810,6 +846,56 @@ static int get_sio_attr(slcan_port_t port, can_sio_attr_t *attr)
     return rc;
 }
 
+static int set_filter(int handle, uint64_t filter, bool xtd)
+{
+    assert(IS_HANDLE_VALID(handle));    // just to make sure
+
+    /* the acceptance code and mask are coded together in a 64-bit value, each of them using 4 bytes
+     * the acceptance code is in the most significant bytes, the mask in the least significant bytes
+     */
+    uint32_t code = (uint32_t)((filter >> 32)) & (uint32_t)(xtd ? CAN_MAX_XTD_ID : CAN_MAX_STD_ID);
+    uint32_t mask = (uint32_t)((filter >>  0)) & (uint32_t)(xtd ? CAN_MAX_XTD_ID : CAN_MAX_STD_ID);
+
+    /* store the acceptance filter values:
+     * a) they can not be set when the controller has been started
+     * b) they cannot be read directly from the controller
+     * c) SJA1000 has only one pair of code and mask registers
+     */
+    if (!xtd) {
+        can[handle].filter.std.code = code;
+        can[handle].filter.std.mask = mask;
+        can[handle].filter.xtd.code = FILTER_XTD_CODE;
+        can[handle].filter.xtd.mask = FILTER_XTD_MASK;
+        // determine the ACn and AMn register
+        can[handle].filter.sja1000.code = (uint32_t)(code << 5);
+        can[handle].filter.sja1000.mask = (uint32_t)((~mask & CAN_MAX_STD_ID) << 5) | (uint32_t)0x1FU;
+    } else {
+        can[handle].filter.std.code = FILTER_STD_CODE;
+        can[handle].filter.std.mask = FILTER_STD_MASK;
+        can[handle].filter.xtd.code = code;
+        can[handle].filter.xtd.mask = mask;
+        // determine the ACn and AMn register
+        can[handle].filter.sja1000.code = (uint32_t)(code << 3);
+        can[handle].filter.sja1000.mask = (uint32_t)((~mask & CAN_MAX_XTD_ID) << 3) | (uint32_t)0x7U;
+    }
+    return CANERR_NOERROR;
+}
+
+static int reset_filter(int handle)
+{
+    assert(IS_HANDLE_VALID(handle));    // just to make sure
+
+    /* reset the acceptance filter for standard and extended identifier */
+    can[handle].filter.std.code = FILTER_STD_CODE;
+    can[handle].filter.std.mask = FILTER_STD_MASK;
+    can[handle].filter.xtd.code = FILTER_XTD_CODE;
+    can[handle].filter.xtd.mask = FILTER_XTD_MASK;
+    can[handle].filter.sja1000.code = FILTER_SJA1000_CODE;
+    can[handle].filter.sja1000.mask = FILTER_SJA1000_MASK;
+
+    return CANERR_NOERROR;
+}
+
 /*  - - - - - -  CAN API V3 properties  - - - - - - - - - - - - - - - - -
  */
 static int lib_parameter(uint16_t param, void *value, size_t nbyte)
@@ -856,27 +942,31 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
             rc = CANERR_NOERROR;
         }
         break;
-    case CANPROP_GET_LIBRARY_VENDOR:    // vendor name of the library (char[256])
-        if ((nbyte > strlen(CAN_API_VENDOR)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, CAN_API_VENDOR);
+    case CANPROP_GET_LIBRARY_VENDOR:    // vendor name of the library (char[])
+        if (nbyte >= 1U) {
+            strncpy((char*)value, CAN_API_VENDOR, nbyte);
+            ((char*)value)[(nbyte - 1)] = '\0';
             rc = CANERR_NOERROR;
         }
         break;
-    case CANPROP_GET_LIBRARY_DLLNAME:   // file name of the library (char[256])
-        if ((nbyte > strlen(LIB_DLLNAME)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, LIB_DLLNAME);
+    case CANPROP_GET_LIBRARY_DLLNAME:   // file name of the library (char[])
+        if (nbyte >= 1U) {
+            strncpy((char*)value, LIB_DLLNAME, nbyte);
+            ((char*)value)[(nbyte - 1)] = '\0';
             rc = CANERR_NOERROR;
         }
         break;
-    case CANPROP_GET_DEVICE_VENDOR:     // vendor name of the CAN interface (char[256])
-        if ((nbyte > strlen(DEV_VENDOR)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, DEV_VENDOR);
+    case CANPROP_GET_DEVICE_VENDOR:     // vendor name of the CAN interface (char[])
+        if (nbyte >= 1U) {
+            strncpy((char*)value, DEV_VENDOR, nbyte);
+            ((char*)value)[(nbyte - 1)] = '\0';
             rc = CANERR_NOERROR;
         }
         break;
-    case CANPROP_GET_DEVICE_DLLNAME:    // file name of the CAN interface DLL (char[256])
-        if ((nbyte > strlen(DEV_DLLNAME)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, DEV_DLLNAME);
+    case CANPROP_GET_DEVICE_DLLNAME:    // file name of the CAN interface DLL (char[])
+        if (nbyte >= 1U) {
+            strncpy((char*)value, DEV_DLLNAME, nbyte);
+            ((char*)value)[(nbyte - 1)] = '\0';
             rc = CANERR_NOERROR;
         }
         break;
@@ -904,8 +994,8 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
                 rc = CANERR_RESOURCE;
         }
         break;
-    case CANPROP_GET_CHANNEL_NAME:      // get channel name at actual index in the interface list (char[256])
-        if ((0U < nbyte) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+    case CANPROP_GET_CHANNEL_NAME:      // get channel name at actual index in the interface list (char[])
+        if (nbyte >= 1U) {
             if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
                 strncpy((char*)value, can_boards[idx_board].name, nbyte);
@@ -916,8 +1006,8 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
                 rc = CANERR_RESOURCE;
         }
         break;
-    case CANPROP_GET_CHANNEL_DLLNAME:   // get file name of the DLL at actual index in the interface list (char[256])
-        if ((0U < nbyte) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+    case CANPROP_GET_CHANNEL_DLLNAME:   // get file name of the DLL at actual index in the interface list (char[])
+        if (nbyte >= 1U) {
             if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
                 strncpy((char*)value, DEV_DLLNAME, nbyte);
@@ -939,8 +1029,8 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
                 rc = CANERR_RESOURCE;
         }
         break;
-    case CANPROP_GET_CHANNEL_VENDOR_NAME: // get vendor name at actual index in the interface list (char[256])
-        if ((0U < nbyte) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
+    case CANPROP_GET_CHANNEL_VENDOR_NAME: // get vendor name at actual index in the interface list (char[])
+        if (nbyte >= 1U) {
             if ((0 <= idx_board) && (idx_board < /*CANSIO_BOARDS*/1) &&  // warning: statement with no effect
                 (can_boards[idx_board].type != EOF)) {
                 strncpy((char*)value, DEV_VENDOR, nbyte);
@@ -952,8 +1042,8 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
         }
         break;
     case CANPROP_GET_DEVICE_TYPE:       // device type of the CAN interface (int32_t)
-    case CANPROP_GET_DEVICE_NAME:       // device name of the CAN interface (char[256])
-    case CANPROP_GET_DEVICE_PARAM:      // device parameter of the CAN interface (char[256])
+    case CANPROP_GET_DEVICE_NAME:       // device name of the CAN interface (char[])
+    case CANPROP_GET_DEVICE_PARAM:      // device parameter of the CAN interface (char[])
     case CANPROP_GET_OP_CAPABILITY:     // supported operation modes of the CAN controller (uint8_t)
     case CANPROP_GET_OP_MODE:           // active operation mode of the CAN controller (uint8_t)
     case CANPROP_GET_BITRATE:           // active bit-rate of the CAN controller (can_bitrate_t)
@@ -969,13 +1059,11 @@ static int lib_parameter(uint16_t param, void *value, size_t nbyte)
     case CANPROP_GET_RCV_QUEUE_SIZE:    // maximum number of message the receive queue can hold (uint32_t)
     case CANPROP_GET_RCV_QUEUE_HIGH:    // maximum number of message the receive queue has hold (uint32_t)
     case CANPROP_GET_RCV_QUEUE_OVFL:    // overflow counter of the receive queue (uint64_t)
-#if (0)
     case CANPROP_GET_FILTER_11BIT:      // acceptance filter code and mask for 11-bit identifier (uint64_t)
     case CANPROP_GET_FILTER_29BIT:      // acceptance filter code and mask for 29-bit identifier (uint64_t)
     case CANPROP_SET_FILTER_11BIT:      // set value for acceptance filter code and mask for 11-bit identifier (uint64_t)
     case CANPROP_SET_FILTER_29BIT:      // set value for acceptance filter code and mask for 29-bit identifier (uint64_t)
     case CANPROP_SET_FILTER_RESET:      // reset acceptance filter code and mask to default values (NULL)
-#endif
         // note: a device parameter requires a valid handle.
         if (!init)
             rc = CANERR_NOTINIT;
@@ -1016,20 +1104,23 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         }
         break;
     case CANPROP_GET_DEVICE_NAME:       // device name of the CAN interface (char[256])
-        if ((nbyte > strlen(can[handle].name)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, can[handle].name);
+        if (nbyte >= 1U) {
+            strncpy((char*)value, can[handle].name, nbyte);
+            ((char*)value)[(nbyte - 1)] = '\0';
             rc = CANERR_NOERROR;
         }
         break;
-    case CANPROP_GET_DEVICE_VENDOR:     // vendor name of the CAN interface (char[256])
-        if ((nbyte > strlen(SLCAN_LIB_VENDOR)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, SLCAN_LIB_VENDOR);
+    case CANPROP_GET_DEVICE_VENDOR:     // vendor name of the CAN interface (char[])
+        if (nbyte >= 1U) {
+            strncpy((char*)value, DEV_VENDOR, nbyte);
+            ((char*)value)[(nbyte - 1)] = '\0';
             rc = CANERR_NOERROR;
         }
         break;
-    case CANPROP_GET_DEVICE_DLLNAME:    // file name of the CAN interface DLL (char[256])
-        if ((nbyte > strlen(SLCAN_LIB_DRIVER)) && (nbyte <= CANPROP_MAX_BUFFER_SIZE)) {
-            strcpy((char*)value, SLCAN_LIB_DRIVER);
+    case CANPROP_GET_DEVICE_DLLNAME:    // file name of the CAN interface DLL (char[])
+        if (nbyte >= 1U) {
+            strncpy((char*)value, DEV_DLLNAME, nbyte);
+            ((char*)value)[(nbyte - 1)] = '\0';
             rc = CANERR_NOERROR;
         }
         break;
@@ -1134,12 +1225,58 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         rc = CANERR_NOTSUPP;
         break;
     case CANPROP_GET_FILTER_11BIT:      // acceptance filter code and mask for 11-bit identifier (uint64_t)
+        if (nbyte >= sizeof(uint64_t)) {
+            *(uint64_t*)value = ((uint64_t)can[handle].filter.std.code << 32)
+                              | ((uint64_t)can[handle].filter.std.mask);
+            rc = CANERR_NOERROR;
+        }
+        break;
     case CANPROP_GET_FILTER_29BIT:      // acceptance filter code and mask for 29-bit identifier (uint64_t)
+        if (nbyte >= sizeof(uint64_t)) {
+            *(uint64_t*)value = ((uint64_t)can[handle].filter.xtd.code << 32)
+                              | ((uint64_t)can[handle].filter.xtd.mask);
+            rc = CANERR_NOERROR;
+        }
+        break;
     case CANPROP_SET_FILTER_11BIT:      // set value for acceptance filter code and mask for 11-bit identifier (uint64_t)
+        if (nbyte >= sizeof(uint64_t)) {
+            if (!(*(uint64_t*)value & 0xFFFFF800FFFFF800ULL)) {   // TODO: replace by a define
+                // note: code and mask must not exceed 11-bit identifier
+                if (can[handle].status.can_stopped) {
+                    // note: set filter only if the CAN controller is in INIT mode
+                    rc= set_filter(handle, *(uint64_t*)value, false);
+                }
+                else
+                    rc = CANERR_ONLINE;
+            }
+            else
+                rc = CANERR_ILLPARA;
+        }
+        break;
     case CANPROP_SET_FILTER_29BIT:      // set value for acceptance filter code and mask for 29-bit identifier (uint64_t)
+        if (nbyte >= sizeof(uint64_t)) {
+            if (!(*(uint64_t*)value & 0xE0000000E0000000ULL) &&   // TODO: replace by a define
+                !can[handle].mode.nxtd) {
+                // note: code and mask must not exceed 29-bit identifier and
+                //       extended frame format mode must not be suppressed
+                if (can[handle].status.can_stopped) {
+                    // note: set filter only if the CAN controller is in INIT mode
+                    rc = set_filter(handle, *(uint64_t*)value, true);
+                }
+                else
+                    rc = CANERR_ONLINE;
+            }
+            else
+                rc = CANERR_ILLPARA;
+        }
+        break;
     case CANPROP_SET_FILTER_RESET:      // reset acceptance filter code and mask to default values (NULL)
-        // TODO: insert coin here
-        rc = CANERR_NOTSUPP;
+        if (can[handle].status.can_stopped) {
+            // note: reset filter only if the CAN controller is in INIT mode
+            rc = reset_filter(handle);
+        }
+        else
+            rc = CANERR_ONLINE;
         break;
     /* vendor-specific properties */
     case (CANPROP_GET_VENDOR_PROP + SLCAN_SERIAL_NUMBER):       // serial no (uint32_t)
