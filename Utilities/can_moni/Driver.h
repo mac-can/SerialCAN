@@ -41,12 +41,12 @@
 #elif defined(__linux__)
 #define MONITOR_PLATFORM  "Linux"
 #define MONITOR_TTYNAME   "/dev/ttyUSB"
-#elif defined(__APPLE__)
-#define MONITOR_PLATFORM  "macOS"
-#define MONITOR_TTYNAME   "/dev/tty.usbserial-<id>"
 #elif defined(__CYGWIN__)
 #define MONITOR_PLATFORM  "Cygwin"
 #define MONITOR_TTYNAME   "/dev/ttyS"
+#elif defined(__APPLE__)
+#define MONITOR_PLATFORM  "Darwin"
+#define MONITOR_TTYNAME   "/dev/tty.usbserial-<id>"
 #endif
 #define MONITOR_ALIASNAME "SLC:"
 

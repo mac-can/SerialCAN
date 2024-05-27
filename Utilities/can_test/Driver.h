@@ -42,12 +42,12 @@
 #elif defined(__linux__)
 #define TESTER_PLATFORM   "Linux"
 #define TESTER_TTYNAME    "/dev/ttyUSB"
-#elif defined(__APPLE__)
-#define TESTER_PLATFORM   "macOS"
-#define TESTER_TTYNAME    "/dev/tty.usbserial-<id>"
 #elif defined(__CYGWIN__)
 #define TESTER_PLATFORM   "Cygwin"
 #define TESTER_TTYNAME    "/dev/ttyS"
+#elif defined(__APPLE__)
+#define TESTER_PLATFORM   "Darwin"
+#define TESTER_TTYNAME    "/dev/tty.usbserial-<id>"
 #endif
 #define TESTER_ALIASNAME  "SLC:"
 

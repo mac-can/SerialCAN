@@ -375,11 +375,11 @@ int CCanDevice::ListCanDevices(void) {
         n++;
         iterChannel = CCanDevice::GetNextChannel(channel);
     }
-#endif
 #if (SERIAL_CAN_SUPPORTED != 0)
     if (n == 0) {
         fprintf(stdout, "Check the Device Manager for compatible serial communication devices!\n");
     }
+#endif
 #endif
     return n;
 }
@@ -444,11 +444,11 @@ int CCanDevice::TestCanDevices(CANAPI_OpMode_t opMode) {
             fprintf(stdout, "FAILED!\n");
         iterChannel = CCanDevice::GetNextChannel(channel);
     }
-#endif
 #if (SERIAL_CAN_SUPPORTED != 0)
     if (n == 0) {
         fprintf(stdout, "Check the Device Manager for compatible serial communication devices!\n");
     }
+#endif
 #endif
     return n;
 }
@@ -579,7 +579,7 @@ bool CCanDevice::WriteJsonFile(const char* filename) {
     }
     fprintf(fp,
             "  },\n"
-            "  \"boards\" : [\n"
+            "  \"boards\": [\n"
            );
     int n = 0;
     while (iterChannel) {
@@ -618,11 +618,11 @@ bool CCanDevice::WriteJsonFile(const char* filename) {
             "      \"id\": %i,\n"
             "      \"name\": \"%s%i\",\n"
             "      \"alias\": \"%s%i\"\n",
-            i, 
-#if !defined(_WIN32) && !defined(_WIN64)
-            MONITOR_TTYNAME, i,
-#else
+            CANDEV_SERIAL, 
+#if defined(_WIN32) || defined(_WIN64)
             MONITOR_TTYNAME, i + 1,
+#else
+            MONITOR_TTYNAME, i,
 #endif
             MONITOR_ALIASNAME, i
            );
