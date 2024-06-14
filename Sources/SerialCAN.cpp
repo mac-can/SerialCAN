@@ -242,8 +242,7 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(int32_t channel, const CANAPI_OpMo
     if (0 <= hnd) {
         m_Handle = hnd;  // we got a handle
         rc = CANERR_NOERROR;
-    }
-    else {
+    } else {
         rc = (CANAPI_Return_t)hnd;
     }
     return rc;
