@@ -58,7 +58,7 @@ Utilities/can_test/Release
 Utilities/can_test/can_test
 Utilities/can_test/*.sln
 Utilities/can_test/*.vcxproj.user
-Tests
+#Tests
 SerialCAN-cppcheck-build-dir
 checker.txt
 artifacts
