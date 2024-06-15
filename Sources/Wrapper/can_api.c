@@ -633,8 +633,10 @@ int can_status(int handle, uint8_t *status)
     if (!IS_HANDLE_OPENED(handle))      // must be an open handle
         return CANERR_HANDLE;
 
-    // get status-register from device (CAN API V1 compatible)
-    if ((rc = slcan_status_flags(can[handle].port, &flags)) == 0) {
+    if (!can[handle].status.can_stopped) { // if running get bus status
+        // get status-register from device (CAN API V1 compatible)
+        if ((rc = slcan_status_flags(can[handle].port, &flags)) < 0)
+            return slcan_error(rc);
         // TODO: SJA1000 datasheet, rtfm!
         can[handle].status.message_lost = (flags.DOI | flags.RxFIFO | flags.TxFIFO) ? 1 : 0;
         can[handle].status.bus_error = flags.BEI ? 1 : 0;
@@ -643,7 +645,7 @@ int can_status(int handle, uint8_t *status)
     }
     if (status)                         // status-register
         *status = can[handle].status.byte;
-    return slcan_error(rc);
+    return CANERR_NOERROR;
 }
 
 EXPORT
