@@ -151,7 +151,7 @@ Windows&reg; operating system:
 
 #### Debian "bookworm" (12.5)
 
-- Debian 6.1.85-1 (2024-04-11) x86_64 GNU/Linux
+- Debian 6.1.90-1 (2024-05-03) x86_64 GNU/Linux
 - gcc (Debian 12.2.0-14) 12.2.0
 
 #### Cygwin (64-bit)
@@ -161,11 +161,16 @@ Windows&reg; operating system:
 
 #### Windows 10 & 11
 
-- Microsoft Visual Studio Community 2022 (Version 17.9.7)
+- Microsoft Visual Studio Community 2022 (Version 17.10.2)
 
 ### CAN Hardware
 
 - Lawicel CANUSB (Hardware 1.0, Firmware 1.1)
+
+### Testing (macOS only)
+
+The Xcode project for the trial program includes an xctest target with one test suite for most of the CAN API V3 **C** interface function.
+To run the test suites or single test cases two CAN devices are required. General test settings can be adapted in the file `Settings.h`.
 
 ## Known Bugs and Caveats
 
