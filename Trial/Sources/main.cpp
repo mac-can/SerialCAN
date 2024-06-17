@@ -136,10 +136,10 @@ int main(int argc, const char * argv[]) {
 //    int option_trace = OPTION_NO;
     int option_log = OPTION_NO;
     int option_xor = OPTION_NO;
-    uint64_t received = 0ULL;
-    uint64_t expected = 0ULL;
-    time_t now = time(NULL);
-	
+    uint64_t received = 0ull;
+    uint64_t expected = 0ull;
+    time_t now = 0l;
+
 	/* serial port attributes */
     char* port = (char*)SERIAL_PORT;
     can_sio_param_t param;

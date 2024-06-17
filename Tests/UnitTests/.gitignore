@@ -1,0 +1,12 @@
+.svn
+Template.h
+# excluded test files
+test_can_test.mm
+test_can_kill.mm
+test_can_bitrate.mm
+test_can_busload.mm
+test_can_property.mm
+test_can_firmware.mm
+test_can_hardware.mm
+test_can_version.mm
+test_can_btr.mm

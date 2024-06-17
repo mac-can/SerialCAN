@@ -48,12 +48,12 @@ HEADERS = -I$(SOURCE_DIR) \
 
 ifeq ($(current_OS),Darwin)  # macOS - libSerialCAN.dylib
 
-CFLAGS += -O2 -Wall -Wno-parentheses \
-	-fno-strict-aliasing \
+CFLAGS += -O0 -g -Wall -Wextra -Wno-parentheses \
+	-fmessage-length=0 -fno-strict-aliasing \
 	$(DEFINES) \
 	$(HEADERS)
 
-CXXFLAGS += -g -Wall -Wextra -pthread \
+CXXFLAGS += -O0 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
@@ -68,23 +68,30 @@ endif
 LIBRARIES = -lpthread
 
 CHECKER  = warning,information
-IGNORE   = -i serial_w.c -i buffer_w.c -i queue_w.c -i logger_w.c -i can_msg.c -i can_dev.c
+IGNORE   = -i serial_w.c -i buffer_w.c -i queue_w.c -i logger_w.c -i can_msg.c -i can_dev.c -i vanilla.c
 ifeq ($(HUNTER),BUGS)
 CHECKER += --bug-hunting
+endif
+
+ifeq ($(XCTEST),FULL)
+TESTING =
+else
+TESTING = -only-testing Testing/Testing/testSmokeTest
 endif
 
 CXX = clang++
 CC = clang
 LD = clang++
+endif
 
-else  # Linux, Cygwin - libserialcan.so
+ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))  # Linux, Cygwin - libserialcan.so
 
-CFLAGS += -O2 -Wall -Wno-parentheses \
-	-fno-strict-aliasing \
+CFLAGS += -O0 -g -Wall -Wextra -Wno-parentheses \
+	-fmessage-length=0 -fno-strict-aliasing \
 	$(DEFINES) \
 	$(HEADERS)
 
-CXXFLAGS += -g -Wall -Wextra -pthread \
+CXXFLAGS += -O0 -g -Wall -Wextra -pthread \
 	$(DEFINES) \
 	$(HEADERS)
 
@@ -136,6 +143,10 @@ install:
 test: info outdir $(TARGET)
 	./$(TARGET) INFO EXIT
 
+xctest:
+	xcodebuild clean build test -project SerialCAN.xcodeproj -scheme Testing $(TESTING)
+
+
 $(OUTDIR)/main.o: $(MAIN_DIR)/main.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MF $*.d -o $@ -c $<
 
@@ -166,4 +177,7 @@ $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
 
 $(TARGET): $(OBJECTS)
 	$(LD) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBRARIES)
+ifeq ($(current_OS),Darwin)
+	@lipo -archs $@
+endif
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"

@@ -1,7 +1,8 @@
+#	SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later
 #
-#	SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
+#	CAN Interface API, Version 3 (for CAN-over-Serial-Line Interfaces)
 #
-#	Copyright (c) 2020-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+#	Copyright (c) 2016-2024  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
 #	All rights reserved.
 #
 #	This file is part of SerialCAN.
@@ -152,7 +153,7 @@ CXXFLAGS += -fPIC -O2 -g -Wall -Wextra -pthread\
 	$(DEFINES) \
 	$(HEADERS)
 
-LDFLAGS += --shared -Wl,-soname,$(SONAME)
+LDFLAGS  += --shared -Wl,-soname,$(SONAME) -lc
 
 ARFLAGS = r
 
@@ -214,7 +215,7 @@ endif
 
 install:
 	@echo "Copying library file..."
-	$(CP) $(TARGET) $(INSTALL)
+	$(RM) $(INSTALL)/$(TARGET); $(CP) $(TARGET) $(INSTALL)
 ifeq ($(current_OS),Darwin)
 	$(RM) $(INSTALL)/$(LIBRARY).dylib ; $(LN) $(INSTALL)/$(TARGET) $(INSTALL)/$(LIBRARY).dylib
 endif
@@ -250,10 +251,11 @@ $(STATIC): $(OBJECTS)
 ifeq ($(current_OS),Darwin)
 	$(LT) $(LTFLAGS) -o $@ $(OBJECTS)
 	@lipo -archs $@
-else
+endif
+ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
 	$(AR) $(ARFLAGS) $@ $(OBJECTS)
 endif
-	$(CP) $(STATIC) $(BINDIR)
+	$(CP) $@ $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"
 
 $(TARGET): $(OBJECTS)
@@ -261,5 +263,5 @@ $(TARGET): $(OBJECTS)
 ifeq ($(current_OS),Darwin)
 	@lipo -archs $@
 endif
-	$(CP) $(TARGET) $(BINDIR)
+	$(CP) $@ $(BINDIR)
 	@echo "\033[1mTarget '"$@"' successfully build\033[0m"

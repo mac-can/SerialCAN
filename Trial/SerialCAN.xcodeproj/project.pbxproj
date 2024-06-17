@@ -16,6 +16,26 @@
 		44A0786427D51C9000AD6EA4 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785A27D51C9000AD6EA4 /* buffer.c */; };
 		44A0786527D51C9000AD6EA4 /* queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785B27D51C9000AD6EA4 /* queue.c */; };
 		44A0786727D51C9000AD6EA4 /* logger.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785E27D51C9000AD6EA4 /* logger.c */; };
+		44D9DD7A2C1CB18B0031C0C4 /* can_api.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0782C27D51B2400AD6EA4 /* can_api.c */; };
+		44D9DD7B2C1CB1900031C0C4 /* can_btr.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F6C789C246C311A007EBB88 /* can_btr.c */; };
+		44D9DD7C2C1CB1A00031C0C4 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785A27D51C9000AD6EA4 /* buffer.c */; };
+		44D9DD7D2C1CB1A70031C0C4 /* logger.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785E27D51C9000AD6EA4 /* logger.c */; };
+		44D9DD7E2C1CB1AC0031C0C4 /* queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785B27D51C9000AD6EA4 /* queue.c */; };
+		44D9DD7F2C1CB1B10031C0C4 /* serial.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785727D51C9000AD6EA4 /* serial.c */; };
+		44D9DD802C1CB1B60031C0C4 /* slcan.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785827D51C9000AD6EA4 /* slcan.c */; };
+		44D9DD8C2C1CB5AA0031C0C4 /* SerialCAN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F92B4822468505C00B06780 /* SerialCAN.cpp */; };
+		44F14D532C1D98E4009D1FCB /* Testing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D4B2C1D94D4009D1FCB /* Testing.mm */; };
+		44F14D542C1D98EE009D1FCB /* Bitrates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D4E2C1D94D4009D1FCB /* Bitrates.cpp */; };
+		44F14D552C1D98F3009D1FCB /* Tester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D482C1D94D4009D1FCB /* Tester.cpp */; };
+		44F14D562C1D98F9009D1FCB /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D4D2C1D94D4009D1FCB /* Timer.cpp */; };
+		44F14D5C2C1D9F96009D1FCB /* Parameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D5B2C1D9F96009D1FCB /* Parameter.cpp */; };
+		44F14D5E2C1DCDBC009D1FCB /* test_can_init.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D5D2C1DCDBC009D1FCB /* test_can_init.mm */; };
+		44F14D602C1DD038009D1FCB /* test_can_exit.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D5F2C1DD038009D1FCB /* test_can_exit.mm */; };
+		44F14D622C1DD159009D1FCB /* test_can_start.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D612C1DD159009D1FCB /* test_can_start.mm */; };
+		44F14D672C1DED0F009D1FCB /* test_can_reset.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D632C1DED0F009D1FCB /* test_can_reset.mm */; };
+		44F14D682C1DED0F009D1FCB /* test_can_status.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D642C1DED0F009D1FCB /* test_can_status.mm */; };
+		44F14D692C1DED0F009D1FCB /* test_can_read.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D652C1DED0F009D1FCB /* test_can_read.mm */; };
+		44F14D6A2C1DED0F009D1FCB /* test_can_write.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D662C1DED0F009D1FCB /* test_can_write.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,6 +61,7 @@
 		0F92B4812468505C00B06780 /* SerialCAN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SerialCAN.h; path = ../../Sources/SerialCAN.h; sourceTree = "<group>"; };
 		0F92B4822468505C00B06780 /* SerialCAN.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SerialCAN.cpp; path = ../../Sources/SerialCAN.cpp; sourceTree = "<group>"; };
 		0FFE72FE24719EA900A64333 /* CANAPI_Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANAPI_Defines.h; path = ../../Sources/CANAPI/CANAPI_Defines.h; sourceTree = "<group>"; };
+		440829272C1B047000E4DA82 /* Testing.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Testing.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		449D42042BB025D500F1D94E /* CANBTR_Defaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANBTR_Defaults.h; path = ../../Sources/CANAPI/CANBTR_Defaults.h; sourceTree = "<group>"; };
 		44A0782B27D51B0500AD6EA4 /* can_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = can_api.h; path = ../../Sources/CANAPI/can_api.h; sourceTree = "<group>"; };
 		44A0782C27D51B2400AD6EA4 /* can_api.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = can_api.c; path = ../../Sources/Wrapper/can_api.c; sourceTree = "<group>"; };
@@ -56,10 +77,35 @@
 		44A0785B27D51C9000AD6EA4 /* queue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = queue.c; path = ../../Sources/SLCAN/queue.c; sourceTree = "<group>"; };
 		44A0785C27D51C9000AD6EA4 /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serial.h; path = ../../Sources/SLCAN/serial.h; sourceTree = "<group>"; };
 		44A0785E27D51C9000AD6EA4 /* logger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = logger.c; path = ../../Sources/SLCAN/logger.c; sourceTree = "<group>"; };
+		44F14D462C1D94D4009D1FCB /* Driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Driver.h; sourceTree = "<group>"; };
+		44F14D472C1D94D4009D1FCB /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		44F14D482C1D94D4009D1FCB /* Tester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tester.cpp; sourceTree = "<group>"; };
+		44F14D492C1D94D4009D1FCB /* Tester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tester.h; sourceTree = "<group>"; };
+		44F14D4A2C1D94D4009D1FCB /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		44F14D4B2C1D94D4009D1FCB /* Testing.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Testing.mm; sourceTree = "<group>"; };
+		44F14D4C2C1D94D4009D1FCB /* Bitrates.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bitrates.h; sourceTree = "<group>"; };
+		44F14D4D2C1D94D4009D1FCB /* Timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
+		44F14D4E2C1D94D4009D1FCB /* Bitrates.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bitrates.cpp; sourceTree = "<group>"; };
+		44F14D5A2C1D9F96009D1FCB /* Parameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Parameter.h; sourceTree = "<group>"; };
+		44F14D5B2C1D9F96009D1FCB /* Parameter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parameter.cpp; sourceTree = "<group>"; };
+		44F14D5D2C1DCDBC009D1FCB /* test_can_init.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = test_can_init.mm; sourceTree = "<group>"; };
+		44F14D5F2C1DD038009D1FCB /* test_can_exit.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = test_can_exit.mm; sourceTree = "<group>"; };
+		44F14D612C1DD159009D1FCB /* test_can_start.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = test_can_start.mm; sourceTree = "<group>"; };
+		44F14D632C1DED0F009D1FCB /* test_can_reset.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = test_can_reset.mm; sourceTree = "<group>"; };
+		44F14D642C1DED0F009D1FCB /* test_can_status.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = test_can_status.mm; sourceTree = "<group>"; };
+		44F14D652C1DED0F009D1FCB /* test_can_read.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = test_can_read.mm; sourceTree = "<group>"; };
+		44F14D662C1DED0F009D1FCB /* test_can_write.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = test_can_write.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		0F8206312460255D00CD103A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		440829242C1B047000E4DA82 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -73,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				0F8206362460255D00CD103A /* Sources */,
+				440829282C1B047000E4DA82 /* Testing */,
 				0F8206352460255D00CD103A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				0F8206342460255D00CD103A /* SerialCAN */,
+				440829272C1B047000E4DA82 /* Testing.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -105,6 +153,32 @@
 				0F8206372460255D00CD103A /* main.cpp */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		440829282C1B047000E4DA82 /* Testing */ = {
+			isa = PBXGroup;
+			children = (
+				44F14D4A2C1D94D4009D1FCB /* Settings.h */,
+				44F14D4B2C1D94D4009D1FCB /* Testing.mm */,
+				44F14D5D2C1DCDBC009D1FCB /* test_can_init.mm */,
+				44F14D612C1DD159009D1FCB /* test_can_start.mm */,
+				44F14D642C1DED0F009D1FCB /* test_can_status.mm */,
+				44F14D652C1DED0F009D1FCB /* test_can_read.mm */,
+				44F14D662C1DED0F009D1FCB /* test_can_write.mm */,
+				44F14D632C1DED0F009D1FCB /* test_can_reset.mm */,
+				44F14D5F2C1DD038009D1FCB /* test_can_exit.mm */,
+				44F14D462C1D94D4009D1FCB /* Driver.h */,
+				44F14D5B2C1D9F96009D1FCB /* Parameter.cpp */,
+				44F14D5A2C1D9F96009D1FCB /* Parameter.h */,
+				44F14D4E2C1D94D4009D1FCB /* Bitrates.cpp */,
+				44F14D4C2C1D94D4009D1FCB /* Bitrates.h */,
+				44F14D482C1D94D4009D1FCB /* Tester.cpp */,
+				44F14D492C1D94D4009D1FCB /* Tester.h */,
+				44F14D4D2C1D94D4009D1FCB /* Timer.cpp */,
+				44F14D472C1D94D4009D1FCB /* Timer.h */,
+			);
+			name = Testing;
+			path = ../Tests/UnitTests;
 			sourceTree = "<group>";
 		};
 		44A0785027D51C4C00AD6EA4 /* SLCAN */ = {
@@ -144,6 +218,23 @@
 			productReference = 0F8206342460255D00CD103A /* SerialCAN */;
 			productType = "com.apple.product-type.tool";
 		};
+		440829262C1B047000E4DA82 /* Testing */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4408292D2C1B047000E4DA82 /* Build configuration list for PBXNativeTarget "Testing" */;
+			buildPhases = (
+				440829232C1B047000E4DA82 /* Sources */,
+				440829242C1B047000E4DA82 /* Frameworks */,
+				440829252C1B047000E4DA82 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Testing;
+			productName = Testing;
+			productReference = 440829272C1B047000E4DA82 /* Testing.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -156,6 +247,9 @@
 				TargetAttributes = {
 					0F8206332460255D00CD103A = {
 						CreatedOnToolsVersion = 11.4.1;
+					};
+					440829262C1B047000E4DA82 = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -173,9 +267,20 @@
 			projectRoot = "";
 			targets = (
 				0F8206332460255D00CD103A /* SerialCAN */,
+				440829262C1B047000E4DA82 /* Testing */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		440829252C1B047000E4DA82 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0F8206302460255D00CD103A /* Sources */ = {
@@ -191,6 +296,33 @@
 				44A0786327D51C9000AD6EA4 /* slcan.c in Sources */,
 				0F6C789F246C311A007EBB88 /* can_btr.c in Sources */,
 				0F92B4832468505C00B06780 /* SerialCAN.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		440829232C1B047000E4DA82 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				44D9DD802C1CB1B60031C0C4 /* slcan.c in Sources */,
+				44D9DD7B2C1CB1900031C0C4 /* can_btr.c in Sources */,
+				44F14D5E2C1DCDBC009D1FCB /* test_can_init.mm in Sources */,
+				44D9DD7A2C1CB18B0031C0C4 /* can_api.c in Sources */,
+				44F14D6A2C1DED0F009D1FCB /* test_can_write.mm in Sources */,
+				44F14D692C1DED0F009D1FCB /* test_can_read.mm in Sources */,
+				44F14D562C1D98F9009D1FCB /* Timer.cpp in Sources */,
+				44F14D532C1D98E4009D1FCB /* Testing.mm in Sources */,
+				44F14D682C1DED0F009D1FCB /* test_can_status.mm in Sources */,
+				44D9DD7F2C1CB1B10031C0C4 /* serial.c in Sources */,
+				44F14D622C1DD159009D1FCB /* test_can_start.mm in Sources */,
+				44F14D542C1D98EE009D1FCB /* Bitrates.cpp in Sources */,
+				44F14D552C1D98F3009D1FCB /* Tester.cpp in Sources */,
+				44D9DD7E2C1CB1AC0031C0C4 /* queue.c in Sources */,
+				44D9DD8C2C1CB5AA0031C0C4 /* SerialCAN.cpp in Sources */,
+				44F14D5C2C1D9F96009D1FCB /* Parameter.cpp in Sources */,
+				44D9DD7D2C1CB1A70031C0C4 /* logger.c in Sources */,
+				44F14D602C1DD038009D1FCB /* test_can_exit.mm in Sources */,
+				44F14D672C1DED0F009D1FCB /* test_can_reset.mm in Sources */,
+				44D9DD7C2C1CB1A00031C0C4 /* buffer.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,10 +375,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
-					"OPTION_CAN_2_0_ONLY=0",
-					"OPTION_CANAPI_COMPANIONS=1",
-					"OPTION_SERIAL_DEBUG_LEVEL=1",
-					"OPTION_SLCAN_DEBUG_LEVEL=1",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -309,12 +437,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"OPTION_CAN_2_0_ONLY=0",
-					"OPTION_CANAPI_COMPANIONS=1",
-					"OPTION_SERIAL_DEBUG_LEVEL=0",
-					"OPTION_SLCAN_DEBUG_LEVEL=0",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -341,6 +464,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"OPTION_CAN_2_0_ONLY=0",
+					"OPTION_CANAPI_RETVALS=0",
+					"OPTION_CANAPI_COMPANIONS=1",
+					"OPTION_SERIAL_DEBUG_LEVEL=3",
+					"OPTION_SLCAN_DEBUG_LEVEL=1",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -353,6 +484,52 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		4408292B2C1B047000E4DA82 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"OPTION_CAN_2_0_ONLY=0",
+					"OPTION_CANAPI_RETVALS=1",
+					"OPTION_CANAPI_COMPANIONS=1",
+					"OPTION_SERIAL_DEBUG_LEVEL=0",
+					"OPTION_SLCAN_DEBUG_LEVEL=0",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "uv-software.Testing";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+			};
+			name = Debug;
+		};
+		4408292C2C1B047000E4DA82 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "uv-software.Testing";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
 			};
 			name = Release;
 		};
@@ -373,6 +550,15 @@
 			buildConfigurations = (
 				0F82063C2460255D00CD103A /* Debug */,
 				0F82063D2460255D00CD103A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4408292D2C1B047000E4DA82 /* Build configuration list for PBXNativeTarget "Testing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4408292B2C1B047000E4DA82 /* Debug */,
+				4408292C2C1B047000E4DA82 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
