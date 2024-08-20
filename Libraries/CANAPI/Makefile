@@ -51,7 +51,7 @@ current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
 MAJOR = 0
-MINOR = 2
+MINOR = 3
 PATCH = 0
 
 ifeq ($(PATCH),0)
@@ -200,18 +200,18 @@ incdir:
 	$(CP) $(CANAPI_DIR)/can_btr.h $(INCDIR)
 
 clean:
-	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	@-$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
 pristine:
 ifeq ($(current_OS),Darwin)
-	$(RM) *.dylib *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
-	$(RM) $(BINDIR)/*.dylib $(BINDIR)/*.a
+	@-$(RM) *.dylib *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	@-$(RM) $(BINDIR)/*.dylib $(BINDIR)/*.a
 endif
 ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
-	$(RM) *.so.* *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
-	$(RM) $(BINDIR)/*.so.* $(BINDIR)/*.a
+	@-$(RM) *.so.* *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	@-$(RM) $(BINDIR)/*.so.* $(BINDIR)/*.a
 endif
-	$(RM) $(INCDIR)/*.h
+	@-$(RM) $(INCDIR)/*.h
 
 install:
 	@echo "Copying library file..."

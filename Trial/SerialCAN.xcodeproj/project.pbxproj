@@ -62,6 +62,7 @@
 		0F92B4822468505C00B06780 /* SerialCAN.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SerialCAN.cpp; path = ../../Sources/SerialCAN.cpp; sourceTree = "<group>"; };
 		0FFE72FE24719EA900A64333 /* CANAPI_Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANAPI_Defines.h; path = ../../Sources/CANAPI/CANAPI_Defines.h; sourceTree = "<group>"; };
 		440829272C1B047000E4DA82 /* Testing.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Testing.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		440D80002C74EC10006DA8F7 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Version.h; path = ../../Sources/Version.h; sourceTree = "<group>"; };
 		449D42042BB025D500F1D94E /* CANBTR_Defaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANBTR_Defaults.h; path = ../../Sources/CANAPI/CANBTR_Defaults.h; sourceTree = "<group>"; };
 		44A0782B27D51B0500AD6EA4 /* can_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = can_api.h; path = ../../Sources/CANAPI/can_api.h; sourceTree = "<group>"; };
 		44A0782C27D51B2400AD6EA4 /* can_api.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = can_api.c; path = ../../Sources/Wrapper/can_api.c; sourceTree = "<group>"; };
@@ -149,6 +150,7 @@
 				44A0782F27D51B5600AD6EA4 /* SerialCAN_Defines.h */,
 				0F92B4822468505C00B06780 /* SerialCAN.cpp */,
 				0F92B4812468505C00B06780 /* SerialCAN.h */,
+				440D80002C74EC10006DA8F7 /* Version.h */,
 				0F82063E2460266C00CD103A /* build_no.h */,
 				0F8206372460255D00CD103A /* main.cpp */,
 			);
