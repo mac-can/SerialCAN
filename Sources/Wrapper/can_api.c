@@ -349,8 +349,10 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     if (((can_sio_param_t*)param)->attr.protocol != CANSIO_CANABLE) {
         // dummy read to check the protocol (w/ ACK/NACK feedback)
         rc = slcan_version_number(can[handle].port, NULL, NULL);
-        if ((rc < 0) && (errno == EBADMSG))  // wrong protocol
+        if ((rc < 0) && (errno == EBADMSG)) {   // wrong protocol (errno is set)
             rc = CANERR_VENDOR;
+            errno = 0;                  //   clear errno to return CAN API error
+        }
     }
     else {
         // disable ACK/NAK feedback for serial commands
