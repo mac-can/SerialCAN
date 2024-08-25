@@ -148,7 +148,7 @@ int main(int argc, const char * argv[]) {
     char* port = (char*)SERIAL_PORT;
     can_sio_param_t param;
     CSerialCAN::SSerialAttributes attr;
-    attr.options = CANSIO_SLCAN;
+    attr.protocol = CANSIO_LAWICEL;
     attr.baudrate = CANSIO_BD57600;
     attr.bytesize = CANSIO_8DATABITS;
     attr.stopbits = CANSIO_1STOPBIT;
@@ -161,6 +161,7 @@ int main(int argc, const char * argv[]) {
 #else
         if(!strncmp(argv[i], "COM", 3) || !strncmp(argv[i], "\\\\.\\COM", 7)) port = (char*)argv[i];
 #endif
+        if (!strcmp(argv[i], "ACK:OFF")) attr.protocol = CANSIO_CANABLE;
         if (!strncmp(argv[i], "BAUD:", 5) && sscanf(argv[i], "BAUD:%i", &opt) == 1) attr.baudrate = (uint32_t)opt;
         /* baud rate (CAN 2.0) */
         if (!strcmp(argv[i], "BD:0") || !strcmp(argv[i], "BD:1000")) bitrate.index = CANBTR_INDEX_1M;

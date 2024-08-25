@@ -56,9 +56,9 @@
  *  @addtogroup  slcan
  *  @{
  */
-#define VERSION_MAJOR    1
+#define VERSION_MAJOR    2
 #define VERSION_MINOR    0
-#define VERSION_PATCH    1
+#define VERSION_PATCH    99
 #if defined(_WIN64)
 #define PLATFORM        "x64"
 #elif defined(_WIN32)
@@ -73,9 +73,9 @@
 #error Platform not supported
 #endif
 #if (VERSION_PATCH == 0)
-static const char version[] = "Lawicel SLCAN Protocol (Serial-Line CAN), Version %i.%i (%u)";
+static const char version[] = "SLCAN Protocol (Serial-Line CAN), Version %i.%i (%u)";
 #else
-static const char version[] = "Lawicel SLCAN Protocol (Serial-Line CAN), Version %i.%i.%i (%u)";
+static const char version[] = "SLCAN Protocol (Serial-Line CAN), Version %i.%i.%i (%u)";
 #endif
 #ifdef _MSC_VER
 //no Microsoft extensions please!
@@ -157,6 +157,9 @@ static void _finalizer() {
 #define RESPONSE_TIMEOUT  100U
 #define TRANSMIT_TIMEOUT  1000U
 
+#define PROTOCOL_LAWICEL  "Lawicel"
+#define PROTOCOL_CANABLE  "CANable"
+
 
 /*  -----------  types  --------------------------------------------------
  */
@@ -167,6 +170,7 @@ typedef struct slcan_t_ {
     queue_t messages;
     uint8_t buffer[BUFFER_SIZE];
     size_t index;
+    bool ack;
 } slcan_t;
 
 
@@ -240,6 +244,8 @@ slcan_port_t slcan_create(size_t queueSize) {
         }
         /* initialize reception buffer */
         slcan->index = 0U;
+        /* enable ACK/NACK feedback */
+        slcan->ack = true;
     }
     /* return a pointer to the instance */
     return (slcan_port_t)slcan;
@@ -350,6 +356,24 @@ int slcan_get_attr(slcan_port_t port, slcan_attr_t *attr) {
     return sio_get_attr(slcan->port, attr);
 }
 
+
+EXPORT
+int slcan_set_ack(slcan_port_t port, bool on) {
+    slcan_t* slcan = (slcan_t*)port;
+    int res = -1;
+
+    /* sanity check */
+    errno = 0;
+    if (!slcan) {
+        errno = ENODEV;
+        return -1;
+    }
+    /* set ACK/NACK feedback */
+    res = slcan->ack ? 1 : 0;
+    slcan->ack = on;
+    return res;
+}
+
 EXPORT
 int slcan_setup_bitrate(slcan_port_t port, uint8_t index) {
     slcan_t *slcan = (slcan_t*)port;
@@ -381,17 +405,34 @@ int slcan_setup_bitrate(slcan_port_t port, uint8_t index) {
      */
     request[1] = '0' + index;
     /* send command 'Setup with standard CAN bit-rates' */
-    nbytes = send_command(slcan, request, 3, response, 1, RESPONSE_TIMEOUT);
-    if ((nbytes == 1) && (response[0] == '\r')) {
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 3, response, 1, RESPONSE_TIMEOUT);
+        if ((nbytes == 1) && (response[0] == '\r')) {
+            res = 0;
+        }
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
+        }
+    }
+    else {
+        /* CANable SLCAN protocol (w/o ACK/NACK feaadback) */
+        res = sio_transmit(slcan->port, request, 3);
+        /* note: Variable 'errno' is set by the called functions according to
+         *       their result. On error they return a negative value.
+         *       When a wrong number of bytes has been transmitted this will
+         *       be interpreted as the sender or the receiver is busy (EBUSY).
          */
-        errno = EBADMSG;
-        res = -1;
+        if (res != 3) {
+            errno = EBUSY;
+            res = -1;
+        }
     }
     SLCAN_DEBUG_INFO("slcan_setup_bitrate (%i)\n", res);
     return res;
@@ -417,14 +458,25 @@ int slcan_setup_btr(slcan_port_t port, uint16_t btr) {
     request[3] = BCD2CHR(btr >> 4);
     request[4] = BCD2CHR(btr >> 0);
     /* send command 'Setup with BTR0/BTR1 CAN bit-rates' */
-    nbytes = send_command(slcan, request, 6, response, 1, RESPONSE_TIMEOUT);
-    if ((nbytes == 1) && (response[0] == '\r')) {
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 6, response, 1, RESPONSE_TIMEOUT);
+        if ((nbytes == 1) && (response[0] == '\r')) {
+            res = 0;
+        }
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
+        }
+    }
+    else {
+        /* note: This command is not supported by the CANable SLCAN protocol.
+         *       A protocol error (EBADMSG) will be returned in this case.
          */
         errno = EBADMSG;
         res = -1;
@@ -450,17 +502,34 @@ int slcan_open_channel(slcan_port_t port) {
     /* clear the message queue */
     (void)queue_clear(slcan->messages);  // FIXME: (?)
     /* send command 'Open the CAN channel' */
-    nbytes = send_command(slcan, request, 2, response, 1, RESPONSE_TIMEOUT);
-    if ((nbytes == 1) && (response[0] == '\r')) {
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 2, response, 1, RESPONSE_TIMEOUT);
+        if ((nbytes == 1) && (response[0] == '\r')) {
+            res = 0;
+        }
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
+        }
+    }
+    else {
+        /* CANable SLCAN protocol (w/o ACK/NACK feaadback) */
+        res = sio_transmit(slcan->port, request, 2);
+        /* note: Variable 'errno' is set by the called functions according to
+         *       their result. On error they return a negative value.
+         *       When a wrong number of bytes has been transmitted this will
+         *       be interpreted as the sender or the receiver is busy (EBUSY).
          */
-        errno = EBADMSG;
-        res = -1;
+        if (res != 2) {
+            errno = EBUSY;
+            res = -1;
+        }
     }
     SLCAN_DEBUG_INFO("slcan_open_channel (%i)\n", res);
     return res;
@@ -481,17 +550,34 @@ int slcan_close_channel(slcan_port_t port) {
         return -1;
     }
     /* send command 'Close the CAN channel' */
-    nbytes = send_command(slcan, request, 2, response, 1, RESPONSE_TIMEOUT);
-    if ((nbytes == 1) && (response[0] == '\r')) {
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 2, response, 1, RESPONSE_TIMEOUT);
+        if ((nbytes == 1) && (response[0] == '\r')) {
+            res = 0;
+        }
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
+        }
+    }
+    else {
+        /* CANable SLCAN protocol (w/o ACK/NACK feaadback) */
+        res = sio_transmit(slcan->port, request, 2);
+        /* note: Variable 'errno' is set by the called functions according to
+         *       their result. On error they return a negative value.
+         *       When a wrong number of bytes has been transmitted this will
+         *       be interpreted as the sender or the receiver is busy (EBUSY).
          */
-        errno = EBADMSG;
-        res = -1;
+        if (res != 2) {
+            errno = EBUSY;
+            res = -1;
+        }
     }
     SLCAN_DEBUG_INFO("slcan_close_channel (%i)\n", res);
     return res;
@@ -526,21 +612,25 @@ int slcan_write_message(slcan_port_t port, const slcan_message_t *message, uint1
     /* send CAN message to the device via serial port */
     nbytes = sio_transmit(slcan->port, buffer, length);
     if (nbytes == (int)length) {
-        uint8_t response[2];
-        /* wait for response in the reception buffer */
-        nbytes = buffer_get(slcan->response, (void*)response, 2, TRANSMIT_TIMEOUT);
-        if ((nbytes == 2) && (response[1] == '\r') &&
-            ((((response[0] == 'z') && ((buffer[0] == 't') || (buffer[0] == 'r')))) ||
-             (((response[0] == 'Z') && ((buffer[0] == 'T') || (buffer[0] == 'R')))))) {
-            res = 0;
-        } else if (nbytes >= 0) {
-            /* note: Variable 'errno' is set by the called functions according
-             *       to their result. On error they return a negative value.
-             *       Receiving a wrong number of bytes will be interpreted as
-             *       protocol error (EBADMSG).
-             */
-             errno = EBADMSG;
-            res = -1;
+        if (slcan->ack) {
+            /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+            uint8_t response[2];
+            /* wait for response in the reception buffer */
+            nbytes = buffer_get(slcan->response, (void*)response, 2, TRANSMIT_TIMEOUT);
+            if ((nbytes == 2) && (response[1] == '\r') &&
+                ((((response[0] == 'z') && ((buffer[0] == 't') || (buffer[0] == 'r')))) ||
+                    (((response[0] == 'Z') && ((buffer[0] == 'T') || (buffer[0] == 'R')))))) {
+                res = 0;
+            }
+            else if (nbytes >= 0) {
+                /* note: Variable 'errno' is set by the called functions according
+                 *       to their result. On error they return a negative value.
+                 *       Receiving a wrong number of bytes will be interpreted as
+                 *       protocol error (EBADMSG).
+                 */
+                errno = EBADMSG;
+                res = -1;
+            }
         }
     } else if (nbytes >= 0) {
         /* note: Variable 'errno' is set by the called functions according to
@@ -609,21 +699,38 @@ int slcan_status_flags(slcan_port_t port, slcan_flags_t *flags) {
         return -1;
     }
     /* send command 'Read Status Flags' */
-    nbytes = send_command(slcan, request, 2, response, 4, RESPONSE_TIMEOUT);
-    if ((nbytes == 4) && (response[0] == 'F') && (response[3] == '\r')) {
-        if (flags) {
-            flags->byte = (uint8_t)(CHR2BCD(response[1]) << 4);
-            flags->byte |= (uint8_t)CHR2BCD(response[2]);
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 2, response, 4, RESPONSE_TIMEOUT);
+        if ((nbytes == 4) && (response[0] == 'F') && (response[3] == '\r')) {
+            if (flags) {
+                flags->byte = (uint8_t)(CHR2BCD(response[1]) << 4);
+                flags->byte |= (uint8_t)CHR2BCD(response[2]);
+            }
+            res = 0;
         }
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
+        }
+    }
+    else {
+        /* note: This command is not supported by the CANable SLCAN protocol.
+         *       A protocol error (EBADMSG) will be returned in this case.
          */
+#if (OPTION_SLCAN_FAKE_COMMANDS != 0)
+        if (flags)
+            flags->byte = 0x00U;
+        res = 0;
+#else
         errno = EBADMSG;
         res = -1;
+#endif
     }
     SLCAN_DEBUG_INFO("slcan_status_flags (%i)\n", res);
     return res;
@@ -653,14 +760,25 @@ int slcan_acceptance_code(slcan_port_t port, uint32_t code) {
     request[7] = BCD2CHR(code >> 4);
     request[8] = BCD2CHR(code >> 0);
     /* send command 'Sets Acceptance Code Register' */
-    nbytes = send_command(slcan, request, 10, response, 1, RESPONSE_TIMEOUT);
-    if ((nbytes == 1) && (response[0] == '\r')) {
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 10, response, 1, RESPONSE_TIMEOUT);
+        if ((nbytes == 1) && (response[0] == '\r')) {
+            res = 0;
+        }
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
+        }
+    }
+    else {
+        /* note: This command is not supported by the CANable SLCAN protocol.
+         *       A protocol error (EBADMSG) will be returned in this case.
          */
         errno = EBADMSG;
         res = -1;
@@ -693,14 +811,25 @@ int slcan_acceptance_mask(slcan_port_t port, uint32_t mask) {
     request[7] = BCD2CHR(mask >> 4);
     request[8] = BCD2CHR(mask >> 0);
     /* send command 'Sets Acceptance Mask Register' */
-    nbytes = send_command(slcan, request, 10, response, 1, RESPONSE_TIMEOUT);
-    if ((nbytes == 1) && (response[0] == '\r')) {
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 10, response, 1, RESPONSE_TIMEOUT);
+        if ((nbytes == 1) && (response[0] == '\r')) {
+            res = 0;
+        }
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
+        }
+    }
+    else {
+        /* note: This command is not supported by the CANable SLCAN protocol.
+         *       A protocol error (EBADMSG) will be returned in this case.
          */
         errno = EBADMSG;
         res = -1;
@@ -724,25 +853,45 @@ int slcan_version_number(slcan_port_t port, uint8_t *hardware, uint8_t *software
         return -1;
     }
     /* send command 'Get Version number of both CANUSB hardware and software' */
-    nbytes = send_command(slcan, request, 2, response, 6, RESPONSE_TIMEOUT);
-    if ((nbytes == 6) && (response[0] == 'V') && (response[5] == '\r')) {
-        if (hardware) {
-            *hardware = (uint8_t)(CHR2BCD(response[1]) << 4);
-            *hardware |= (uint8_t)CHR2BCD(response[2]);
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 2, response, 6, RESPONSE_TIMEOUT);
+        if ((nbytes == 6) && (response[0] == 'V') && (response[5] == '\r')) {
+            if (hardware) {
+                *hardware = (uint8_t)(CHR2BCD(response[1]) << 4);
+                *hardware |= (uint8_t)CHR2BCD(response[2]);
+            }
+            if (software) {
+                *software = (uint8_t)(CHR2BCD(response[3]) << 4);
+                *software |= (uint8_t)CHR2BCD(response[4]);
+            }
+            res = 0;
         }
-        if (software) {
-            *software = (uint8_t)(CHR2BCD(response[3]) << 4);
-            *software |= (uint8_t)CHR2BCD(response[4]);
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
         }
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+    }
+    else {
+        /* note: This command returns firmware version and remote path as a
+         *       string with the CANable SLCAN protocol and is not supported.
+         *       A protocol error (EBADMSG) will be returned in this case.
          */
+#if (OPTION_SLCAN_FAKE_COMMANDS != 0)
+        if (hardware)
+            hardware = 0x00U;
+        if (software)
+            software = 0x00U;
+        res = 0;
+#else
         errno = EBADMSG;
         res = -1;
+#endif
     }
     SLCAN_DEBUG_INFO("slcan_version_number (%i)\n", res);
     return res;
@@ -764,20 +913,31 @@ int slcan_serial_number(slcan_port_t port, uint32_t *number) {
         return -1;
     }
     /* send command 'Get Serial number of the CANUSB' */
-    nbytes = send_command(slcan, request, 2, response, 6, RESPONSE_TIMEOUT);
-    if ((nbytes == 6) && (response[0] == 'N') && (response[5] == '\r')) {
-        if (number) {
-            *number = (uint32_t)(response[0] << 24);
-            *number |= (uint32_t)(response[1] << 16);
-            *number |= (uint32_t)(response[2] << 8);
-            *number |= (uint32_t)response[3];
+    if (slcan->ack) {
+        /* Lawicel SLCAN protocol (with ACK/NACK feaadback) */
+        nbytes = send_command(slcan, request, 2, response, 6, RESPONSE_TIMEOUT);
+        if ((nbytes == 6) && (response[0] == 'N') && (response[5] == '\r')) {
+            if (number) {
+                *number = (uint32_t)(response[0] << 24);
+                *number |= (uint32_t)(response[1] << 16);
+                *number |= (uint32_t)(response[2] << 8);
+                *number |= (uint32_t)response[3];
+            }
+            res = 0;
         }
-        res = 0;
-    } else if (nbytes >= 0) {
-        /* note: Variable 'errno' is set by the called functions according
-         *       to their result. On error they return a negative value.
-         *       Receiving a wrong number of bytes will be interpreted as
-         *       protocol error (EBADMSG).
+        else if (nbytes >= 0) {
+            /* note: Variable 'errno' is set by the called functions according
+             *       to their result. On error they return a negative value.
+             *       Receiving a wrong number of bytes will be interpreted as
+             *       protocol error (EBADMSG).
+             */
+            errno = EBADMSG;
+            res = -1;
+        }
+    }
+    else {
+        /* note: This command is not supported by the CANable SLCAN protocol.
+         *       A protocol error (EBADMSG) will be returned in this case.
          */
         errno = EBADMSG;
         res = -1;

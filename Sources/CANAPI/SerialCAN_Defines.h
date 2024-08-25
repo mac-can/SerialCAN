@@ -93,10 +93,13 @@ extern "C" {
 #define CANSIO_BOARDS               0  /**< number of serial line interfaces */
 /** @} */
 
-/** @name  Protocol option flags
- *  @brief SerialCAN protocol options
+/** @name  Protocol option
+ *  @brief SLCAN protocol option
  *  @{ */
-#define CANSIO_SLCAN             0x00U  /**< Lawicel SLCAN protocol */
+#define CANSIO_LAWICEL           0x00U  /**< Lawicel SLCAN protocol */
+#define CANSIO_CANABLE           0x01U  /**< CANable SLCAN protocol */
+#define CANSIO_AUTO              0xFFU  /**< auto detect (not realized yet) */
+#define CANSIO_SLCAN    CANSIO_LAWICEL  /**< Lawicel SLCAN protocol (default) */
  /** @} */
 
  /** @name  Baud rate option
@@ -194,7 +197,8 @@ typedef struct can_sio_attr_t_ {        /* serial port attributes: */
     uint8_t  bytesize;                  /**<  number fo data bits (5, 6, 7, 8) */
     uint8_t  parity;                    /**<  parity bit (None, Even, Odd) */
     uint8_t  stopbits;                  /**<  number of stop bits (1 or 2) */
-    uint8_t  options;                   /**<  protocol options */
+    uint8_t  protocol;                  /**<  protocol (defaul: Lawicel) */
+    //uint8_t  options;                   /**<  protocol options (nou used) */
 } can_sio_attr_t;
 
 /** @brief SerialCAN port parameters

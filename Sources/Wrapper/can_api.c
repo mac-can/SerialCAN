@@ -123,7 +123,7 @@ static void _finalizer() {
 #define SERIAL_BYTESIZE         CANSIO_8DATABITS
 #define SERIAL_PARITY           CANSIO_NOPARITY
 #define SERIAL_STOPBITS         CANSIO_1STOPBIT
-#define SERIAL_OPTIONS          (CANSIO_SLCAN)
+#define SERIAL_PROTOCOL         CANSIO_LAWICEL
 
 #define SUPPORTED_OP_MODE       (CANMODE_DEFAULT)
 #define CAN_CLOCK_FREQUENCY     CANBTR_FREQ_SJA1000
@@ -133,6 +133,11 @@ static void _finalizer() {
 #define FILTER_STD_MASK         (uint32_t)(0x000)
 #define FILTER_XTD_CODE         (uint32_t)(0x00000000)
 #define FILTER_XTD_MASK         (uint32_t)(0x00000000)
+#define FILTER_STD_XOR_MASK     (uint64_t)(0x00000000000007FF)
+#define FILTER_XTD_XOR_MASK     (uint64_t)(0x000000001FFFFFFF)
+#define FILTER_STD_VALID_MASK   (uint64_t)(0x000007FF000007FF)
+#define FILTER_XTD_VALID_MASK   (uint64_t)(0x1FFFFFFF1FFFFFFF)
+#define FILTER_RESET_VALUE      (uint64_t)(0x0000000000000000)
 #define FILTER_SJA1000_CODE     (uint32_t)(0x00000000)
 #define FILTER_SJA1000_MASK     (uint32_t)(0xFFFFFFFF)
 #ifndef SYSERR_OFFSET
@@ -239,8 +244,11 @@ int can_test(int32_t channel, uint8_t mode, const void *param, int *result)
         var_init();                     //   initialize all variables
         init = 1;                       //   set initialization flag
     }
-    // check requested protocol option (SLCAN)
-    if ((((can_sio_param_t*)param)->attr.options & CANSIO_SLCAN) != CANSIO_SLCAN) {
+    // check requested SLCAN protocol option
+    switch (((can_sio_param_t*)param)->attr.protocol) {
+    case CANSIO_LAWICEL: break;         //   Lawicel SLCAN protocol
+    case CANSIO_CANABLE: break;         //   CANable SLCAN protocol
+    default:                            //   sorry, not supported
         rc = CANERR_ILLPARA;
         goto end_test;
     }
@@ -311,8 +319,11 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     if (!IS_HANDLE_VALID(handle)) {     // no free handle found
         return CANERR_NOTINIT;
     }
-    // check requested protocol option (SLCAN)
-    if ((((can_sio_param_t*)param)->attr.options & CANSIO_SLCAN) != CANSIO_SLCAN) {
+    // check requested SLCAN protocol option
+    switch (((can_sio_param_t*)param)->attr.protocol) {
+    case CANSIO_LAWICEL: break;         //   Lawicel SLCAN protocol
+    case CANSIO_CANABLE: break;         //   CANable SLCAN protocol
+    default:                            //   sorry, not supported
         rc = CANERR_ILLPARA;
         goto err_init;
     }
@@ -334,10 +345,17 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
         (void)slcan_destroy(can[handle].port);
         goto err_init;
     }
-    // check for SLCAN protocol (dummy read)
-    uint8_t hw_version = 0x00U;
-    uint8_t sw_version = 0x00U;
-    rc = slcan_version_number(can[handle].port, &hw_version, &sw_version);
+    // check for SLCAN protocol (Lawicel or CANable protocol)
+    if (((can_sio_param_t*)param)->attr.protocol != CANSIO_CANABLE) {
+        // dummy read to check the protocol (w/ ACK/NACK feedback)
+        rc = slcan_version_number(can[handle].port, NULL, NULL);
+        if ((rc < 0) && (errno == EBADMSG))  // wrong protocol
+            rc = CANERR_VENDOR;
+    }
+    else {
+        // disable ACK/NAK feedback for serial commands
+        rc = slcan_set_ack(can[handle].port, false);
+    }
     rc = slcan_error(rc);
     if (rc != CANERR_NOERROR) {         // errno is set in this case
         (void)slcan_disconnect(can[handle].port);
@@ -350,7 +368,7 @@ int can_init(int32_t channel, uint8_t mode, const void *param)
     // store the tty name and the operation mode
     strncpy(can[handle].name, &name[0], CANPROP_MAX_BUFFER_SIZE);
     can[handle].name[CANPROP_MAX_BUFFER_SIZE - 1] = '\0';
-    can[handle].attr.options = ((can_sio_param_t*)param)->attr.options;
+    can[handle].attr.protocol = ((can_sio_param_t*)param)->attr.protocol;
     (void)get_sio_attr(can[handle].port, &can[handle].attr);
     can[handle].mode.byte = mode;       // store selected operation mode
     can[handle].status.byte = CANSTAT_RESET; // CAN controller not started yet
@@ -450,7 +468,6 @@ int can_start(int handle, const can_bitrate_t *bitrate)
     int rc = CANERR_FATAL;              // return value
 
     uint16_t btr0btr1 = CAN_BTR_DEFAULT;// btr0btr1 value
-    can_bitrate_t temporary;            // bit-rate settings
 
     if (!init)                          // must be initialized
         return CANERR_NOTINIT;
@@ -463,27 +480,36 @@ int can_start(int handle, const can_bitrate_t *bitrate)
     if (!can[handle].status.can_stopped) // must be stopped
         return CANERR_ONLINE;
 
-    // check bit-rate settings (possibly after conversion from index)
-    memcpy(&temporary, bitrate, sizeof(can_bitrate_t));
+    // set bit-rate (from index or BTR0BTR1 register)
     if (bitrate->index <= 0) {
-        // convert index to bit-rate
-        if (btr_index2bitrate(bitrate->index, &temporary) != CANERR_NOERROR)
+        if (bitrate->index < CANBTR_INDEX_10K)
             return CANERR_BAUDRATE;
+        // convert index to SJA1000 BTR0/BTR1 register
+        if (btr_index2sja1000(bitrate->index, &btr0btr1) != CANERR_NOERROR)
+            return CANERR_BAUDRATE;
+        // set the bit-rate (with reverse index numbering)
+        rc = slcan_setup_bitrate(can[handle].port, (uint8_t)(8 + bitrate->index));
     }
-    // convert bit-rate to SJA1000 BTR0/BTR1 register
-    if (btr_bitrate2sja1000(&temporary, &btr0btr1) != CANERR_NOERROR)
-        return CANERR_BAUDRATE;
-    // set the bit-timing register
-    rc = slcan_setup_btr(can[handle].port, btr0btr1);
+    else {
+        if (can[handle].attr.protocol != CANSIO_LAWICEL)
+            return CANERR_BAUDRATE;
+        // convert bit-rate to SJA1000 BTR0/BTR1 register
+        if (btr_bitrate2sja1000(bitrate, &btr0btr1) != CANERR_NOERROR)
+            return CANERR_BAUDRATE;
+        // set the bit-timing register
+        rc = slcan_setup_btr(can[handle].port, btr0btr1);
+    }
     if (rc < 0)
         return slcan_error(rc);
     // set acceptance filter (code and mask)
-    rc = slcan_acceptance_code(can[handle].port, can[handle].filter.sja1000.code);
-    if (rc < 0)
-        return slcan_error(rc);
-    rc = slcan_acceptance_mask(can[handle].port, can[handle].filter.sja1000.mask);
-    if (rc < 0)
-        return slcan_error(rc);
+    if (can[handle].attr.protocol != CANSIO_CANABLE) {
+        rc = slcan_acceptance_code(can[handle].port, can[handle].filter.sja1000.code);
+        if (rc < 0)
+            return slcan_error(rc);
+        rc = slcan_acceptance_mask(can[handle].port, can[handle].filter.sja1000.mask);
+        if (rc < 0)
+            return slcan_error(rc);
+    }
     // start the CAN controller
     rc = slcan_open_channel(can[handle].port);
     if (rc < 0)
@@ -772,9 +798,10 @@ char *can_firmware(int handle)
     if (slcan_version_number(can[handle].port, NULL, &sw_version) < 0)
         return NULL;
 
-    snprintf(firmware, CANPROP_MAX_BUFFER_SIZE, "Firmware %u.%u (%s protocol)",
+    snprintf(firmware, CANPROP_MAX_BUFFER_SIZE, "Firmware %u.%u (%s SLCAN protocol)",
         (uint8_t)(sw_version >> 4), (uint8_t)(sw_version & 0xFU),
-        can[handle].attr.options == CANSIO_SLCAN ? "SLCAN" : "?");
+        can[handle].attr.protocol == CANSIO_LAWICEL ? "Lawicel" :
+        can[handle].attr.protocol == CANSIO_CANABLE ? "CANable" : "?");
     firmware[CANPROP_MAX_BUFFER_SIZE] = '\0';
     return (char*)firmware;
 }
@@ -793,7 +820,7 @@ static void var_init(void)
         can[i].attr.bytesize = SERIAL_BYTESIZE;
         can[i].attr.parity = SERIAL_PARITY;
         can[i].attr.stopbits = SERIAL_STOPBITS;
-        can[i].attr.options = SERIAL_OPTIONS;
+        can[i].attr.protocol = SERIAL_PROTOCOL;
         can[i].btr0btr1 = CAN_BTR_DEFAULT;
         can[i].mode.byte = CANMODE_DEFAULT;
         can[i].status.byte = CANSTAT_RESET;
@@ -1154,7 +1181,7 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
     switch (param) {
     case CANPROP_GET_DEVICE_TYPE:       // device type of the CAN interface (int32_t)
         if (nbyte >= sizeof(int32_t)) {
-            *(int32_t*)value = (int32_t)SERIAL_OPTIONS;
+            *(int32_t*)value = (int32_t)can[handle].attr.protocol;
             rc = CANERR_NOERROR;
         }
         break;
@@ -1186,7 +1213,7 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
             ((can_sio_param_t*)value)->attr.bytesize = can[handle].attr.bytesize;
             ((can_sio_param_t*)value)->attr.parity = can[handle].attr.parity;
             ((can_sio_param_t*)value)->attr.stopbits = can[handle].attr.stopbits;
-            ((can_sio_param_t*)value)->attr.options = can[handle].attr.options;
+            ((can_sio_param_t*)value)->attr.protocol = can[handle].attr.protocol;
             rc = CANERR_NOERROR;
         }
         break;
@@ -1295,7 +1322,7 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_SET_FILTER_11BIT:      // set value for acceptance filter code and mask for 11-bit identifier (uint64_t)
         if (nbyte >= sizeof(uint64_t)) {
-            if (!(*(uint64_t*)value & 0xFFFFF800FFFFF800ULL)) {   // TODO: replace by a define
+            if (!(*(uint64_t*)value & ~FILTER_STD_VALID_MASK)) {
                 // note: code and mask must not exceed 11-bit identifier
                 if (can[handle].status.can_stopped) {
                     // note: set filter only if the CAN controller is in INIT mode
@@ -1310,8 +1337,7 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         break;
     case CANPROP_SET_FILTER_29BIT:      // set value for acceptance filter code and mask for 29-bit identifier (uint64_t)
         if (nbyte >= sizeof(uint64_t)) {
-            if (!(*(uint64_t*)value & 0xE0000000E0000000ULL) &&   // TODO: replace by a define
-                !can[handle].mode.nxtd) {
+            if (!(*(uint64_t*)value & ~FILTER_XTD_VALID_MASK) && !can[handle].mode.nxtd) {
                 // note: code and mask must not exceed 29-bit identifier and
                 //       extended frame format mode must not be suppressed
                 if (can[handle].status.can_stopped) {
@@ -1338,6 +1364,10 @@ static int drv_parameter(int handle, uint16_t param, void *value, size_t nbyte)
         if (nbyte >= sizeof(uint32_t)) {
             if ((rc = slcan_serial_number(can[handle].port, &serial_no)) == 0) {
                 *(uint32_t*)value = (uint32_t)serial_no;
+                rc = CANERR_NOERROR;
+            }
+            else if (can[handle].attr.protocol == CANSIO_CANABLE) {
+                *(uint32_t*)value = (uint32_t)0x99999999;
                 rc = CANERR_NOERROR;
             }
             else {
