@@ -420,8 +420,7 @@ int slcan_setup_bitrate(slcan_port_t port, uint8_t index) {
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* CANable SLCAN protocol (w/o ACK/NACK feaadback) */
         res = sio_transmit(slcan->port, request, 3);
         /* note: Variable 'errno' is set by the called functions according to
@@ -473,8 +472,7 @@ int slcan_setup_btr(slcan_port_t port, uint16_t btr) {
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* note: This command is not supported by the CANable SLCAN protocol.
          *       A protocol error (EBADMSG) will be returned in this case.
          */
@@ -517,8 +515,7 @@ int slcan_open_channel(slcan_port_t port) {
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* CANable SLCAN protocol (w/o ACK/NACK feaadback) */
         res = sio_transmit(slcan->port, request, 2);
         /* note: Variable 'errno' is set by the called functions according to
@@ -565,8 +562,7 @@ int slcan_close_channel(slcan_port_t port) {
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* CANable SLCAN protocol (w/o ACK/NACK feaadback) */
         res = sio_transmit(slcan->port, request, 2);
         /* note: Variable 'errno' is set by the called functions according to
@@ -631,6 +627,9 @@ int slcan_write_message(slcan_port_t port, const slcan_message_t *message, uint1
                 errno = EBADMSG;
                 res = -1;
             }
+        } else {
+            /* CANable SLCAN protocol (w/o ACK/NACK feaadback) */
+            res = 0;
         }
     } else if (nbytes >= 0) {
         /* note: Variable 'errno' is set by the called functions according to
@@ -718,8 +717,7 @@ int slcan_status_flags(slcan_port_t port, slcan_flags_t *flags) {
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* note: This command is not supported by the CANable SLCAN protocol.
          *       A protocol error (EBADMSG) will be returned in this case.
          */
@@ -775,8 +773,7 @@ int slcan_acceptance_code(slcan_port_t port, uint32_t code) {
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* note: This command is not supported by the CANable SLCAN protocol.
          *       A protocol error (EBADMSG) will be returned in this case.
          */
@@ -826,8 +823,7 @@ int slcan_acceptance_mask(slcan_port_t port, uint32_t mask) {
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* note: This command is not supported by the CANable SLCAN protocol.
          *       A protocol error (EBADMSG) will be returned in this case.
          */
@@ -876,8 +872,7 @@ int slcan_version_number(slcan_port_t port, uint8_t *hardware, uint8_t *software
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* note: This command returns firmware version and remote path as a
          *       string with the CANable SLCAN protocol and is not supported.
          *       A protocol error (EBADMSG) will be returned in this case.
@@ -934,8 +929,7 @@ int slcan_serial_number(slcan_port_t port, uint32_t *number) {
             errno = EBADMSG;
             res = -1;
         }
-    }
-    else {
+    } else {
         /* note: This command is not supported by the CANable SLCAN protocol.
          *       A protocol error (EBADMSG) will be returned in this case.
          */
