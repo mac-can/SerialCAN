@@ -49,9 +49,9 @@
  *
  *  @brief       CAN Message Formatter
  *
- *  @author      $Author: eris $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 1270 $
+ *  @version     $Rev: 1355 $
  *
  *  @defgroup    can_msg CAN Message Formatter
  *  @{
@@ -66,18 +66,21 @@ extern "C" {
 /*  -----------  includes  -----------------------------------------------
  */
 
-#if (OPTION_CANAPI_COMPANIONS != 0)     // set it in the build environment!
-#include "CANAPI_Types.h"               //   use CAN API V3 types and defines
-#else                                   // otherwise:
-#define CANBTR_STANDALONE_VARIANT       //   don't include CAN API V3 headers
-#include <stdint.h>                     //   C99 header for sized integer types
-#include <stdbool.h>                    //   C99 header for boolean type
-#include <time.h>                       //   time types for time-stamp
+#if (OPTION_CANAPI_COMPANIONS != 0)     /* set it in the build environment! */
+#include "CANAPI_Types.h"               /*   use CAN API V3 types and defines */
+#else                                   /* otherwise: */
+#define CANMSG_STANDALONE_VARIANT       /*   don't include CAN API V3 headers */
+#include <stdint.h>                     /*   C99 header for sized integer types */
+#include <stdbool.h>                    /*   C99 header for boolean type */
+#include <time.h>                       /*   for structure 'timespec' */
 #endif
 
 /*  -----------  options  ------------------------------------------------
  */
 
+/** @name  Compiler Switches
+ *  @brief Options for conditional compilation.
+ *  @{ */
 /** @note  Set define OPTION_CANAPI_COMPANIONS to a non-zero value to compile
  *         this module in conjunction with the CAN API V3 sources (e.g. in
  *         the build environment).
@@ -85,18 +88,22 @@ extern "C" {
 /** @note  Set define OPTION_CAN_2_0_ONLY to a non-zero value to compile
  *         with CAN 2.0 frame format only (e.g. in the build environment).
  */
-#if (OPTION_CAN_2_0_ONLY != 0)
+#ifndef OPTION_DISABLED
+#define OPTION_DISABLED  0  /**< if a define is not defined, it is automatically set to 0 */
+#endif
+#if (OPTION_CAN_2_0_ONLY != OPTION_DISABLED)
 #ifdef _MSC_VER
-#pragma message ( "Compilation with with legacy CAN 2.0 frame format!" )
+#pragma message ( "Compilation with legacy CAN 2.0 frame format!" )
 #else
-#warning Compilation with with legacy CAN 2.0 frame format!
+#warning Compilation with legacy CAN 2.0 frame format!
 #endif
 #endif
+/** @} */
 
 /*  -----------  defines  ------------------------------------------------
  */
 
-#ifdef CANBTR_STANDALONE_VARIANT
+#ifdef CANMSG_STANDALONE_VARIANT
 /** @name  CAN Identifier
  *  @brief CAN Identifier range
  *  @{ */
@@ -223,14 +230,14 @@ typedef enum msg_fmt_wraparound_t_ {
 
 /** @brief       CAN Time-stamp:
  */
-#ifdef CANMSG_STANDALONE
+#ifdef CANMSG_STANDALONE_VARIANT
 typedef struct timespec msg_timestamp_t;  /* w/ nanoseconds resolution */
 #else
 typedef can_timestamp_t msg_timestamp_t;  /* CAN API V3 time-stamp */
 #endif
 /** @brief       CAN Message (with Time-stamp):
  */
-#ifdef CANMSG_STANDALONE
+#ifdef CANMSG_STANDALONE_VARIANT
 typedef struct msg_message_t_ {
     uint32_t id;                        /**< CAN identifier */
     struct {

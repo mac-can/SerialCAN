@@ -83,6 +83,15 @@ struct SOptions {
     uint64_t m_nTxDelay;
     uint32_t m_nTxCanId;
     uint8_t m_nTxCanDlc;
+    bool m_fTxXtdId;
+#if (CAN_TRACE_SUPPORTED != 0)
+    enum {
+        eTraceOff,
+        eTraceBinary,
+        eTraceLogger,
+        eTraceVendor
+    } m_eTraceMode;
+#endif
     bool m_fListBitrates;
     bool m_fListBoards;
     bool m_fTestBoards;

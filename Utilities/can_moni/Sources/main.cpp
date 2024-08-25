@@ -85,7 +85,7 @@ int main(int argc, const char* argv[]) {
     CCanDevice::SLibraryInfo library = { (-1), "", "" };
 #endif
     CANAPI_Return_t retVal = CANERR_FATAL;
-    char property[CANPROP_MAX_BUFFER_SIZE] = "";
+    char property[CANPROP_MAX_BUFFER_SIZE + 1] = "";
     char* string = NULL;
 
     /* device parameter */
@@ -313,9 +313,50 @@ int main(int argc, const char* argv[]) {
         fprintf(stderr, "+++ error: CAN Controller could not be started (%i)\n", retVal);
         goto teardown;
     }
+    /* - start trace session (if enabled) */
+#if (CAN_TRACE_SUPPORTED != 0)
+    if (opts.m_eTraceMode != SOptions::eTraceOff) {
+        /* -- set trace format */
+        switch (opts.m_eTraceMode) {
+            case SOptions::eTraceVendor:
+                property[0] = CANPARA_TRACE_TYPE_VENDOR;
+                break;
+            case SOptions::eTraceLogger:
+                property[0] = CANPARA_TRACE_TYPE_LOGGER;
+                break;
+            case SOptions::eTraceBinary:
+            default:
+                property[0] = CANPARA_TRACE_TYPE_BINARY;
+                break;
+        }
+        (void)canDevice.SetProperty(CANPROP_SET_TRACE_TYPE, (void*)&property[0], sizeof(uint8_t));
+        /* -- set trace active */
+        property[0] = CANPARA_TRACE_ON;
+        retVal = canDevice.SetProperty(CANPROP_SET_TRACE_ACTIVE, (void*)&property[0], sizeof(uint8_t));
+        if (retVal != CCanApi::NoError) {
+            fprintf(stdout, "FAILED!\n");
+            fprintf(stderr, "+++ error: trace session could not be started (%i)\n", retVal);
+            goto teardown;
+        }
+    }
+#endif
     fprintf(stdout, "OK!\n");
     /* - reception loop */
     canDevice.ReceptionLoop();
+    /* - stop trace session (if enabled) */
+#if (CAN_TRACE_SUPPORTED != 0)
+    if (opts.m_eTraceMode != SOptions::eTraceOff) {
+        /* -- get trace file name */
+        retVal = canDevice.GetProperty(CANPROP_GET_TRACE_FILE, (void*)property, CANPROP_MAX_BUFFER_SIZE);
+        if (retVal == CCanApi::NoError) {
+            property[CANPROP_MAX_BUFFER_SIZE] = '\0';
+            fprintf(stdout, "Trace-file=%s\n", property);
+        }
+        /* -- set trace inactive */
+        property[0] = CANPARA_TRACE_OFF;
+        (void)canDevice.SetProperty(CANPROP_SET_TRACE_ACTIVE, (void*)&property[0], sizeof(uint8_t));
+    }
+#endif
     /* - show interface information */
     if ((string = canDevice.GetHardwareVersion()) != NULL)
         fprintf(stdout, "Hardware: %s\n", string);
@@ -471,7 +512,6 @@ bool CCanDevice::IsBlacklisted(int32_t library, int32_t blacklist[]) {
 int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
     CANAPI_Bitrate_t bitrate[9];
     CANAPI_BusSpeed_t speed;
-    CANAPI_Return_t retVal;
 
     char string[CANPROP_MAX_BUFFER_SIZE] = "";
     bool hasDataPhase = false;
@@ -519,7 +559,7 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
         hasNoSamp = true;
     }
     for (i = 0; i < n; i++) {
-        if ((retVal = CCanDevice::MapBitrate2Speed(bitrate[i], speed)) == CCanApi::NoError) {
+        if (CCanDevice::MapBitrate2Speed(bitrate[i], speed) == CCanApi::NoError) {
             fprintf(stdout, "  %4.0fkbps@%.1f%%", speed.nominal.speed / 1000., speed.nominal.samplepoint * 100.);
 #if (CAN_FD_SUPPORTED != 0)
             if (opMode.brse)
@@ -618,7 +658,7 @@ bool CCanDevice::WriteJsonFile(const char* filename) {
             "      \"id\": %i,\n"
             "      \"name\": \"%s%i\",\n"
             "      \"alias\": \"%s%i\"\n",
-            CANDEV_SERIAL, 
+            CANDEV_SERIAL,
 #if defined(_WIN32) || defined(_WIN64)
             MONITOR_TTYNAME, i + 1,
 #else
@@ -647,7 +687,6 @@ bool CCanDevice::WriteJsonFile(const char* filename) {
  */
 uint64_t CCanDevice::ReceptionLoop() {
     CANAPI_Message_t message;
-    CANAPI_Return_t retVal;
     uint64_t frames = 0U;
 
     char string[CANPROP_MAX_STRING_LENGTH+1];
@@ -655,7 +694,7 @@ uint64_t CCanDevice::ReceptionLoop() {
 
     fprintf(stderr, "\nPress ^C to abort.\n\n");
     while(running) {
-        if ((retVal = ReadMessage(message)) == CCanApi::NoError) {
+        if (ReadMessage(message) == CCanApi::NoError) {
             if ((((message.id < MAX_ID) && can_id[message.id]) || ((message.id >= MAX_ID) && can_id_xtd))) {
                 (void)CCanMessage::Format(message, ++frames, string, CANPROP_MAX_STRING_LENGTH);
                 fprintf(stdout, "%s\n", string);
@@ -729,9 +768,9 @@ static int get_exclusion(const char* arg)
     }
     if (inv) {
         for (i = 0; i < MAX_ID; i++)
-            can_id[i] = !can_id[i];
+            can_id[i] = can_id[i] ? 0 : 1;
     }
-    can_id_xtd = !inv;
+    can_id_xtd = inv ? 0 : 1;
     return 1;
 }
 
