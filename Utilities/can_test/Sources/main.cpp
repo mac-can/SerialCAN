@@ -91,7 +91,7 @@ int main(int argc, const char* argv[]) {
     /* - CAN-over-Serial-Line (SLCAN protocol) */
     can_sio_param_t sioParam;
     sioParam.name = NULL;
-    sioParam.attr.options = CANSIO_SLCAN;
+    sioParam.attr.protocol = CANSIO_SLCAN;
     sioParam.attr.baudrate = CANSIO_BD57600;
     sioParam.attr.bytesize = CANSIO_8DATABITS;
     sioParam.attr.parity = CANSIO_NOPARITY;
