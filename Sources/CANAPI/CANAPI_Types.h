@@ -49,9 +49,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces - Data Types and Defines
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 1286 $
+ *  @version     $Rev: 1391 $
  *
  *  @addtogroup  can_api
  *  @{
@@ -264,8 +264,10 @@ extern "C" {
 #define CANERR_LEC_CRC            (-16) /**< LEC - checksum error */
 #define CANERR_RESERVED1          (-19) /**< RIP - error frame */
 #define CANERR_TX_BUSY            (-20) /**< USR - transmitter busy */
+#define CANERR_RESERVED2          (-21) /**< N/A - macCAN specific */
 #define CANERR_RX_EMPTY           (-30) /**< USR - receiver empty */
 #define CANERR_QUE_OVR            (-40) /**< USR - queue overrun */
+#define CANERR_RESERVED3          (-41) /**< N/A - macCAN specific */
 #define CANERR_TIMEOUT            (-50) /**< USR - time-out */
 #define CANERR_RESOURCE           (-90) /**< USR - resource allocation */
 #define CANERR_BAUDRATE           (-91) /**< USR - illegal baudrate */
@@ -350,6 +352,19 @@ extern "C" {
 #define CANPROP_SET_FILTER_11BIT    42U /**< set value for acceptance filter code and mask for 11-bit identifier (uint64_t) */
 #define CANPROP_SET_FILTER_29BIT    43U /**< set value for acceptance filter code and mask for 29-bit identifier (uint64_t) */
 #define CANPROP_SET_FILTER_RESET    44U /**< reset acceptance filter code and mask to default values (NULL) */
+#define CANPROP_SET_FROMTO_11BIT    45U /**< add an 11-bit identifier range to the from-to filter list (uint64_t) */
+#define CANPROP_SET_FROMTO_29BIT    46U /**< add an 11-bit identifier range to the from-to filter list (uint64_t) */
+#define CANPROP_GET_TRACE_ACTIVE    48U /**< trace file activation state: STOPPED/RUNNING (uint8_t) */
+#define CANPROP_GET_TRACE_FOLDER    49U /**< trace file folder location (directory only) (char[]) */
+#define CANPROP_GET_TRACE_TYPE      50U /**< trace file type (for possible values see below) (uint8_t) */
+#define CANPROP_GET_TRACE_MODE      51U /**< trace file mode (for possible options see below) (uint16_t) */
+#define CANPROP_GET_TRACE_SIZE      52U /**< trace file segment size (in 10 KB steps, 0 = 100MB) (uint 16_t) */
+#define CANPROP_GET_TRACE_FILE      55U /**< trace file name: directory + basename + extension (char[]) */
+#define CANPROP_SET_TRACE_ACTIVE    56U /**< start/stop trace file logging with configured settings (uint8_t) */
+#define CANPROP_SET_TRACE_FOLDER    57U /**< set trace file folder location (directory only) (char[]) */
+#define CANPROP_SET_TRACE_TYPE      58U /**< set trace file type (for possible values see below) (uint8_t) */
+#define CANPROP_SET_TRACE_MODE      59U /**< set trace file mode (for possible options see below) (uint16_t) */
+#define CANPROP_SET_TRACE_SIZE      60U /**< set trace file segment size (in 10 KB steps, 0 = 100MB) (uint16_t) */
 #if (OPTION_CANAPI_LIBRARY != 0)
 /* - -  build-in bit-rate conversion  - - - - - - - - - - - - - - - - - */
 #define CANPROP_GET_BTR_INDEX       64U /**< bit-rate as CiA index (int32_t) */
@@ -428,6 +443,27 @@ extern "C" {
 /** @name  Property Values
  *  @brief Values which can be used as property value (argument)
  *  @{ */
+/* - -  trace file  - - - - - - - - - - - - - - - - - - - - - - - - - - */
+#define CANPARA_TRACE_OFF            0U /**< trace file activation: STOP */
+#define CANPARA_TRACE_ON             1U /**< trace file activation: START */
+/* - -  trace file type - - - - - - - - - - - - - - - - - - - - - - - - */
+#define CANPARA_TRACE_TYPE_BINARY    0U /**< trace file: binary format */
+#define CANPARA_TRACE_TYPE_LOGGER    1U /**< trace file: CSV format */
+#define CANPARA_TRACE_TYPE_VENDOR 0x80U /**< trace file: vendor-specific */
+/* - -  trace file mode - - - - - - - - - - - - - - - - - - - - - - - - */
+#define CANPARA_TRACE_MODE_DEFAULT   0x0000U /**< trace file: default (create/append) */
+#define CANPARA_TRACE_MODE_OVERWRITE   0x80U /**< trace file: overwrite existing/create */
+#define CANPARA_TRACE_MODE_SEGMENTED   0x01U /**< trace file: segmented trace file */
+#define CANPARA_TRACE_MODE_COMPRESSED  0x40U /**< trace file: compressed trace file */
+#define CANPARA_TRACE_MODE_PREFIX_DATE  0x02U /**< trace file: date as file name prefix */
+#define CANPARA_TRACE_MODE_PREFIX_TIME  0x04U /**< trace file: time as file name prefix */
+#define CANPARA_TRACE_MODE_OUTPUT_DLC  0x000U /**< trace file: length as Data Length Code */
+#define CANPARA_TRACE_MODE_OUTPUT_LEN  0x100U /**< trace file: length as LENGTH in bytes */
+/* - -  trace file size - - - - - - - - - - - - - - - - - - - - - - - - */
+#define CANPARA_TRACE_SIZE_DEFAULT   1024U  /**< trace file: default segment size (in [10 * KB]) */
+#define CANPARA_TRACE_SIZE_LIMIT     62500U /**< trace file: maximum segment size (in [10 * KB]) */
+#define CANPARA_TRACE_SIZE_10KB      10240L /**< trace file: size factor(in [KB]) */
+/* - -  message formatter - - - - - - - - - - - - - - - - - - - - - - - */
 #define CANPARA_FORMAT_DEFAULT       0  /**< message formatter output (default) */
 /* - -  formatter option: ON or OFF - - - - - - - - - - - - - - - - - - */
 #define CANPARA_OPTION_OFF           0  /**< formatter option: OFF (false, no, 0) */

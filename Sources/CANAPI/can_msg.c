@@ -49,9 +49,9 @@
  *
  *  @brief       CAN Message Formatter
  *
- *  @author      $Author: eris $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 1270 $
+ *  @version     $Rev: 1382 $
  *
  *  @addtogroup  can_msg
  *  @{
@@ -689,6 +689,8 @@ int msg_set_fmt_tx_prompt(const char *option)
 static void format_time(char *string, const msg_message_t *message)
 {
     static msg_timestamp_t laststamp = { 0, 0 };
+    static int first = 1;
+
     struct timespec difftime;
     struct tm tm; time_t t;
     char   timestring[25];
@@ -700,7 +702,8 @@ static void format_time(char *string, const msg_message_t *message)
     switch (msg_option.time_stamp) {
     case MSG_FMT_TIMESTAMP_RELATIVE:
     case MSG_FMT_TIMESTAMP_ZERO:
-        if (laststamp.tv_sec == 0) { /* first init */
+        if (first) { /* first time-stamp received */
+            first = 0;
             laststamp.tv_sec = message->timestamp.tv_sec;
             laststamp.tv_nsec = message->timestamp.tv_nsec;
         }
@@ -710,7 +713,7 @@ static void format_time(char *string, const msg_message_t *message)
             difftime.tv_sec -= 1;
             difftime.tv_nsec += 1000000000;
         }
-        if (difftime.tv_sec < 0) {
+        if (difftime.tv_sec < 0) { /* FIXME: why shouldn't it be negative? */
             difftime.tv_sec = 0;
             difftime.tv_nsec = 0;
         }
