@@ -1,4 +1,4 @@
-__CAN Tester for CAN-over-Serial-Line Interfaces, Version 0.2__ \
+__CAN Tester for CAN-over-Serial-Line Interfaces, Version 0.3__ \
 Copyright &copy; 2005-2010 Uwe Vogt, UV Software, Friedrichshafen \
 Copyright &copy; 2012-2024 Uwe Vogt, UV Software, Berlin
 

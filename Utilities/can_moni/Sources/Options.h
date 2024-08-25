@@ -68,6 +68,14 @@ struct SOptions {
         uint32_t m_u32Mask;
     } m_StdFilter, m_XtdFilter;
     char* m_szExcludeList;
+#if (CAN_TRACE_SUPPORTED != 0)
+    enum {
+        eTraceOff,
+        eTraceBinary,
+        eTraceLogger,
+        eTraceVendor
+    } m_eTraceMode;
+#endif
     bool m_fListBitrates;
     bool m_fListBoards;
     bool m_fTestBoards;

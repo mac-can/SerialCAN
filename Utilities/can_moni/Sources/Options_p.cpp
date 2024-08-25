@@ -55,7 +55,6 @@ static const char* c_szWarranty = CAN_MONI_WARRANTY;
 static const char* c_szLicense = CAN_MONI_LICENSE;
 static const char* c_szBasename = CAN_MONI_PROGRAM;
 static const char* c_szInterface = "(unknown)";
-static const char* c_szExcludeList = "~0x00-0x7FF";
 
 SOptions::SOptions() {
     // to have default bus speed from bit-timing index
@@ -77,11 +76,13 @@ SOptions::SOptions() {
     m_StdFilter.m_u32Mask = CANACC_MASK_11BIT;
     m_XtdFilter.m_u32Code = CANACC_CODE_29BIT;
     m_XtdFilter.m_u32Mask = CANACC_MASK_29BIT;
-    m_szExcludeList = (char*)c_szExcludeList;
+    m_szExcludeList = (char*)NULL;
+#if (CAN_TRACE_SUPPORTED != 0)
+    m_eTraceMode = SOptions::eTraceOff;
+#endif
     m_fListBitrates = false;
     m_fListBoards = false;
     m_fTestBoards = false;
-    m_fVerbose = false;
     m_fVerbose = false;
     m_fExit = false;
 }
@@ -110,6 +111,9 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
     int optFmtWrap = 0;
 #endif
     int optExclude = 0;
+#if (CAN_TRACE_SUPPORTED != 0)
+    int optTraceMode = 0;
+#endif
     int optListBitrates = 0;
     int optListBoards = 0;
     int optTestBoards = 0;
@@ -154,6 +158,7 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
         {"wraparound", required_argument, 0, 'w'},
         {"exclude", required_argument, 0, 'x'},
         {"script", required_argument, 0, 's'},
+        {"trace", required_argument, 0, 'y'},
         {"list-bitrates", optional_argument, 0, 'l'},
 #if (OPTION_CANAPI_LIBRARY != 0)
         {"list-boards", optional_argument, 0, 'L'},
@@ -179,9 +184,9 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
 #endif
     // (2) scan command-line for options
 #if (OPTION_CANAPI_LIBRARY != 0)
-    while ((opt = getopt_long(argc, (char * const *)argv, "b:vp:m:t:i:d:a:w:x:s:lLTh", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, (char * const *)argv, "b:vp:m:t:i:d:a:w:x:s:y:lLTh", long_options, NULL)) != -1) {
 #else
-    while ((opt = getopt_long(argc, (char * const *)argv, "b:vm:t:i:d:a:w:x:s:lLTj:h", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, (char * const *)argv, "b:vm:t:i:d:a:w:x:s:y:lLTj:h", long_options, NULL)) != -1) {
 #endif
         switch (opt) {
         /* option '--baudrate=<baudrate>' (-b) */
@@ -323,8 +328,7 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
                 fprintf(err, "%s: illegal argument for option `--error-frames'\n", m_szBasename);
                 return 1;
             }
-           m_OpMode.byte |= CANMODE_ERR;
- 
+            m_OpMode.byte |= CANMODE_ERR;
             break;
         /* option '--no-extended-frames' */
         case 'X':
@@ -336,7 +340,7 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
                 fprintf(err, "%s: illegal argument for option `--no-extended-frames'\n", m_szBasename);
                 return 1;
             }
-           m_OpMode.byte |= CANMODE_NXTD;
+            m_OpMode.byte |= CANMODE_NXTD;
             break;
         /* option '--no-remote-frames' */
         case 'R':
@@ -348,7 +352,7 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
                 fprintf(err, "%s: missing argument for option `--no-remote-frames'\n", m_szBasename);
                 return 1;
             }
-           m_OpMode.byte |= CANMODE_NRTR;
+            m_OpMode.byte |= CANMODE_NRTR;
             break;
         /* option '--code=<11-bit-code>' */
         case '1':
@@ -430,6 +434,36 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
             }
             m_XtdFilter.m_u32Mask = (uint32_t)intarg;
             break;
+        /* option '--trace=(ON|OFF)' (-y) */
+#if (CAN_TRACE_SUPPORTED != 0)
+        case 'y':
+            if (optTraceMode++) {
+                fprintf(err, "%s: duplicated option `--trace'\n", m_szBasename);
+                return 1;
+            }
+            if (optarg == NULL) {
+                fprintf(err, "%s: missing argument for option `--trace'\n", m_szBasename);
+                return 1;
+            }
+#if (CAN_TRACE_SUPPORTED == 1)
+            if (!strcasecmp(optarg, "OFF") || !strcasecmp(optarg, "NO") || !strcasecmp(optarg, "n") || !strcasecmp(optarg, "0"))
+                m_eTraceMode = SOptions::eTraceOff;
+            else if (!strcasecmp(optarg, "ON") || !strcasecmp(optarg, "YES") || !strcasecmp(optarg, "y") || !strcasecmp(optarg, "1"))
+                m_eTraceMode = SOptions::eTraceVendor;
+#else
+            if (!strcasecmp(optarg, "BIN") || !strcasecmp(optarg, "BINARY") || !strcasecmp(optarg, "default"))
+                m_eTraceMode = SOptions::eTraceBinary;
+            else if (!strcasecmp(optarg, "CSV") || !strcasecmp(optarg, "logger") || !strcasecmp(optarg, "log"))
+                m_eTraceMode = SOptions::eTraceLogger;
+            else if (!strcasecmp(optarg, "TRC") || !strcasecmp(optarg, "vendor"))
+                m_eTraceMode = SOptions::eTraceVendor;
+#endif
+            else {
+                fprintf(err, "%s: illegal argument for option `--trace'\n", m_szBasename);
+                return 1;
+            }
+            break;
+#endif
         /* option '--time=(ABS|REL|ZERO)' (-t) */
         case 't':
             if (optFmtTime++) {
@@ -761,6 +795,9 @@ void SOptions::ShowUsage(FILE* stream, bool args) {
     fprintf(stream, " -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or\n");
     fprintf(stream, "     --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)\n");
     fprintf(stream, " -v, --verbose                        show detailed bit-rate settings\n");
+#if (CAN_TRACE_SUPPORTED != 0)
+    fprintf(stream, " -y, --trace=(ON|OFF)                 write a trace file (default=OFF)\n");
+#endif
 #if (CAN_FD_SUPPORTED != 0)
     fprintf(stream, "     --list-bitrates[=<mode>]         list standard bit-rate settings and exit\n");
 #else

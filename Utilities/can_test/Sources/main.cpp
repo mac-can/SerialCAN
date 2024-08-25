@@ -57,8 +57,8 @@
 class CCanDevice : public CCanDriver {
 public:
     uint64_t ReceiverTest(bool checkCounter = false, uint64_t expectedNumber = 0U, bool stopOnError = false);
-    uint64_t TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id = 0x100U, uint8_t dlc = 0U, uint64_t delay = 0U, uint64_t offset = 0U);
-    uint64_t TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random = false, uint32_t id = 0x100U, uint8_t dlc = 0U, uint64_t delay = 0U, uint64_t offset = 0U);
+    uint64_t TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id = 0x100U, bool xtd = false, uint8_t dlc = 0U, uint64_t delay = 0U, uint64_t offset = 0U);
+    uint64_t TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random = false, uint32_t id = 0x100U, bool xtd = false, uint8_t dlc = 0U, uint64_t delay = 0U, uint64_t offset = 0U);
 public:
     int ListCanDevices(void);
     int TestCanDevices(CANAPI_OpMode_t opMode);
@@ -82,7 +82,7 @@ int main(int argc, const char* argv[]) {
     CCanDevice::SLibraryInfo library = { (-1), "", "" };
 #endif
     CANAPI_Return_t retVal = CANERR_FATAL;
-    char property[CANPROP_MAX_BUFFER_SIZE] = "";
+    char property[CANPROP_MAX_BUFFER_SIZE + 1] = "";
     char* string = NULL;
 
     /* device parameter */
@@ -299,23 +299,64 @@ int main(int argc, const char* argv[]) {
         fprintf(stderr, "+++ error: CAN Controller could not be started (%i)\n", retVal);
         goto teardown;
     }
+    /* - start trace session (if enabled) */
+#if (CAN_TRACE_SUPPORTED != 0)
+    if (opts.m_eTraceMode != SOptions::eTraceOff) {
+        /* -- set trace format */
+        switch (opts.m_eTraceMode) {
+            case SOptions::eTraceVendor:
+                property[0] = CANPARA_TRACE_TYPE_VENDOR;
+                break;
+            case SOptions::eTraceLogger:
+                property[0] = CANPARA_TRACE_TYPE_LOGGER;
+                break;
+            case SOptions::eTraceBinary:
+            default:
+                property[0] = CANPARA_TRACE_TYPE_BINARY;
+                break;
+        }
+        (void)canDevice.SetProperty(CANPROP_SET_TRACE_TYPE, (void*)&property[0], sizeof(uint8_t));
+        /* -- set trace active */
+        property[0] = CANPARA_TRACE_ON;
+        retVal = canDevice.SetProperty(CANPROP_SET_TRACE_ACTIVE, (void*)&property[0], sizeof(uint8_t));
+        if (retVal != CCanApi::NoError) {
+            fprintf(stdout, "FAILED!\n");
+            fprintf(stderr, "+++ error: trace session could not be started (%i)\n", retVal);
+            goto teardown;
+        }
+    }
+#endif
     fprintf(stdout, "OK!\n");
     /* - do your job well: */
     switch (opts.m_TestMode) {
     case SOptions::TxMODE:   /* transmitter test (duration) */
-        (void)canDevice.TransmitterTest(opts.m_nTxTime, opts.m_OpMode, opts.m_nTxCanId, opts.m_nTxCanDlc, opts.m_nTxDelay, opts.m_nStartNumber);
+        (void)canDevice.TransmitterTest(opts.m_nTxTime, opts.m_OpMode, opts.m_nTxCanId, opts.m_fTxXtdId, opts.m_nTxCanDlc, opts.m_nTxDelay, opts.m_nStartNumber);
         break;
     case SOptions::TxFRAMES: /* transmitter test (frames) */
-        (void)canDevice.TransmitterTest(opts.m_nTxFrames, opts.m_OpMode, false, opts.m_nTxCanId, opts.m_nTxCanDlc, opts.m_nTxDelay, opts.m_nStartNumber);
+        (void)canDevice.TransmitterTest(opts.m_nTxFrames, opts.m_OpMode, false, opts.m_nTxCanId, opts.m_fTxXtdId, opts.m_nTxCanDlc, opts.m_nTxDelay, opts.m_nStartNumber);
         break;
     case SOptions::TxRANDOM: /* transmitter test (random) */
-        (void)canDevice.TransmitterTest(opts.m_nTxFrames, opts.m_OpMode, true, opts.m_nTxCanId, opts.m_nTxCanDlc, opts.m_nTxDelay, opts.m_nStartNumber);
+        (void)canDevice.TransmitterTest(opts.m_nTxFrames, opts.m_OpMode, true, opts.m_nTxCanId, opts.m_fTxXtdId, opts.m_nTxCanDlc, opts.m_nTxDelay, opts.m_nStartNumber);
         break;
     case SOptions::RxMODE:   /* receiver test (abort with Ctrl+C) */
     default:
         (void)canDevice.ReceiverTest(opts.m_fCheckNumber, opts.m_nStartNumber, opts.m_fStopOnError);
         break;
     }
+    /* - stop trace session (if enabled) */
+#if (CAN_TRACE_SUPPORTED != 0)
+    if (opts.m_eTraceMode != SOptions::eTraceOff) {
+        /* -- get trace file name */
+        retVal = canDevice.GetProperty(CANPROP_GET_TRACE_FILE, (void*)property, CANPROP_MAX_BUFFER_SIZE);
+        if (retVal == CCanApi::NoError) {
+            property[CANPROP_MAX_BUFFER_SIZE] = '\0';
+            fprintf(stdout, "Trace-file=%s\n", property);
+        }
+        /* -- set trace inactive */
+        property[0] = CANPARA_TRACE_OFF;
+        (void)canDevice.SetProperty(CANPROP_SET_TRACE_ACTIVE, (void*)&property[0], sizeof(uint8_t));
+    }
+#endif
     /* - show interface information */
     if ((string = canDevice.GetHardwareVersion()) != NULL)
         fprintf(stdout, "Hardware: %s\n", string);
@@ -471,7 +512,6 @@ bool CCanDevice::IsBlacklisted(int32_t library, int32_t blacklist[]) {
 int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
     CANAPI_Bitrate_t bitrate[9];
     CANAPI_BusSpeed_t speed;
-    CANAPI_Return_t retVal;
 
     char string[CANPROP_MAX_BUFFER_SIZE] = "";
     bool hasDataPhase = false;
@@ -519,7 +559,7 @@ int CCanDevice::ListCanBitrates(CANAPI_OpMode_t opMode) {
         hasNoSamp = true;
     }
     for (i = 0; i < n; i++) {
-        if ((retVal = CCanDevice::MapBitrate2Speed(bitrate[i], speed)) == CCanApi::NoError) {
+        if (CCanDevice::MapBitrate2Speed(bitrate[i], speed) == CCanApi::NoError) {
             fprintf(stdout, "  %4.0fkbps@%.1f%%", speed.nominal.speed / 1000., speed.nominal.samplepoint * 100.);
 #if (CAN_FD_SUPPORTED != 0)
             if (opMode.brse)
@@ -618,7 +658,7 @@ bool CCanDevice::WriteJsonFile(const char* filename) {
             "      \"id\": %i,\n"
             "      \"name\": \"%s%i\",\n"
             "      \"alias\": \"%s%i\"\n",
-            CANDEV_SERIAL, 
+            CANDEV_SERIAL,
 #if defined(_WIN32) || defined(_WIN64)
             TESTER_TTYNAME, i + 1,
 #else
@@ -652,7 +692,7 @@ bool CCanDevice::WriteJsonFile(const char* filename) {
  *  - offset for first up counting number
  *  * Note: Most CAN drivers use a transmission queue that stalls after the time period has expired.
  */
-uint64_t CCanDevice::TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id, uint8_t dlc, uint64_t delay, uint64_t offset) {
+uint64_t CCanDevice::TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, uint32_t id, bool xtd, uint8_t dlc, uint64_t delay, uint64_t offset) {
     CANAPI_Message_t message;
     CANAPI_Return_t retVal;
 
@@ -665,7 +705,7 @@ uint64_t CCanDevice::TransmitterTest(time_t duration, CANAPI_OpMode_t opMode, ui
 
     fprintf(stderr, "\nPress ^C to abort.\n");
     message.id  = id;
-    message.xtd = 0;
+    message.xtd = xtd;
     message.rtr = 0;
 #if (CAN_FD_SUPPORTED != 0)
     message.fdf = opMode.fdoe;
@@ -731,7 +771,7 @@ retry_tx_test:
  *  - offset for first up counting number
  *  * Note: Most CAN drivers use a transmission queue that stalls after the time period has expired.
  */
-uint64_t CCanDevice::TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random, uint32_t id, uint8_t dlc, uint64_t delay, uint64_t offset) {
+uint64_t CCanDevice::TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, bool random, uint32_t id, bool xtd, uint8_t dlc, uint64_t delay, uint64_t offset) {
     CANAPI_Message_t message;
     CANAPI_Return_t retVal;
 
@@ -745,7 +785,7 @@ uint64_t CCanDevice::TransmitterTest(uint64_t count, CANAPI_OpMode_t opMode, boo
 
     fprintf(stderr, "\nPress ^C to abort.\n");
     message.id  = id;
-    message.xtd = 0;
+    message.xtd = xtd;
     message.rtr = 0;
 #if (CAN_FD_SUPPORTED != 0)
     message.fdf = opMode.fdoe;
