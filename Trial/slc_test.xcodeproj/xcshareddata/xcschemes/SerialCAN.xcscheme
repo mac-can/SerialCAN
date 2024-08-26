@@ -56,7 +56,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "ACK:OFF"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "TEST"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "LOG"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

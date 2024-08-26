@@ -28,7 +28,8 @@ WRAPPER_DIR = $(HOME_DIR)/Sources/Wrapper
 OBJECTS = $(OUTDIR)/SerialCAN.o \
 	$(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
-	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o \
+	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o \
+	$(OUTDIR)/timer.o $(OUTDIR)/logger.o \
 	$(OUTDIR)/main.o
 
 DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
@@ -170,6 +171,9 @@ $(OUTDIR)/buffer.o: $(SERIAL_DIR)/buffer.c $(SERIAL_DIR)/buffer_p.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 $(OUTDIR)/queue.o: $(SERIAL_DIR)/queue.c $(SERIAL_DIR)/queue_p.c
+	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
+
+$(OUTDIR)/timer.o: $(SERIAL_DIR)/timer.c $(SERIAL_DIR)/timer_p.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c
