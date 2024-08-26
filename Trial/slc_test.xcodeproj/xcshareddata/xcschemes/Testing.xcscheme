@@ -17,7 +17,7 @@
                BlueprintIdentifier = "440829262C1B047000E4DA82"
                BuildableName = "Testing.xctest"
                BlueprintName = "Testing"
-               ReferencedContainer = "container:SerialCAN.xcodeproj">
+               ReferencedContainer = "container:slc_test.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "440829262C1B047000E4DA82"
                BuildableName = "Testing.xctest"
                BlueprintName = "Testing"
-               ReferencedContainer = "container:SerialCAN.xcodeproj">
+               ReferencedContainer = "container:slc_test.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -63,7 +63,7 @@
             BlueprintIdentifier = "440829262C1B047000E4DA82"
             BuildableName = "Testing.xctest"
             BlueprintName = "Testing"
-            ReferencedContainer = "container:SerialCAN.xcodeproj">
+            ReferencedContainer = "container:slc_test.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

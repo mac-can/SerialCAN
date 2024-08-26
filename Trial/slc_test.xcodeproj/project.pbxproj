@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -54,7 +54,7 @@
 		0F680C052469A6830049148F /* CANAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANAPI.h; path = ../../Sources/CANAPI/CANAPI.h; sourceTree = "<group>"; };
 		0F6C789C246C311A007EBB88 /* can_btr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = can_btr.c; path = ../../Sources/CANAPI/can_btr.c; sourceTree = "<group>"; };
 		0F6C789E246C311A007EBB88 /* can_btr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = can_btr.h; path = ../../Sources/CANAPI/can_btr.h; sourceTree = "<group>"; };
-		0F8206342460255D00CD103A /* SerialCAN */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SerialCAN; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F8206342460255D00CD103A /* slc_test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = slc_test; sourceTree = BUILT_PRODUCTS_DIR; };
 		0F8206372460255D00CD103A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		0F82063E2460266C00CD103A /* build_no.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = build_no.h; path = ../../Sources/build_no.h; sourceTree = "<group>"; };
 		0F820648246026E600CD103A /* CANAPI_Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CANAPI_Types.h; path = ../../Sources/CANAPI/CANAPI_Types.h; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 		0F8206352460255D00CD103A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0F8206342460255D00CD103A /* SerialCAN */,
+				0F8206342460255D00CD103A /* slc_test */,
 				440829272C1B047000E4DA82 /* Testing.xctest */,
 			);
 			name = Products;
@@ -201,9 +201,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0F8206332460255D00CD103A /* SerialCAN */ = {
+		0F8206332460255D00CD103A /* slc_test */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0F82063B2460255D00CD103A /* Build configuration list for PBXNativeTarget "SerialCAN" */;
+			buildConfigurationList = 0F82063B2460255D00CD103A /* Build configuration list for PBXNativeTarget "slc_test" */;
 			buildPhases = (
 				0F8206302460255D00CD103A /* Sources */,
 				0F8206312460255D00CD103A /* Frameworks */,
@@ -213,9 +213,9 @@
 			);
 			dependencies = (
 			);
-			name = SerialCAN;
+			name = slc_test;
 			productName = SerialCAN;
-			productReference = 0F8206342460255D00CD103A /* SerialCAN */;
+			productReference = 0F8206342460255D00CD103A /* slc_test */;
 			productType = "com.apple.product-type.tool";
 		};
 		440829262C1B047000E4DA82 /* Testing */ = {
@@ -253,7 +253,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 0F82062F2460255D00CD103A /* Build configuration list for PBXProject "SerialCAN" */;
+			buildConfigurationList = 0F82062F2460255D00CD103A /* Build configuration list for PBXProject "slc_test" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -266,7 +266,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				0F8206332460255D00CD103A /* SerialCAN */,
+				0F8206332460255D00CD103A /* slc_test */,
 				440829262C1B047000E4DA82 /* Testing */,
 			);
 		};
@@ -471,6 +471,7 @@
 					"OPTION_CANAPI_COMPANIONS=1",
 					"OPTION_SERIAL_DEBUG_LEVEL=3",
 					"OPTION_SLCAN_DEBUG_LEVEL=1",
+					"OPTION_SLCAN_FAKE_COMMANDS=1",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -503,6 +504,7 @@
 					"OPTION_CANAPI_COMPANIONS=1",
 					"OPTION_SERIAL_DEBUG_LEVEL=0",
 					"OPTION_SLCAN_DEBUG_LEVEL=0",
+					"OPTION_SLCAN_FAKE_COMMANDS=1",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -536,7 +538,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0F82062F2460255D00CD103A /* Build configuration list for PBXProject "SerialCAN" */ = {
+		0F82062F2460255D00CD103A /* Build configuration list for PBXProject "slc_test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0F8206392460255D00CD103A /* Debug */,
@@ -545,7 +547,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0F82063B2460255D00CD103A /* Build configuration list for PBXNativeTarget "SerialCAN" */ = {
+		0F82063B2460255D00CD103A /* Build configuration list for PBXNativeTarget "slc_test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0F82063C2460255D00CD103A /* Debug */,
