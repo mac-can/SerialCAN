@@ -11,19 +11,21 @@
 		0F8206382460255D00CD103A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F8206372460255D00CD103A /* main.cpp */; };
 		0F92B4832468505C00B06780 /* SerialCAN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F92B4822468505C00B06780 /* SerialCAN.cpp */; };
 		44A0782E27D51B2400AD6EA4 /* can_api.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0782C27D51B2400AD6EA4 /* can_api.c */; };
-		44A0786227D51C9000AD6EA4 /* serial.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785727D51C9000AD6EA4 /* serial.c */; };
 		44A0786327D51C9000AD6EA4 /* slcan.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785827D51C9000AD6EA4 /* slcan.c */; };
-		44A0786427D51C9000AD6EA4 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785A27D51C9000AD6EA4 /* buffer.c */; };
-		44A0786527D51C9000AD6EA4 /* queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785B27D51C9000AD6EA4 /* queue.c */; };
-		44A0786727D51C9000AD6EA4 /* logger.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785E27D51C9000AD6EA4 /* logger.c */; };
 		44D9DD7A2C1CB18B0031C0C4 /* can_api.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0782C27D51B2400AD6EA4 /* can_api.c */; };
 		44D9DD7B2C1CB1900031C0C4 /* can_btr.c in Sources */ = {isa = PBXBuildFile; fileRef = 0F6C789C246C311A007EBB88 /* can_btr.c */; };
-		44D9DD7C2C1CB1A00031C0C4 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785A27D51C9000AD6EA4 /* buffer.c */; };
-		44D9DD7D2C1CB1A70031C0C4 /* logger.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785E27D51C9000AD6EA4 /* logger.c */; };
-		44D9DD7E2C1CB1AC0031C0C4 /* queue.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785B27D51C9000AD6EA4 /* queue.c */; };
-		44D9DD7F2C1CB1B10031C0C4 /* serial.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785727D51C9000AD6EA4 /* serial.c */; };
 		44D9DD802C1CB1B60031C0C4 /* slcan.c in Sources */ = {isa = PBXBuildFile; fileRef = 44A0785827D51C9000AD6EA4 /* slcan.c */; };
 		44D9DD8C2C1CB5AA0031C0C4 /* SerialCAN.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F92B4822468505C00B06780 /* SerialCAN.cpp */; };
+		44DDFB902C7CB81B004B9BD0 /* buffer_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8B2C7CB81B004B9BD0 /* buffer_p.c */; };
+		44DDFB912C7CB81B004B9BD0 /* timer_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8C2C7CB81B004B9BD0 /* timer_p.c */; };
+		44DDFB922C7CB81B004B9BD0 /* logger_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8D2C7CB81B004B9BD0 /* logger_p.c */; };
+		44DDFB932C7CB81B004B9BD0 /* serial_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8E2C7CB81B004B9BD0 /* serial_p.c */; };
+		44DDFB942C7CB81B004B9BD0 /* queue_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8F2C7CB81B004B9BD0 /* queue_p.c */; };
+		44DDFB952C7CCC01004B9BD0 /* buffer_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8B2C7CB81B004B9BD0 /* buffer_p.c */; };
+		44DDFB962C7CCC06004B9BD0 /* logger_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8D2C7CB81B004B9BD0 /* logger_p.c */; };
+		44DDFB972C7CCC0A004B9BD0 /* queue_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8F2C7CB81B004B9BD0 /* queue_p.c */; };
+		44DDFB982C7CCC0E004B9BD0 /* serial_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8E2C7CB81B004B9BD0 /* serial_p.c */; };
+		44DDFB992C7CCC15004B9BD0 /* timer_p.c in Sources */ = {isa = PBXBuildFile; fileRef = 44DDFB8C2C7CB81B004B9BD0 /* timer_p.c */; };
 		44F14D532C1D98E4009D1FCB /* Testing.mm in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D4B2C1D94D4009D1FCB /* Testing.mm */; };
 		44F14D542C1D98EE009D1FCB /* Bitrates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D4E2C1D94D4009D1FCB /* Bitrates.cpp */; };
 		44F14D552C1D98F3009D1FCB /* Tester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44F14D482C1D94D4009D1FCB /* Tester.cpp */; };
@@ -71,13 +73,15 @@
 		44A0785327D51C9000AD6EA4 /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = buffer.h; path = ../../Sources/SLCAN/buffer.h; sourceTree = "<group>"; };
 		44A0785427D51C9000AD6EA4 /* slcan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = slcan.h; path = ../../Sources/SLCAN/slcan.h; sourceTree = "<group>"; };
 		44A0785627D51C9000AD6EA4 /* logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = logger.h; path = ../../Sources/SLCAN/logger.h; sourceTree = "<group>"; };
-		44A0785727D51C9000AD6EA4 /* serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = serial.c; path = ../../Sources/SLCAN/serial.c; sourceTree = "<group>"; };
 		44A0785827D51C9000AD6EA4 /* slcan.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = slcan.c; path = ../../Sources/SLCAN/slcan.c; sourceTree = "<group>"; };
 		44A0785927D51C9000AD6EA4 /* queue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = queue.h; path = ../../Sources/SLCAN/queue.h; sourceTree = "<group>"; };
-		44A0785A27D51C9000AD6EA4 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffer.c; path = ../../Sources/SLCAN/buffer.c; sourceTree = "<group>"; };
-		44A0785B27D51C9000AD6EA4 /* queue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = queue.c; path = ../../Sources/SLCAN/queue.c; sourceTree = "<group>"; };
 		44A0785C27D51C9000AD6EA4 /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = serial.h; path = ../../Sources/SLCAN/serial.h; sourceTree = "<group>"; };
-		44A0785E27D51C9000AD6EA4 /* logger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = logger.c; path = ../../Sources/SLCAN/logger.c; sourceTree = "<group>"; };
+		44DDFB8A2C7CB81A004B9BD0 /* timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timer.h; path = ../../Sources/SLCAN/timer.h; sourceTree = "<group>"; };
+		44DDFB8B2C7CB81B004B9BD0 /* buffer_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffer_p.c; path = ../../Sources/SLCAN/buffer_p.c; sourceTree = "<group>"; };
+		44DDFB8C2C7CB81B004B9BD0 /* timer_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = timer_p.c; path = ../../Sources/SLCAN/timer_p.c; sourceTree = "<group>"; };
+		44DDFB8D2C7CB81B004B9BD0 /* logger_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = logger_p.c; path = ../../Sources/SLCAN/logger_p.c; sourceTree = "<group>"; };
+		44DDFB8E2C7CB81B004B9BD0 /* serial_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = serial_p.c; path = ../../Sources/SLCAN/serial_p.c; sourceTree = "<group>"; };
+		44DDFB8F2C7CB81B004B9BD0 /* queue_p.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = queue_p.c; path = ../../Sources/SLCAN/queue_p.c; sourceTree = "<group>"; };
 		44F14D462C1D94D4009D1FCB /* Driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Driver.h; sourceTree = "<group>"; };
 		44F14D472C1D94D4009D1FCB /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 		44F14D482C1D94D4009D1FCB /* Tester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tester.cpp; sourceTree = "<group>"; };
@@ -186,16 +190,18 @@
 		44A0785027D51C4C00AD6EA4 /* SLCAN */ = {
 			isa = PBXGroup;
 			children = (
-				44A0785A27D51C9000AD6EA4 /* buffer.c */,
+				44DDFB8B2C7CB81B004B9BD0 /* buffer_p.c */,
 				44A0785327D51C9000AD6EA4 /* buffer.h */,
-				44A0785E27D51C9000AD6EA4 /* logger.c */,
+				44DDFB8D2C7CB81B004B9BD0 /* logger_p.c */,
 				44A0785627D51C9000AD6EA4 /* logger.h */,
-				44A0785B27D51C9000AD6EA4 /* queue.c */,
+				44DDFB8F2C7CB81B004B9BD0 /* queue_p.c */,
 				44A0785927D51C9000AD6EA4 /* queue.h */,
-				44A0785727D51C9000AD6EA4 /* serial.c */,
+				44DDFB8E2C7CB81B004B9BD0 /* serial_p.c */,
 				44A0785C27D51C9000AD6EA4 /* serial.h */,
 				44A0785827D51C9000AD6EA4 /* slcan.c */,
 				44A0785427D51C9000AD6EA4 /* slcan.h */,
+				44DDFB8C2C7CB81B004B9BD0 /* timer_p.c */,
+				44DDFB8A2C7CB81A004B9BD0 /* timer.h */,
 			);
 			name = SLCAN;
 			sourceTree = "<group>";
@@ -290,13 +296,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				0F8206382460255D00CD103A /* main.cpp in Sources */,
-				44A0786727D51C9000AD6EA4 /* logger.c in Sources */,
-				44A0786227D51C9000AD6EA4 /* serial.c in Sources */,
+				44DDFB902C7CB81B004B9BD0 /* buffer_p.c in Sources */,
+				44DDFB912C7CB81B004B9BD0 /* timer_p.c in Sources */,
 				44A0782E27D51B2400AD6EA4 /* can_api.c in Sources */,
-				44A0786527D51C9000AD6EA4 /* queue.c in Sources */,
-				44A0786427D51C9000AD6EA4 /* buffer.c in Sources */,
 				44A0786327D51C9000AD6EA4 /* slcan.c in Sources */,
+				44DDFB932C7CB81B004B9BD0 /* serial_p.c in Sources */,
+				44DDFB942C7CB81B004B9BD0 /* queue_p.c in Sources */,
 				0F6C789F246C311A007EBB88 /* can_btr.c in Sources */,
+				44DDFB922C7CB81B004B9BD0 /* logger_p.c in Sources */,
 				0F92B4832468505C00B06780 /* SerialCAN.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -313,18 +320,19 @@
 				44F14D692C1DED0F009D1FCB /* test_can_read.mm in Sources */,
 				44F14D562C1D98F9009D1FCB /* Timer.cpp in Sources */,
 				44F14D532C1D98E4009D1FCB /* Testing.mm in Sources */,
+				44DDFB992C7CCC15004B9BD0 /* timer_p.c in Sources */,
+				44DDFB952C7CCC01004B9BD0 /* buffer_p.c in Sources */,
 				44F14D682C1DED0F009D1FCB /* test_can_status.mm in Sources */,
-				44D9DD7F2C1CB1B10031C0C4 /* serial.c in Sources */,
 				44F14D622C1DD159009D1FCB /* test_can_start.mm in Sources */,
 				44F14D542C1D98EE009D1FCB /* Bitrates.cpp in Sources */,
+				44DDFB972C7CCC0A004B9BD0 /* queue_p.c in Sources */,
 				44F14D552C1D98F3009D1FCB /* Tester.cpp in Sources */,
-				44D9DD7E2C1CB1AC0031C0C4 /* queue.c in Sources */,
 				44D9DD8C2C1CB5AA0031C0C4 /* SerialCAN.cpp in Sources */,
 				44F14D5C2C1D9F96009D1FCB /* Parameter.cpp in Sources */,
-				44D9DD7D2C1CB1A70031C0C4 /* logger.c in Sources */,
 				44F14D602C1DD038009D1FCB /* test_can_exit.mm in Sources */,
+				44DDFB962C7CCC06004B9BD0 /* logger_p.c in Sources */,
+				44DDFB982C7CCC0E004B9BD0 /* serial_p.c in Sources */,
 				44F14D672C1DED0F009D1FCB /* test_can_reset.mm in Sources */,
-				44D9DD7C2C1CB1A00031C0C4 /* buffer.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
