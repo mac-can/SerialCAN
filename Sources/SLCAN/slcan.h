@@ -271,8 +271,8 @@ SLCANAPI int slcan_get_attr(slcan_port_t port, slcan_attr_t *attr);
 /** @brief       enables or disables ACK/NACK feedback for serial commands.
  *               Defaults to ACK/NACK feedback enabled (Lawicel protocol).
  *
- *  @param[in]   port     - pointer to a SLCAN instance
- *  @param[in]   enabled  -
+ *  @param[in]   port  - pointer to a SLCAN instance
+ *  @param[in]   on    -
  *
  *  @returns     0 if successful, or a negative value on error.
  *
