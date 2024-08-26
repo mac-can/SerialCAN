@@ -53,7 +53,7 @@
  *
  *  @author      $Author: quaoar $
  *
- *  @version     $Rev: 810 $
+ *  @version     $Rev: 821 $
  *
  *  @defgroup    timer A high-resolution Timer
  *  @{
@@ -72,9 +72,6 @@
 /*  -----------  options  -----------------------------------------------
  */
 
-#if defined(_WIN32) || defined(_WIN64)
-#define TIMER_WAITABLE_TIMER            /**< Windows alternative for usleep() */
-#endif
 
 /*  -----------  defines  -----------------------------------------------
  */

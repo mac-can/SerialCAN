@@ -54,6 +54,9 @@
     <ClCompile Include="..\Sources\SLCAN\slcan.c">
       <Filter>Source Files\SLCAN</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\SLCAN\timer_w.c">
+      <Filter>Source Files\SLCAN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\SLCAN\buffer.h">
@@ -106,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="..\Sources\CANAPI\SerialCAN_Defines.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\SLCAN\timer.h">
+      <Filter>Header Files\SLCAN</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

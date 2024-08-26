@@ -1018,7 +1018,11 @@ static int wait_for_bytes_sent(slcan_t *slcan, int nbytes) {
     if ((sio_get_attr(slcan->port, &attr) >= 0) && (attr.baudrate != 0U))
         baud = (int)attr.baudrate;
 
-    /* delay until */
+    /* wait until all data bytes has been certainly sent */
+    /* note: transmission time for one byte is:
+     *
+     *       tByte = (1sec / baud rate) * (1 + bits per byte + 1)
+     */
     errno = 0;
     return timer_delay((timer_val_t)((10000000 / baud) * nbytes));
 }
