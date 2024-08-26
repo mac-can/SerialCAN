@@ -90,6 +90,7 @@ static const char version[] = "SLCAN Protocol (Serial-Line CAN), Version %i.%i.%
 #include "serial.h"
 #include "queue.h"
 #include "buffer.h"
+#include "timer.h"
 #include "logger.h"
 
 #include <stdbool.h>
@@ -164,13 +165,13 @@ static void _finalizer() {
 /*  -----------  types  --------------------------------------------------
  */
 
-typedef struct slcan_t_ {
-    sio_port_t port;
-    buffer_t response;
-    queue_t messages;
-    uint8_t buffer[BUFFER_SIZE];
-    size_t index;
-    bool ack;
+typedef struct slcan_t_ {               /* SLCAN communication instance: */
+    sio_port_t port;                    /* - serial communication port */
+    buffer_t response;                  /* - buffer for command response */
+    queue_t messages;                   /* - queue for received CAN messages */
+    uint8_t buffer[BUFFER_SIZE];        /* - receive buffer (reception loop) */
+    size_t index;                       /* - write index of the receive buffer */
+    bool ack;                           /* - ACK/NACK feedback enabled/disabled */
 } slcan_t;
 
 
@@ -182,6 +183,8 @@ static int send_command(slcan_t *slcan, const uint8_t *request, size_t nbytes,
 static bool encode_message(const slcan_message_t *message, uint8_t *buffer, size_t *nbytes);
 static bool decode_message(slcan_message_t *message, const uint8_t *buffer, size_t nbytes);
 static void reception_loop(const void *port, const uint8_t *buffer, size_t nbytes);
+
+static int wait_for_bytes_sent(slcan_t *slcan, int nbytes);  // for CANable devices only
 
 
 /*  -----------  variables  ----------------------------------------------
@@ -628,8 +631,12 @@ int slcan_write_message(slcan_port_t port, const slcan_message_t *message, uint1
                 res = -1;
             }
         } else {
-            /* CANable SLCAN protocol (w/o ACK/NACK feaadback) */
-            res = 0;
+            /* CANable SLCAN protocol (w/o ACK/NACK feedback) */
+            /* note: As the transmission is not confirmed by the CANable device
+             *       and data may be lost during bulk transmission, we have to
+             *       wait until all data bytes has been certainly sent.
+             */
+            res = wait_for_bytes_sent(slcan, nbytes);
         }
     } else if (nbytes >= 0) {
         /* note: Variable 'errno' is set by the called functions according to
@@ -998,6 +1005,22 @@ static int send_command(slcan_t *slcan, const uint8_t *request, size_t nbytes,
     }
     /* return number of received bytes, or a negative value on error */
     return res;
+}
+
+static int wait_for_bytes_sent(slcan_t *slcan, int nbytes) {
+    int baud = 57600; /* baud rate (in [bps]) */
+    sio_attr_t attr;
+
+    assert(slcan);
+    assert(nbytes >= 0);
+
+    /* get the baud rate from serial device */
+    if ((sio_get_attr(slcan->port, &attr) >= 0) && (attr.baudrate != 0U))
+        baud = (int)attr.baudrate;
+
+    /* delay until */
+    errno = 0;
+    return timer_delay((timer_val_t)((10000000 / baud) * nbytes));
 }
 
 static bool encode_message(const slcan_message_t *message, uint8_t *buffer, size_t *nbytes) {
