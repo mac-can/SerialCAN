@@ -18,6 +18,7 @@
     <ClCompile Include="..\Sources\SLCAN\queue_w.c" />
     <ClCompile Include="..\Sources\SLCAN\serial_w.c" />
     <ClCompile Include="..\Sources\SLCAN\slcan.c" />
+    <ClCompile Include="..\Sources\SLCAN\timer_w.c" />
     <ClCompile Include="..\Sources\Wrapper\can_api.c" />
     <ClCompile Include="Sources\main.cpp" />
   </ItemGroup>
@@ -38,6 +39,7 @@
     <ClInclude Include="..\Sources\SLCAN\serial.h" />
     <ClInclude Include="..\Sources\SLCAN\serial_attr.h" />
     <ClInclude Include="..\Sources\SLCAN\slcan.h" />
+    <ClInclude Include="..\Sources\SLCAN\timer.h" />
     <ClInclude Include="..\Sources\Wrapper\can_defs.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

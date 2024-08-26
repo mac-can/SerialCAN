@@ -62,6 +62,9 @@
     <ClCompile Include="..\..\Sources\CANAPI\can_btr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Sources\SLCAN\timer_w.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="uvcanslc.rc">
