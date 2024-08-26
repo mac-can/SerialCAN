@@ -27,7 +27,11 @@
 
 #if !defined(_WIN32) && !defined(_WIN64)
 #if defined(__APPLE__)
-#define SERIAL_PORT  "/dev/tty.usbserial-LW4KOZQW"
+#define TTY_LAWICEL1  "/dev/tty.usbserial-LW4KOZQW"
+#define TTY_LAWICEL2  "/dev/tty.usbserial-LW917KWK"
+#define TTY_CANABLE1  "/dev/tty.usbmodem2061389354311"
+#define TTY_CANABLE2  "/dev/tty.usbmodem2082386554311"
+#define SERIAL_PORT    TTY_LAWICEL1
 #elif !defined(__CYGWIN__)
 #define SERIAL_PORT  "/dev/ttyUSB0"
 #else

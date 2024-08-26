@@ -9,15 +9,15 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0F8206332460255D00CD103A"
-               BuildableName = "SerialCAN"
-               BlueprintName = "SerialCAN"
-               ReferencedContainer = "container:SerialCAN.xcodeproj">
+               BlueprintIdentifier = "440829262C1B047000E4DA82"
+               BuildableName = "Testing.xctest"
+               BlueprintName = "Testing"
+               ReferencedContainer = "container:slc_test.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,6 +28,16 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "440829262C1B047000E4DA82"
+               BuildableName = "Testing.xctest"
+               BlueprintName = "Testing"
+               ReferencedContainer = "container:slc_test.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -40,34 +50,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0F8206332460255D00CD103A"
-            BuildableName = "SerialCAN"
-            BlueprintName = "SerialCAN"
-            ReferencedContainer = "container:SerialCAN.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "INFO"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "ACK:OFF"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "TEST"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "LOG"
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -75,16 +57,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0F8206332460255D00CD103A"
-            BuildableName = "SerialCAN"
-            BlueprintName = "SerialCAN"
-            ReferencedContainer = "container:SerialCAN.xcodeproj">
+            BlueprintIdentifier = "440829262C1B047000E4DA82"
+            BuildableName = "Testing.xctest"
+            BlueprintName = "Testing"
+            ReferencedContainer = "container:slc_test.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
