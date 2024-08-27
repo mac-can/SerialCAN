@@ -470,6 +470,7 @@ int can_start(int handle, const can_bitrate_t *bitrate)
     int rc = CANERR_FATAL;              // return value
 
     uint16_t btr0btr1 = CAN_BTR_DEFAULT;// btr0btr1 value
+    can_bitrate_t temporary;            // bit-rate settings
 
     if (!init)                          // must be initialized
         return CANERR_NOTINIT;
@@ -482,21 +483,31 @@ int can_start(int handle, const can_bitrate_t *bitrate)
     if (!can[handle].status.can_stopped) // must be stopped
         return CANERR_ONLINE;
 
-    // set bit-rate (from index or BTR0BTR1 register)
-    if (bitrate->index <= 0) {
-        if (bitrate->index < CANBTR_INDEX_10K)
+    // note: CANable devices do not support SJA1000 bit-rate settings
+    //
+    if ((bitrate->index > 0) && (can[handle].attr.protocol == CANSIO_CANABLE)) {
+        // convert bit-rate settings to index (SJA1000)
+        if(btr_bitrate2index(bitrate, &temporary.index) != CANERR_NOERROR)
             return CANERR_BAUDRATE;
-        // convert index to SJA1000 BTR0/BTR1 register
-        if (btr_index2sja1000(bitrate->index, &btr0btr1) != CANERR_NOERROR)
+        // indexes are defined as negative numbers or zero:  -8 = 10kbps, ..., 0 = 1Mbps
+        if ((temporary.index < CANBTR_INDEX_10K) || (temporary.index > CANBTR_INDEX_1M))
             return CANERR_BAUDRATE;
-        // set the bit-rate (with reverse index numbering)
-        rc = slcan_setup_bitrate(can[handle].port, (uint8_t)(8 + bitrate->index));
     }
     else {
-        if (can[handle].attr.protocol != CANSIO_LAWICEL)
+        // accept both: bit-rate settings or index
+        memcpy(&temporary, bitrate, sizeof(can_bitrate_t));
+    }
+    // set bit-rate (from index or BTR0BTR1 register)
+    if (temporary.index <= 0) {
+        // convert index to SJA1000 BTR0/BTR1 register
+        if (btr_index2sja1000(temporary.index, &btr0btr1) != CANERR_NOERROR)
             return CANERR_BAUDRATE;
+        // set the bit-rate (with reverse index numbering)
+        rc = slcan_setup_bitrate(can[handle].port, (uint8_t)(CANBDR_10 + temporary.index));
+    }
+    else {
         // convert bit-rate to SJA1000 BTR0/BTR1 register
-        if (btr_bitrate2sja1000(bitrate, &btr0btr1) != CANERR_NOERROR)
+        if (btr_bitrate2sja1000(&temporary, &btr0btr1) != CANERR_NOERROR)
             return CANERR_BAUDRATE;
         // set the bit-timing register
         rc = slcan_setup_btr(can[handle].port, btr0btr1);
