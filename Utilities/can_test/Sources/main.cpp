@@ -231,6 +231,7 @@ int main(int argc, const char* argv[]) {
     if (channel.m_nLibraryId == CANLIB_SERIALCAN) {
         channel.m_nChannelNo = CANDEV_SERIAL;  // note: override channel number from JSON file
         sioParam.name = opts.m_szInterface;
+        sioParam.attr.protocol = opts.m_u8Protocol;
         devParam = (void*)&sioParam;
     }
 #endif

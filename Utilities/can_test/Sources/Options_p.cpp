@@ -71,6 +71,9 @@ SOptions::SOptions() {
 #else
     m_szJsonFilename = (char*)NULL;
 #endif
+#if (SERIAL_CAN_SUPPORTED != 0)
+    m_u8Protocol = CANSIO_LAWICEL;
+#endif
     m_OpMode.byte = DEFAULT_OP_MODE;
     m_Bitrate.index = DEFAULT_BAUDRATE;
     m_bHasDataPhase = false;
@@ -131,6 +134,9 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
     int optListBitrates = 0;
     int optListBoards = 0;
     int optTestBoards = 0;
+#if (SERIAL_CAN_SUPPORTED != 0)
+    int optProtocol = 0;
+#endif
 #if (OPTION_CANAPI_LIBRARY != 0)
     int optPath = 0;
 #else
@@ -142,6 +148,7 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
         {"baudrate", required_argument, 0, 'b'},
         {"bitrate", required_argument, 0, 'B'},
         {"verbose", no_argument, 0, 'v'},
+        {"protocol", required_argument, 0, 'z'},
         {"mode", required_argument, 0, 'm'},
         {"shared", no_argument, 0, 'S'},
         {"listen-only", no_argument, 0, 'M'},
@@ -191,9 +198,9 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
 #endif
     // (2) scan command-line for options
 #if (OPTION_CANAPI_LIBRARY != 0)
-    while ((opt = getopt_long(argc, (char * const *)argv, "b:vp:m:rn:st:f:R:c:u:d:i:ey:lLaTh", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, (char * const *)argv, "b:vp:z:m:rn:st:f:R:c:u:d:i:ey:lLaTh", long_options, NULL)) != -1) {
 #else
-    while ((opt = getopt_long(argc, (char * const *)argv, "b:vm:rn:st:f:R:c:u:d:i:ey:lLaTj:h", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, (char * const *)argv, "b:vz:m:rn:st:f:R:c:u:d:i:ey:lLaTj:h", long_options, NULL)) != -1) {
 #endif
         switch (opt) {
         /* option '--baudrate=<baudrate>' (-b) */
@@ -275,6 +282,27 @@ int SOptions::ScanCommanline(int argc, const char* argv[], FILE* err, FILE* out)
                 return 1;
             }
             m_szSearchPath = optarg;
+            break;
+#endif
+#if (SERIAL_CAN_SUPPORTED != 0)
+        /* option '--protocol=(Lawicel|CANable)' */
+        case 'z':
+            if (optProtocol++) {
+                fprintf(err, "%s: duplicated option `--protocol' (%c)\n", m_szBasename, opt);
+                return 1;
+            }
+            if (optarg == NULL) {
+                fprintf(err, "%s: missing argument for option `--protocol' (%c)\n", m_szBasename, opt);
+                return 1;
+            }
+            if (!strcasecmp(optarg, "Lawicel") || !strcasecmp(optarg, "default") || !strcasecmp(optarg, "SLCAN"))
+                m_u8Protocol = CANSIO_LAWICEL;
+            else if (!strcasecmp(optarg, "CANable"))
+                m_u8Protocol = CANSIO_CANABLE;
+            else {
+                fprintf(err, "%s: illegal argument for option `--protocol' (%c)\n", m_szBasename, opt);
+                return 1;
+            }
             break;
 #endif
         /* option '--mode=(2.0|FDF[+BRS])' (-m) */
@@ -892,6 +920,9 @@ void SOptions::ShowUsage(FILE* stream, bool args) {
     fprintf(stream, " -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or\n");
     fprintf(stream, "     --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)\n");
     fprintf(stream, " -v, --verbose                        show detailed bit-rate settings\n");
+#if (SERIAL_CAN_SUPPORTED != 0)
+    fprintf(stream, " -z, --protocol=(Lawicel|CANable)     select SLCAN protocol (default=Lawicel)\n");
+#endif
 #if (CAN_TRACE_SUPPORTED != 0)
     fprintf(stream, " -y, --trace=(ON|OFF)                 write a trace file (default=OFF)\n");
 #endif
@@ -917,6 +948,9 @@ void SOptions::ShowUsage(FILE* stream, bool args) {
     fprintf(stream, " -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or\n");
     fprintf(stream, "     --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)\n");
     fprintf(stream, " -v, --verbose                        show detailed bit-rate settings\n");
+#if (SERIAL_CAN_SUPPORTED != 0)
+    fprintf(stream, " -z, --protocol=(Lawicel|CANable)     select SLCAN protocol (default=Lawicel)\n");
+#endif
 #if (CAN_TRACE_SUPPORTED != 0)
     fprintf(stream, " -y, --trace=(ON|OFF)                 write a trace file (default=OFF)\n");
 #endif

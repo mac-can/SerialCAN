@@ -65,6 +65,9 @@ struct SOptions {
 #else
     char* m_szJsonFilename;
 #endif
+#if (SERIAL_CAN_SUPPORTED != 0)
+    uint8_t m_u8Protocol;
+#endif
     CANAPI_OpMode_t m_OpMode;
     CANAPI_Bitrate_t m_Bitrate;
     CANAPI_BusSpeed_t m_BusSpeed;

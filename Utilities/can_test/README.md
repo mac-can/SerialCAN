@@ -14,9 +14,14 @@ Options for receiver test (default test mode):
      --error-frames                   allow reception of error frames
      --no-remote-frames               suppress remote frames (RTR frames)
      --no-extended-frames             suppress extended frames (29-bit identifier)
+     --code=<id>                      acceptance code for 11-bit IDs (default=0x000)
+     --mask=<id>                      acceptance mask for 11-bit IDs (default=0x000)
+     --xtd-code=<id>                  acceptance code for 29-bit IDs (default=0x00000000)
+     --xtd-mask=<id>                  acceptance mask for 29-bit IDs (default=0x00000000)
  -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or
      --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)
  -v, --verbose                        show detailed bit-rate settings
+ -z, --protocol=(Lawicel|CANable)     select SLCAN protocol (default=Lawicel)
 Options for transmitter test:
  -t, --transmit=<time>                send messages for the given time in seconds, or
  -f, --frames=<number>,               alternatively send the given number of messages, or
@@ -25,12 +30,14 @@ Options for transmitter test:
  -u, --usec=<cycle>                   cycle time in microseconds (default=0)
  -d, --dlc=<length>                   send messages of given length (default=8)
  -i, --id=<can-id>                    use given identifier (default=100h)
+ -e, --extended                       use extended identifier (29-bit)
  -n, --number=<number>                set first up-counting number (default=0)
  -m, --mode=2.0                       CAN operation mode: CAN 2.0
      --shared                         shared CAN controller access (if supported)
  -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or
      --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)
  -v, --verbose                        show detailed bit-rate settings
+ -z, --protocol=(Lawicel|CANable)     select SLCAN protocol (default=Lawicel)
 Other options:
      --list-bitrates[=2.0]            list standard bit-rate settings and exit
  -h, --help                           display this help screen and exit

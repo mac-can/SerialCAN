@@ -22,6 +22,7 @@ Options:
  -b, --baudrate=<baudrate>            CAN bit-timing in kbps (default=250), or
      --bitrate=<bit-rate>             CAN bit-rate settings (as key/value list)
  -v, --verbose                        show detailed bit-rate settings
+ -z, --protocol=(Lawicel|CANable)     select SLCAN protocol (default=Lawicel)
      --list-bitrates[=2.0]            list standard bit-rate settings and exit
  -h, --help                           display this help screen and exit
      --version                        show version information and exit
