@@ -56,13 +56,22 @@
 #define DUT2  (SInt32)CAN_DEVICE2
 
 //  Default operation mode and bit-rate settings
-#define TEST_CANMODE  CANMODE_DEFAULT
+#define TEST_CANMODE   CANMODE_DEFAULT
 #define TEST_BTRINDEX  CANBTR_INDEX_250K
 
 //  Device parameter (for special devices)
 #if (SERIAL_CAN_SUPPORTED != 0)
-#define SERIAL_PORT1  "/dev/tty.usbserial-LW4KOZQW"
-#define SERIAL_PORT2  "/dev/tty.usbserial-LW917KWK"
+//  - todo: add your devices here
+#define TTY_LAWICEL1  "/dev/tty.usbserial-LW4KOZQW"
+#define TTY_LAWICEL2  "/dev/tty.usbserial-LW917KWK"
+#define TTY_CANABLE1  "/dev/tty.usbmodem2061389354311"
+#define TTY_CANABLE2  "/dev/tty.usbmodem2082386554311"
+//  - todo: select devices under test
+#define TEST_SERIAL1   TTY_LAWICEL1
+#define TEST_SERIAL2   TTY_LAWICEL2
+#define TEST_PROTOCOL1 0  // 0 = Lawicel, 1 = CANable
+#define TEST_PROTOCOL2 0  // 0 = Lawicel, 1 = CANable
+//  - note: don't touch that dial
 #define TEST_PARAM(n)  GetParameter(n)
 #else
 #define TEST_PARAM(n)  NULL

@@ -56,9 +56,10 @@ static int init = 0;
 
 static can_sio_param_t *get_sio_param(int device) {
     if (!init) {
-        sio_param[0].name = (char*)SERIAL_PORT1;
-        sio_param[1].name = (char*)SERIAL_PORT2;
-        sio_param[1].attr.options = sio_param[0].attr.options = CANSIO_SLCAN;
+        sio_param[0].name = (char*)TEST_SERIAL1;
+        sio_param[1].name = (char*)TEST_SERIAL2;
+        sio_param[0].attr.protocol = TEST_PROTOCOL1;
+        sio_param[1].attr.protocol = TEST_PROTOCOL2;
         sio_param[1].attr.baudrate = sio_param[0].attr.baudrate = CANSIO_BD57600;
         sio_param[1].attr.bytesize = sio_param[0].attr.bytesize = CANSIO_8DATABITS;
         sio_param[1].attr.stopbits = sio_param[0].attr.stopbits = CANSIO_1STOPBIT;

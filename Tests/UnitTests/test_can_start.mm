@@ -513,7 +513,7 @@
         if (bitrate.index == CANBTR_INDEX_800K)
             continue;
 #endif
-#if (FEATURE_BITRATE_SJA1000 != FEATURE_SUPPORTED)
+#if (FEATURE_BITRATE_SJA1000 != FEATURE_SUPPORTED) || (SERIAL_CAN_SUPPORTED != 0)
         if (bitrate.index == SJA1000_INDEX_5K)
             continue;
 #endif
@@ -705,7 +705,7 @@
         if (bitrate.index == CANBTR_INDEX_800K)
             continue;
 #endif
-#if (FEATURE_BITRATE_SJA1000 != FEATURE_SUPPORTED)
+#if (FEATURE_BITRATE_SJA1000 != FEATURE_SUPPORTED) || (SERIAL_CAN_SUPPORTED != 0)
         if (bitrate.index == SJA1000_INDEX_5K)
             continue;
 #endif
@@ -1812,7 +1812,7 @@
             if (bitrate.index == CANBTR_INDEX_800K)
                 continue;
 #endif
-#if (FEATURE_BITRATE_SJA1000 != FEATURE_SUPPORTED)
+#if (FEATURE_BITRATE_SJA1000 != FEATURE_SUPPORTED) || (SERIAL_CAN_SUPPORTED != 0)
             if (bitrate.index == SJA1000_INDEX_5K)
                 continue;
 #endif
