@@ -30,6 +30,7 @@ LDFLAGS =
 CXX = g++
 LD = g++
 RM = rm -f
+CP = cp
 
 all: $(TARGET1) $(TARGET2)
 
@@ -41,3 +42,9 @@ $(TARGET2):	$(SOURCE2)
 
 clean:
 	@-$(RM) *.o *~ $(TARGET1) $(TARGET2)
+pristine:
+	@-$(RM) *.o *~ $(TARGET1) $(TARGET2)
+
+install:
+	@-$(CP) $(TARGET1) /usr/local/bin
+	@-$(CP) $(TARGET2) /usr/local/bin

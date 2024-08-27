@@ -38,7 +38,7 @@ int main(int argc, const char * argv[]) {
 
     can_sio_param_t port;
     port.name = (char*)SERIAL_PORT;
-    port.attr.options = CANSIO_SLCAN;
+    port.attr.protocol = CANSIO_LAWICEL;
     port.attr.baudrate = CANSIO_BD57600;
     port.attr.bytesize = CANSIO_8DATABITS;
     port.attr.parity = CANSIO_NOPARITY;
