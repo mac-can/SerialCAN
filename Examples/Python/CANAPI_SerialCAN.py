@@ -54,7 +54,7 @@
 
     $Author: makemake $
 
-    $Rev: 1261 $
+    $Rev: 1397 $
 """
 from CANAPI import *
 from ctypes import *
@@ -66,7 +66,10 @@ CANDEV_SERIAL = -1  # channel ID for serial port device
 
 # SerialCAN protocol options
 #
-CANSIO_SLCAN = 0x00  # Lawicel SLCAN protocol
+CANSIO_LAWICEL = 0x00          # Lawicel SLCAN protocol
+CANSIO_CANABLE = 0x01          # CANable SLCAN protocol
+CANSIO_AUTO    = 0xFF          # auto detect (not realized yet)
+CANSIO_SLCAN = CANSIO_LAWICEL  # Lawicel SLCAN protocol (default)
 
 # Baud rate (CBAUDEX compatible, e.g. CygWin)
 #
@@ -112,10 +115,10 @@ class SerialAttr(LittleEndianStructure):
         ('bytesize', c_uint8),
         ('parity', c_uint8),
         ('stopbits', c_uint8),
-        ('options', c_uint8)
+        ('protocol', c_uint8)
     ]
     def __init__(self):
-        self.options = CANSIO_SLCAN
+        self.protocol = CANSIO_SLCAN
         self.baudrate = CANSIO_BD57600
         self.bytesize = CANSIO_8DATABITS
         self.parity = CANSIO_NOPARITY
