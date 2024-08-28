@@ -151,7 +151,7 @@ Windows&reg; operating system:
 
 #### Debian "bookworm" (12.5)
 
-- Debian 6.1,76-1 (2024-02-01) x86_64 GNU/Linux
+- Debian 6.1.99-1 (2024-07-15) x86_64 GNU/Linux
 - gcc (Debian 12.2.0-14) 12.2.0
 
 #### Cygwin (64-bit)
