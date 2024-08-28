@@ -51,17 +51,17 @@
  *
  *  @note        This is only a dummy file to have a SVN revision number.
  * 
- *  @author      $Author: makemake $
+ *  @author      $Author: eris $
  *
- *  @version     $Rev: 1392 $
+ *  @version     $Rev: 1398 $
  *
  *  @addtogroup  can_api
  *  @{
  */
 #ifndef CANAPI_VERSION_H_INCLUDED
 #define CANAPI_VERSION_H_INCLUDED
-// SVN revision number (update with each commit: I)
-#define CAN_API_REV  "$Rev: 1392 $"
+// SVN revision number (update with each commit: II)
+#define CAN_API_REV  "$Rev: 1398 $"
 #endif /* CANAPI_VERSION_H_INCLUDED */
 /** @}
  */

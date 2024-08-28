@@ -49,9 +49,9 @@
  *
  *  @brief       CAN API V3 for generic CAN Interfaces - Definitions and Options
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: eris $
  *
- *  @version     $Rev: 1312 $
+ *  @version     $Rev: 1398 $
  *
  *  @addtogroup  can_api
  *  @{
@@ -198,7 +198,6 @@ typedef struct can_sio_attr_t_ {        /* serial port attributes: */
     uint8_t  parity;                    /**<  parity bit (None, Even, Odd) */
     uint8_t  stopbits;                  /**<  number of stop bits (1 or 2) */
     uint8_t  protocol;                  /**<  protocol (defaul: Lawicel) */
-    //uint8_t  options;                   /**<  protocol options (nou used) */
 } can_sio_attr_t;
 
 /** @brief SerialCAN port parameters
