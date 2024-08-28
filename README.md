@@ -17,6 +17,9 @@ or as a _CAN API V3_ driver library ([libUVCANSLC](#libUVCANSLC)),
 as well as my beloved utilities [`can_moni`](#can_moni) and [`can_test`](#can_test),
 and some C/C++ example programs.
 
+The libraries, utilities and example programs can also be used with [CANable 2.0](https://github.com/normaldotcom/canable-fw) compatible devices.
+In this case, the protocol option must be set to `CANSIO_CANABLE` or the command line option `--protocol CANable` must be specified.
+
 ## SerialCAN API
 
 ```C++
@@ -181,6 +184,17 @@ To run the test suites or single test cases two CAN devices are required. Genera
 2. Time-stamps are currently not supported.
 
 3. Python Ctrl+C issue is still unsolved.
+
+### Restrictions for CANable 2.0 Compatible Devices
+
+- The firmware currently does not provide ACK/NACK feedback for serial commands
+- CAN FD operation mode (bit-rate switching) is not supported by the libraries
+- Silent operation mode (listen-only) is not supported by the libraries
+- SJA1000 bit-rates (BTR register) are not provided by the firmware
+- Acceptance filtering is not provided by the firmware
+- Bus errors (status flags) are not provided by the firmware
+- Hardware and firmware versions are displayed as fake number `0.0`
+- Serial number is displayed as fake number `99999999`
 
 ## This and That
 
