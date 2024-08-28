@@ -125,11 +125,11 @@ incdir:
 	@mkdir -p $(INCDIR)
 
 clean:
-	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	@-$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
 pristine:
-	$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
-	$(RM) $(BINDIR)/$(TARGET)
+	@-$(RM) $(TARGET) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	@-$(RM) $(BINDIR)/$(TARGET)
 
 install:
 	@echo "Copying binary file..."

@@ -46,6 +46,8 @@ parser.add_argument('--port', type=str, nargs=1, default=[com],
                     help='Serial port, default=' + str(com))
 parser.add_argument('--frames', type=int, nargs=1, default=[num],
                     help='number of CAN frames to be sent, default=' + str(num))
+parser.add_argument('--protocol', type=str, nargs=1, default='LAWICEL',
+                    help='SLCAN protocol LAWICEL or CANable, default=LAWICEL')
 args = parser.parse_args()
 lib = args.input
 com = args.port[0]
@@ -76,11 +78,15 @@ print(can.software())
 # serial port settings
 port = SerialPort()
 port.name = c_char_p(com.encode('utf-8'))
-port.attr.options = CANSIO_SLCAN
 port.attr.baudrate = CANSIO_BD57600
 port.attr.bytesize = CANSIO_8DATABITS
 port.attr.parity = CANSIO_NOPARITY
 port.attr.stopbits = CANSIO_1STOPBIT
+if args.protocol[0] == 'CANable':
+    print('!!! Using {} protocol'.format(args.protocol[0]))
+    port.attr.protocol = CANSIO_CANABLE
+else:
+    port.attr.protocol = CANSIO_LAWICEL
 
 # initialize the CAN interface
 print('>>> can.init({}, 0x{:02X})'.format(port.name, opMode.byte))

@@ -1,15 +1,15 @@
-/*  SPDX-License-Identifier: GPL-3.0-or-later */
+/*  SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later */
 /*
- *  SerialCAN - CAN API V3 Driver for CAN-over-Serial-Line Interfaces
+ *  CAN Interface API, Version 3 (Data Types and Defines)
  *
- *  Copyright (c) 2020-2022  Uwe Vogt, UV Software, Berlin (info@uv-software.com)
+ *  Copyright (c) 2004-2024 Uwe Vogt, UV Software, Berlin (info@uv-software.com)
  *  All rights reserved.
  *
- *  This file is part of SerialCAN.
+ *  This file is part of CAN API V3.
  *
- *  SerialCAN is dual-licensed under the BSD 2-Clause "Simplified" License
- *  and under the GNU General Public License v3.0 (or any later version). You can
- *  choose between one of them if you use SerialCAN in whole or in part.
+ *  CAN API V3 is dual-licensed under the BSD 2-Clause "Simplified" License
+ *  and under the GNU General Public License v3.0 (or any later version).
+ *  You can choose between one of them if you use this file.
  *
  *  BSD 2-Clause "Simplified" License:
  *  Redistribution and use in source and binary forms, with or without
@@ -20,7 +20,7 @@
  *     this list of conditions and the following disclaimer in the documentation
  *     and/or other materials provided with the distribution.
  *
- *  SerialCAN IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *  CAN API V3 IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -29,32 +29,44 @@
  *  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
  *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- *  OF SerialCAN, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *  OF CAN API V3, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  GNU General Public License v3.0 or later:
- *  SerialCAN is free software: you can redistribute it and/or modify
+ *  CAN API V3 is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  SerialCAN is distributed in the hope that it will be useful,
+ *  CAN API V3 is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with SerialCAN.  If not, see <https://www.gnu.org/licenses/>.
+ *  along with CAN API V3.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef VERSION_H_INCLUDED
-#define VERSION_H_INCLUDED
-#include "build_no.h"
-#define VERSION_MAJOR    0
-#define VERSION_MINOR    3
-#define VERSION_PATCH    0 
-#define VERSION_BUILD    BUILD_NO
-#if (VERSION_PATCH == 0)
-#define VERSION_STRING   TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) " (" TOSTRING(BUILD_NO) ")"
-#else
-#define VERSION_STRING   TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) "." TOSTRING(VERSION_PATCH) " (" TOSTRING(BUILD_NO) ")"
-#endif
-#endif
+/** @file        CANAPI_Version.h
+ *
+ *  @brief       CAN API V3 for generic CAN Interfaces - Version Number
+ *
+ *  @note        This is only a dummy file to have a SVN revision number.
+ * 
+ *  @author      $Author: eris $
+ *
+ *  @version     $Rev: 1398 $
+ *
+ *  @addtogroup  can_api
+ *  @{
+ */
+#ifndef CANAPI_VERSION_H_INCLUDED
+#define CANAPI_VERSION_H_INCLUDED
+// SVN revision number (update with each commit: II)
+#define CAN_API_REV  "$Rev: 1398 $"
+#endif /* CANAPI_VERSION_H_INCLUDED */
+/** @}
+ */
+/*  ----------------------------------------------------------------------
+ *  Uwe Vogt,  UV Software,  Chausseestrasse 33 A,  10115 Berlin,  Germany
+ *  Tel.: +49-30-46799872,  Fax: +49-30-46799873,  Mobile: +49-170-3801903
+ *  E-Mail: uwe.vogt@uv-software.de,  Homepage: https://www.uv-software.de
+ */

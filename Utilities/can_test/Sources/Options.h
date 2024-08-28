@@ -65,6 +65,9 @@ struct SOptions {
 #else
     char* m_szJsonFilename;
 #endif
+#if (SERIAL_CAN_SUPPORTED != 0)
+    uint8_t m_u8Protocol;
+#endif
     CANAPI_OpMode_t m_OpMode;
     CANAPI_Bitrate_t m_Bitrate;
     CANAPI_BusSpeed_t m_BusSpeed;
@@ -83,6 +86,15 @@ struct SOptions {
     uint64_t m_nTxDelay;
     uint32_t m_nTxCanId;
     uint8_t m_nTxCanDlc;
+    bool m_fTxXtdId;
+#if (CAN_TRACE_SUPPORTED != 0)
+    enum {
+        eTraceOff,
+        eTraceBinary,
+        eTraceLogger,
+        eTraceVendor
+    } m_eTraceMode;
+#endif
     bool m_fListBitrates;
     bool m_fListBoards;
     bool m_fTestBoards;

@@ -7,6 +7,57 @@ _All rights reserved._
 
 Implementation of Lawicel SLCAN protocol.
 
+## Lawicel SLCAN Protocol
+
+### Supported commands
+
+- `O[CR]` - Open the CAN channel
+- `C[CR]` - Close the CAN channel
+- `Sn[CR]` - Setup with standard CAN bit-rates (`0` = 10kbps, `1` = 20kbps, ..., `8` = 1000kbps)
+- `sxxyy[CR]` -  Setup with BTR0/BTR1 CAN bit-rates (`xx` = BTR0, `yy` = BTR1)
+- `tiiildd...[CR]` - Transmit a standard (11bit) CAN frame (`iii` = Id., `l` = DLC, `dd` = Data)
+- `Tiiiiiiiildd...[CR]` - Transmit an extended (29bit) CAN frame  (`iiiiiiii` = Id., `l` = DLC, `dd` = Data)
+- `riiil[CR]` - Transmit an standard RTR (11bit) CAN frame (`iii` = Id., `l` = DLC)
+- `Riiiiiiiil[CR]` - Transmit an extended RTR (29bit) CAN frame (`iiiiiiii` = Id., `l` = DLC)
+- `F[CR]` - Read Status Flags (returns 8-bit status register; see below)
+- `Mxxxxxxxx[CR]` - Sets Acceptance Code Register (AC0, AC1, AC2 & AC3; LSB first)
+- `mxxxxxxxx[CR]` - Sets Acceptance Mask Register (AM0, AM1, AM2 & AM3; LSB first)
+- `V[CR]` - Get Version number of both CANUSB hardware and software (returns `Vhhss[CR]` - `hh` = Hw, `ss` = Sw)
+- `N[CR]` - Get Serial number of the CANUSB (returns `Naaaa[CR]` - `aaaa` = S/N; alpha-numerical)
+
+Note: Channel configuration commands must be sent before opening the channel. The channel must be opened before transmitting frames.
+
+### CANable SLCAN Protocol (Option 1)
+
+Supported commands
+
+- `O` - Open channel
+- `C` - Close channel
+- `S0` - Set bitrate to 10k
+- `S1` - Set bitrate to 20k
+- `S2` - Set bitrate to 50k
+- `S3` - Set bitrate to 100k
+- `S4` - Set bitrate to 125k
+- `S5` - Set bitrate to 250k
+- `S6` - Set bitrate to 500k
+- `S7` - Set bitrate to 750k
+- `S8` - Set bitrate to 1M
+- `M0` - Set mode to normal mode (default) *(not supported)*
+- `M1` - Set mode to silent mode *(not supported)*
+- `A0` - Disable automatic retransmission *(not supported)*
+- `A1` - Enable automatic retransmission (default) *(not supported)*
+- `TIIIIIIIILDD...` - Transmit data frame (Extended ID) [ID, length, data]
+- `tIIILDD...` - Transmit data frame (Standard ID) [ID, length, data]
+- `RIIIIIIIIL` - Transmit remote frame (Extended ID) [ID, length]
+- `rIIIL` - Transmit remote frame (Standard ID) [ID, length]
+- `V` - Returns firmware version and remote path as a string
+
+Note: Channel configuration commands must be sent before opening the channel. The channel must be opened before transmitting frames.
+
+**Note: The firmware currently does not provide any ACK/NACK feedback for serial commands.**
+
+Note: The implementation currently does not support CAN FD commands and frame format.
+
 ## SLCAN API
 
 ```C
@@ -102,6 +153,21 @@ int slcan_disconnect(slcan_port_t port);
  *  @retval      EINVAL   - invalid argument (attr is NULL)
  */
 int slcan_get_attr(slcan_port_t port, slcan_attr_t *attr);
+
+
+/** @brief       enables or disables ACK/NACK feedback for serial commands.
+ *               Defaults to ACK/NACK feedback enabled (Lawicel protocol).
+ *
+ *  @param[in]   port  - pointer to a SLCAN instance
+ *  @param[in]   on    -
+ *
+ *  @returns     0 if successful, or a negative value on error.
+ *
+ *  @note        System variable 'errno' will be set in case of an error.
+ *
+ *  @retval      ENODEV   - no such device (invalid port instance)
+ */
+int slcan_set_ack(slcan_port_t port, bool on);
 
 
 /** @brief       setup with standard CAN bit-rates.
@@ -376,7 +442,7 @@ int slcan_signal(slcan_port_t port);
  *  @param[out]  version_no - major and minor version number (optional)
  *  @param[out]  patch_no   - patch number (optional)
  *  @param[out]  build_no   - build number (optional)
- * 
+ *
  *  @returns     pointer to a zero-terminated string, or NULL on error.
  */
 char *slcan_api_version(uint16_t *version_no, uint8_t *patch_no, uint32_t *build_no);
@@ -384,14 +450,14 @@ char *slcan_api_version(uint16_t *version_no, uint8_t *patch_no, uint32_t *build
 
 ## This and That
 
-The documentation of the SLCAN protocol can be found on [Lawicel CANUSB product page](https://www.canusb.com/products/canusb).
+The documentation of the SLCAN protocol can be found on [Lawicel CANUSB](https://www.canusb.com/products/canusb) product page.
+For the CANable 2.0 adaptation, see the [CANable Firmware](https://github.com/normaldotcom/canable-fw) documentation on GitHub. 
 
 ### Dual-License
 
-This work is dual-licensed under the terms of the BSD 2-Clause "Simplified" License and under the terms of the GNU General Public License v3.0 (or any later version).
-You can choose between one of them if you use this work in whole or in part.
-
-`SPDX-License-Identifier: BSD-2-Clause OR GPL-3.0-or-later`
+Except where otherwise noted, this work is dual-licensed under the terms of the BSD 2-Clause "Simplified" License
+and under the terms of the GNU General Public License v3.0 (or any later version).
+You can choose between one of them if you use these portions of this work in whole or in part.
 
 ### Trademarks
 

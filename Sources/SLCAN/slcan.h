@@ -49,9 +49,9 @@
  *
  *  @brief       Lawicel SLCAN protocol.
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 811 $
+ *  @version     $Rev: 823 $
  *
  *  @defgroup    slcan Lawicel SLCAN Protocol
  *  @{
@@ -63,6 +63,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 
 /*  -----------  options  ------------------------------------------------
@@ -265,6 +266,21 @@ SLCANAPI int slcan_disconnect(slcan_port_t port);
  *  @retval      EINVAL   - invalid argument (attr is NULL)
  */
 SLCANAPI int slcan_get_attr(slcan_port_t port, slcan_attr_t *attr);
+
+
+/** @brief       enables or disables ACK/NACK feedback for serial commands.
+ *               Defaults to ACK/NACK feedback enabled (Lawicel protocol).
+ *
+ *  @param[in]   port  - pointer to a SLCAN instance
+ *  @param[in]   on    -
+ *
+ *  @returns     0 if successful, or a negative value on error.
+ *
+ *  @note        System variable 'errno' will be set in case of an error.
+ *
+ *  @retval      ENODEV   - no such device (invalid port instance)
+ */
+SLCANAPI int slcan_set_ack(slcan_port_t port, bool on);
 
 
 /** @brief       setup with standard CAN bit-rates.
@@ -539,7 +555,7 @@ SLCANAPI int slcan_signal(slcan_port_t port);
  *  @param[out]  version_no - major and minor version number (optional)
  *  @param[out]  patch_no   - patch number (optional)
  *  @param[out]  build_no   - build number (optional)
- * 
+ *
  *  @returns     pointer to a zero-terminated string, or NULL on error.
  */
 SLCANAPI char *slcan_api_version(uint16_t *version_no, uint8_t *patch_no, uint32_t *build_no);

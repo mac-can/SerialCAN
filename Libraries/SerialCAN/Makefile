@@ -51,7 +51,7 @@ current_OS := $(patsubst MINGW%,MinGW,$(current_OS))
 current_OS := $(patsubst MSYS%,MinGW,$(current_OS))
 
 MAJOR = 0
-MINOR = 2
+MINOR = 3
 PATCH = 0
 
 ifeq ($(PATCH),0)
@@ -70,7 +70,8 @@ WRAPPER_DIR = $(HOME_DIR)/Sources/Wrapper
 
 OBJECTS = $(OUTDIR)/can_api.o $(OUTDIR)/can_btr.o \
 	$(OUTDIR)/slcan.o $(OUTDIR)/serial.o \
-	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o $(OUTDIR)/logger.o \
+	$(OUTDIR)/buffer.o $(OUTDIR)/queue.o \
+	$(OUTDIR)/timer.o $(OUTDIR)/logger.o \
 	$(OUTDIR)/SerialCAN.o
 
 DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
@@ -79,6 +80,7 @@ DEFINES = -DOPTION_CAN_2_0_ONLY=0 \
 	-DOPTION_CANAPI_COMPANIONS=1 \
 	-DOPTION_CANAPI_DEBUG_LEVEL=0 \
 	-DOPTION_SERIAL_DEBUG_LEVEL=0 \
+	-DOPTION_SLCAN_FAKE_COMMANDS=1 \
 	-DOPTION_SLCAN_DEBUG_LEVEL=0
 
 HEADERS = -I$(SOURCE_DIR) \
@@ -203,18 +205,18 @@ incdir:
 	$(CP) $(CANAPI_DIR)/CANBTR_Defaults.h $(INCDIR)
 
 clean:
-	$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d
+	@-$(RM) $(TARGET) $(STATIC) $(OUTDIR)/*.o $(OUTDIR)/*.d
 
 pristine:
 ifeq ($(current_OS),Darwin)
-	$(RM) *.dylib *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
-	$(RM) $(BINDIR)/*.dylib $(BINDIR)/*.a
+	@-$(RM) *.dylib *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	@-$(RM) $(BINDIR)/*.dylib $(BINDIR)/*.a
 endif
 ifeq ($(current_OS),$(filter $(current_OS),Linux Cygwin))
-	$(RM) *.so.* *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
-	$(RM) $(BINDIR)/*.so.* $(BINDIR)/*.a
+	@-$(RM) *.so.* *.a $(OUTDIR)/*.o $(OUTDIR)/*.d
+	@-(RM) $(BINDIR)/*.so.* $(BINDIR)/*.a
 endif
-	$(RM) $(INCDIR)/*.h
+	@-$(RM) $(INCDIR)/*.h
 
 install:
 	@echo "Copying library file..."
@@ -247,6 +249,9 @@ $(OUTDIR)/buffer.o: $(SERIAL_DIR)/buffer.c $(SERIAL_DIR)/buffer_p.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 $(OUTDIR)/queue.o: $(SERIAL_DIR)/queue.c $(SERIAL_DIR)/queue_p.c
+	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
+
+$(OUTDIR)/timer.o: $(SERIAL_DIR)/timer.c $(SERIAL_DIR)/timer_p.c
 	$(CC) $(CFLAGS) -MMD -MF $*.d -o $@ -c $<
 
 $(OUTDIR)/logger.o: $(SERIAL_DIR)/logger.c $(SERIAL_DIR)/logger_p.c

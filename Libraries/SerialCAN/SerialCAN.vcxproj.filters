@@ -62,6 +62,9 @@
     <ClCompile Include="..\..\Sources\SLCAN\slcan.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Sources\SLCAN\timer_w.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SerialCAN.rc">

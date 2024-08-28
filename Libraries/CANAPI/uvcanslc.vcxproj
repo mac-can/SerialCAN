@@ -150,7 +150,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_FAKE_COMMANDS=1;OPTION_SLCAN_DEBUG_LEVEL==0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -166,7 +166,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_FAKE_COMMANDS=1;OPTION_SLCAN_DEBUG_LEVEL==0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -182,7 +182,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_FAKE_COMMANDS=1;OPTION_SLCAN_DEBUG_LEVEL==0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -200,7 +200,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_FAKE_COMMANDS=1;OPTION_SLCAN_DEBUG_LEVEL==0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -218,7 +218,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_FAKE_COMMANDS=1;OPTION_SLCAN_DEBUG_LEVEL==0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -234,7 +234,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_FAKE_COMMANDS=1;OPTION_SLCAN_DEBUG_LEVEL==0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -250,7 +250,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_FAKE_COMMANDS=1;OPTION_SLCAN_DEBUG_LEVEL==0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -268,7 +268,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SERIAL_DEBUG_LEVEL=0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;U3CANSLC_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);OPTION_CAN_2_0_ONLY=0;OPTION_CANAPI_DLLEXPORT=1;OPTION_CANAPI_DRIVER=1;OPTION_CANAPI_RETVALS=1;OPTION_CANAPI_COMPANIONS=1;OPTION_CANAPI_DEBUG_LEVEL=0;OPTION_SLCAN_FAKE_COMMANDS=1;OPTION_SLCAN_DEBUG_LEVEL==0;OPTION_SLCAN_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -350,6 +350,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_lib|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_lib|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_dll|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Sources\SLCAN\timer_w.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_dll|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_lib|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_dll|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_lib|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_dll|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_lib|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_dll|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_lib|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\Sources\Wrapper\can_api.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_dll|Win32'">NotUsing</PrecompiledHeader>

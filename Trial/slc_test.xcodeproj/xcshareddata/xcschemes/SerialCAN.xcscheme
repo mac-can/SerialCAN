@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0F8206332460255D00CD103A"
-               BuildableName = "SerialCAN"
-               BlueprintName = "SerialCAN"
-               ReferencedContainer = "container:SerialCAN.xcodeproj">
+               BuildableName = "slc_test"
+               BlueprintName = "slc_test"
+               ReferencedContainer = "container:slc_test.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0F8206332460255D00CD103A"
-            BuildableName = "SerialCAN"
-            BlueprintName = "SerialCAN"
-            ReferencedContainer = "container:SerialCAN.xcodeproj">
+            BuildableName = "slc_test"
+            BlueprintName = "slc_test"
+            ReferencedContainer = "container:slc_test.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -56,7 +56,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "ACK:OFF"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "TEST"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "LOG"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
@@ -72,9 +80,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0F8206332460255D00CD103A"
-            BuildableName = "SerialCAN"
-            BlueprintName = "SerialCAN"
-            ReferencedContainer = "container:SerialCAN.xcodeproj">
+            BuildableName = "slc_test"
+            BlueprintName = "slc_test"
+            ReferencedContainer = "container:slc_test.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -96,7 +96,7 @@
 #define SERIAL_BYTESIZE  CANSIO_8DATABITS
 #define SERIAL_PARITY    CANSIO_NOPARITY
 #define SERIAL_STOPBITS  CANSIO_1STOPBIT
-#define SERIAL_OPTIONS  (CANSIO_SLCAN)
+#define SERIAL_PROTOCOL  CANSIO_LAWICEL
 
 #if ((OPTION_SERIALCAN_DYLIB != 0) || (OPTION_SERIALCAN_SO != 0))
 __attribute__((constructor))
@@ -176,7 +176,7 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode
     sioAttr.bytesize = SERIAL_BYTESIZE;
     sioAttr.parity = SERIAL_PARITY;
     sioAttr.stopbits = SERIAL_STOPBITS;
-    sioAttr.options = SERIAL_OPTIONS;
+    sioAttr.protocol = SERIAL_PROTOCOL;
     // delegate with default values for parameter 'sioAttr'
     return ProbeChannel(device, opMode, sioAttr, state);
 }
@@ -189,7 +189,7 @@ CANAPI_Return_t CSerialCAN::ProbeChannel(const char *device, const CANAPI_OpMode
     param.attr.bytesize = sioAttr.bytesize;
     param.attr.parity = sioAttr.parity;
     param.attr.stopbits = sioAttr.stopbits;
-    param.attr.options = sioAttr.options;
+    param.attr.protocol = sioAttr.protocol;
     // delegated to standard initialization function
     return ProbeChannel(CANDEV_SERIAL, opMode, (void*)&param, state);
 }
@@ -216,7 +216,7 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(const char* device, const CANAPI_O
     sioAttr.bytesize = SERIAL_BYTESIZE;
     sioAttr.parity = SERIAL_PARITY;
     sioAttr.stopbits = SERIAL_STOPBITS;
-    sioAttr.options = SERIAL_OPTIONS;
+    sioAttr.protocol = SERIAL_PROTOCOL;
     // delegate with default values for parameter 'sioAttr'
     return InitializeChannel(device, opMode, sioAttr);
 }
@@ -229,7 +229,7 @@ CANAPI_Return_t CSerialCAN::InitializeChannel(const char* device, const CANAPI_O
     param.attr.bytesize = sioAttr.bytesize;
     param.attr.parity = sioAttr.parity;
     param.attr.stopbits = sioAttr.stopbits;
-    param.attr.options = sioAttr.options;
+    param.attr.protocol = sioAttr.protocol;
     // delegated to standard initialization function
     return InitializeChannel(CANDEV_SERIAL, opMode, (void*)&param);;
 }
