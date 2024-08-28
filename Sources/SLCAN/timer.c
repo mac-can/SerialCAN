@@ -51,4 +51,4 @@
 #include "timer_p.c"
 #endif
 
-/* $Id$  Copyright (c) UV Software */
+/* $Id: timer.c 822 2024-08-27 09:23:18Z makemake $  Copyright (c) UV Software */

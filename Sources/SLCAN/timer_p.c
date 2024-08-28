@@ -51,15 +51,15 @@
  *
  *  @remarks     POSIX compatible variant (Linux, macOS)
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 810 $
+ *  @version     $Rev: 822 $
  *
  *  @addtogroup  timer
  *  @{
  */
 
-/*static const char _id[] = "$Id: timer.c 810 2024-04-18 14:01:00Z quaoar $";*/
+/*static const char _id[] = "$Id: timer_p.c 822 2024-08-27 09:23:18Z makemake $";*/
 
 
 /*  -----------  includes  ----------------------------------------------

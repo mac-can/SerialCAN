@@ -49,16 +49,16 @@
  *
  *  @brief       Lawicel SLCAN protocol.
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 811 $
+ *  @version     $Rev: 823 $
  *
  *  @addtogroup  slcan
  *  @{
  */
 #define VERSION_MAJOR    2
 #define VERSION_MINOR    0
-#define VERSION_PATCH    99
+#define VERSION_PATCH    0
 #if defined(_WIN64)
 #define PLATFORM        "x64"
 #elif defined(_WIN32)
@@ -950,7 +950,7 @@ int slcan_serial_number(slcan_port_t port, uint32_t *number) {
 EXPORT
 char *slcan_api_version(uint16_t *version_no, uint8_t *patch_no, uint32_t *build_no) {
     static char str[100 + 1] = "Try to relaxe and enjoy the crisis.";
-    const char svn[17 + 1] = "$Rev: 811 $";
+    const char svn[17 + 1] = "$Rev: 823 $";
     unsigned rev = 0u;
 
     /* determine pseudo build no. from SVN revision */

@@ -51,9 +51,9 @@
  *
  *               Including a general purpose timer (GPT0).
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 821 $
+ *  @version     $Rev: 825 $
  *
  *  @defgroup    timer A high-resolution Timer
  *  @{
@@ -97,6 +97,9 @@ typedef uint64_t timer_val_t;           /**< timer value (in [usec]) */
 
 /*  -----------  prototypes  --------------------------------------------
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /** @brief       creates and starts a new timer object.
  *
@@ -150,6 +153,9 @@ struct timespec timer_get_time(void);
 double timer_diff_time(struct timespec *start, struct timespec *stop);
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* TIMER_H_INCLUDED */
 /** @}
  */

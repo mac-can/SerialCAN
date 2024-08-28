@@ -51,15 +51,15 @@
  *
  *  @remarks     Windows compatible variant (_WIN32 and _WIN64)
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 821 $
+ *  @version     $Rev: 822 $
  *
  *  @addtogroup  timer
  *  @{
  */
 
-/*static const char _id[] = "$Id: timer_w.c 821 2024-08-26 17:04:56Z quaoar $";*/
+/*static const char _id[] = "$Id: timer_w.c 822 2024-08-27 09:23:18Z makemake $";*/
 
 
 /*  -----------  includes  ----------------------------------------------

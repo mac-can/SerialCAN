@@ -450,12 +450,14 @@ char *slcan_api_version(uint16_t *version_no, uint8_t *patch_no, uint32_t *build
 
 ## This and That
 
-The documentation of the SLCAN protocol can be found on [Lawicel CANUSB product page](https://www.canusb.com/products/canusb).
+The documentation of the SLCAN protocol can be found on [Lawicel CANUSB](https://www.canusb.com/products/canusb) product page.
+For the CANable 2.0 adaptation, see the [CANable Firmware](https://github.com/normaldotcom/canable-fw) documentation on GitHub. 
 
 ### Dual-License
 
-This work is dual-licensed under the terms of the BSD 2-Clause "Simplified" License and under the terms of the GNU General Public License v3.0 (or any later version).
-You can choose between one of them if you use this work in whole or in part.
+Except where otherwise noted, this work is dual-licensed under the terms of the BSD 2-Clause "Simplified" License
+and under the terms of the GNU General Public License v3.0 (or any later version).
+You can choose between one of them if you use these portions of this work in whole or in part.
 
 ### Trademarks
 

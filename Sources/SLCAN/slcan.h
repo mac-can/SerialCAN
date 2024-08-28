@@ -49,9 +49,9 @@
  *
  *  @brief       Lawicel SLCAN protocol.
  *
- *  @author      $Author: quaoar $
+ *  @author      $Author: makemake $
  *
- *  @version     $Rev: 811 $
+ *  @version     $Rev: 823 $
  *
  *  @defgroup    slcan Lawicel SLCAN Protocol
  *  @{
